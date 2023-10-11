@@ -1,0 +1,32 @@
+<div class="flex flex-col">
+  <span>Form Login</span>
+  <mat-form-field appearance="outline">
+    <mat-label>Username</mat-label>
+    <input matInput placeholder="Enter Username" [(ngModel)]="username" name="username" />
+    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon></mat-form-field
+  >
+  <mat-form-field appearance="outline">
+    <mat-label>Password</mat-label>
+    <input
+      matInput
+      [(ngModel)]="password"
+      [type]="showPassword ? 'text' : 'password'"
+      placeholder="Enter Password"
+      name="password"
+    />
+    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+    <mat-icon matSuffix (click)="togglePasswordVisibility()">{{
+      !showPassword ? "visibility_off" : "visibility"
+    }}</mat-icon>
+    <div>
+      <button
+        mat-raised-button
+        [mat-dialog-close]="true"
+        cdkFocusInitial
+        (click)="login()"
+      >
+        Đăng nhập
+      </button>
+    </div>
+  </mat-form-field>
+</div>
