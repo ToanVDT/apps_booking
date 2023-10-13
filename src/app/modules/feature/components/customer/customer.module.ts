@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { CustomerRoutingModule } from './customer-routing.module';
 import { CustomerComponent } from './customer.component';
 import { MarouselComponent } from './marousel/marousel.component';
-import { FeatureModule } from '../../feature.module';
 import { ShareModule } from 'src/app/modules/share/share.module';
 
 
@@ -16,7 +15,6 @@ import { ShareModule } from 'src/app/modules/share/share.module';
   imports: [
     CommonModule,
     CustomerRoutingModule,
-    FeatureModule,
     ShareModule
   ],
   exports:[
