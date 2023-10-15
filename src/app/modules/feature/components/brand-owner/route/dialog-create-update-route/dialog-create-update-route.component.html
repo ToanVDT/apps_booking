@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>Chi tiết tuyến xe</h2>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="routeForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Điểm xuất phát</mat-label>
+      <mat-select formControlName="startPoint">
+          <mat-option *ngFor="let province of provinces" [value]="province">
+              {{ province.name }}
+          </mat-option>
+      </mat-select>
+  </mat-form-field>
+  <br>
+  <mat-form-field appearance="outline">
+    <mat-label>Điểm kết thúc</mat-label>
+    <mat-select formControlName="endPoint">
+        <mat-option *ngFor="let province of provinces" [value]="province">
+            {{ province.name }}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Hủy</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial (click)="onSubmit()">Lưu</button>
+</mat-dialog-actions>

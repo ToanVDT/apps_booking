@@ -1,0 +1,37 @@
+<div class="flex col-span-1">
+    <!-- <span>Thêm thông tin </span> -->
+    <form [formGroup]="brandForm">
+        <mat-form-field appearance="outline">
+            <mat-label>Tên nhà xe</mat-label>
+            <input matInput placeholder="Placeholder" formControlName="name">
+            <!-- <mat-icon matSuffix>sentiment_very_satisfied</mat-icon> -->
+            <!-- <mat-hint>Hint</mat-hint> -->
+          </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Địa chỉ</mat-label>
+            <input matInput placeholder="Placeholder" formControlName="address">
+            <!-- <mat-icon matSuffix>sentiment_very_satisfied</mat-icon> -->
+            <!-- <mat-hint>Hint</mat-hint> -->
+          </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Số điện thoại</mat-label>
+            <input matInput placeholder="Placeholder" formControlName="phone">
+            <!-- <mat-icon matSuffix>sentiment_very_satisfied</mat-icon> -->
+            <!-- <mat-hint>Hint</mat-hint> -->
+          </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Mô tả</mat-label>
+            <input matInput placeholder="Placeholder" formControlName="description">
+            <!-- <mat-icon matSuffix>sentiment_very_satisfied</mat-icon> -->
+            <!-- <mat-hint>Hint</mat-hint> -->
+          </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Hình ảnh</mat-label>
+            <label htmlFor="fileUpload">	<mat-icon>cloud_upload</mat-icon></label>
+            <input id="fileUpload" matInput placeholder="img"   hidden/>
+            <input id="fileUpload"  type="file" class="file-upload"  (change)="upLoad($event)"  >
+          </mat-form-field>
+          <button mat-button mat-raised-button [mat-dialog-close]="true">Hủy</button>
+          <button mat-raised-button (click)="onSubmit()" [mat-dialog-close]="true">Lưu </button>
+    </form>
+</div>

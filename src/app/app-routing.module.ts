@@ -19,6 +19,7 @@ const routes: Routes = [
       ),
   },
   { path: 'brand-owner', loadChildren: () => import('./modules/feature/components/brand-owner/brand-owner.module').then(m => m.BrandOwnerModule) },
+  { path: 'auth', loadChildren: () => import('./modules/feature/components/auth/auth.module').then(m => m.AuthModule) },
 ];
 
 @NgModule({

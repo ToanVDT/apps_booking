@@ -9,7 +9,7 @@ import { ShareModule } from './modules/share/share.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,

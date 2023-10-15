@@ -1,0 +1,92 @@
+<div *ngIf="!isSuccess">
+  <button
+    style="margin: 3%; background: green; color: white;"
+    mat-raised-button
+    color="#primary"
+    (click)="openFormAddBrand()"
+  >
+    Thêm thông tin nhà xe
+  </button>
+</div>
+<div
+  *ngIf="isSuccess"
+  style="
+    height: 40%;
+    width: 60%;
+    border: 1px solid black;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+    margin-left: 20%;
+    margin-top: 6%;
+  "
+>
+  <div
+    style="
+      display: flex;
+      justify-content: center;
+      margin-top: 3%;
+      font-family: monospace;
+    "
+  >
+    <span>Thông tin về nhà xe</span>
+  </div>
+  <form [formGroup]="brandForm">
+    <div style="display: flex; padding: 20px;">
+      <div style="margin-top: 10%;">
+        <div style="display: flex; margin-right: 10px; margin-bottom: 5%;">
+          <mat-form-field appearance="outline" style="margin-right: 10px;">
+            <mat-label>Tên nhà xe</mat-label>
+            <input matInput placeholder="Placeholder" formControlName="name" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Địa chỉ</mat-label>
+            <input
+              matInput
+              placeholder="Placeholder"
+              formControlName="address"
+            />
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field appearance="outline" style="margin-right: 10px;">
+            <mat-label>Số điện thoại</mat-label>
+            <input matInput placeholder="Placeholder" formControlName="phone" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Mô tả</mat-label>
+            <input
+              matInput
+              placeholder="Placeholder"
+              formControlName="description"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+      <mat-form-field
+        appearance="outline"
+        style="margin-left: 5%; margin-top: 10%;"
+      >
+        <img [src]="thumb || img" />
+        <label htmlFor="fileUpload"> <mat-icon>cloud_upload</mat-icon></label>
+        <input id="fileUpload" matInput placeholder="img" hidden />
+        <input
+          id="fileUpload"
+          type="file"
+          class="file-upload"
+          (change)="upLoad($event)"
+        />
+      </mat-form-field>
+    </div>
+    <div style="margin: 20px;">
+      <button
+        mat-raised-button
+        style="background: #fff9c4;"
+        (click)="saveBrand()"
+      >
+        Lưu
+      </button>
+    </div>
+  </form>
+</div>
+<app-spinner [isLoading]="isLoading"></app-spinner>

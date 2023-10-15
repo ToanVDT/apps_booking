@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 export class AppComponent {
   title = 'apps_booking';
   constructor(private toast:ToastrService){}
-  test(){
-    this.toast.success("OK","success",{timeOut:2000,progressBar:true})
-  }
+  // test(){
+  //   this.toast.success("OK","success",{timeOut:2000,progressBar:true})
+  // }
 }

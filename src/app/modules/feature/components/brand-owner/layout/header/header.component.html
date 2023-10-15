@@ -1,0 +1,29 @@
+<div class="fixed left-0 right-0 top-0 bg-[#2474E5] z-50 text-white-800">
+    <div class="flex h-16 items-center justify-between px-5 lg:px-20">
+      <div class="flex items-center">
+        <div>
+          <img
+            src="https://storage.googleapis.com/fe-production/svgIcon/icon_vxr_full_2.svg"
+            alt="logo"
+          />
+        </div>
+      </div>
+      <div class="flex items-center">
+        <div  class="relative ml-3 flex items-center">
+          <div class="flex items-center space-x-5">
+            <span style="color: aliceblue;">Xin chào, {{user.data.username}}</span>
+            <button mat-button [matMenuTriggerFor]="profileMenu">
+              <img class="h-10 w-10"
+                src="https://www.shareicon.net/data/128x128/2016/05/24/770117_people_512x512.png"
+                alt="avatar_profile"
+              />
+            </button>
+            <mat-menu #profileMenu="matMenu">
+              <button mat-menu-item>Thông tin tài khoản</button>
+              <button mat-menu-item (click)="logout()">Đăng xuất</button>
+            </mat-menu>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
