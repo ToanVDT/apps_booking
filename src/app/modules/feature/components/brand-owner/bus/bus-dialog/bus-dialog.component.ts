@@ -1,18 +1,18 @@
-import { Component, EventEmitter, Inject, OnInit, Output } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { RouteService } from "../../service/route.service";
-import { Routes } from "../../model/route.model";
-import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import { RouteService } from '../../service/route.service';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: "app-dialog-create-update-route",
-  templateUrl: "./dialog-create-update-route.component.html",
-  styleUrls: ["./dialog-create-update-route.component.scss"],
+  selector: 'app-bus-dialog',
+  templateUrl: './bus-dialog.component.html',
+  styleUrls: ['./bus-dialog.component.scss']
 })
-export class DialogCreateUpdateRouteComponent implements OnInit {
+export class BusDialogComponent implements OnInit {
+
   routeForm: FormGroup;
   provinces: any;
-  route!: Routes;
+  bus:any; //bus
   startpoint: any;
   endpoint: any;
   indexend:any;

@@ -38,6 +38,9 @@
           <mat-form-field appearance="outline" style="margin-right: 10px;">
             <mat-label>Tên nhà xe</mat-label>
             <input matInput placeholder="Placeholder" formControlName="name" />
+            <div>
+              <p *ngIf="nameDuplicated" style="color: red;">Tên nhà xe đã tồn tại</p>
+          </div>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Địa chỉ</mat-label>
@@ -52,6 +55,9 @@
           <mat-form-field appearance="outline" style="margin-right: 10px;">
             <mat-label>Số điện thoại</mat-label>
             <input matInput placeholder="Placeholder" formControlName="phone" />
+            <div>
+              <p *ngIf="phoneDuplicated" style="color: red;">SĐT nhà xe đã tồn tại</p>
+          </div>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Mô tả</mat-label>

@@ -1,31 +1,30 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { DialogCreateUpdateRouteComponent } from './dialog-create-update-route/dialog-create-update-route.component';
-import { Route } from '@angular/router';
 import { AuthenticationService } from '../../auth/service/authentication.service';
+import { MatDialog } from '@angular/material/dialog';
 import { RouteService } from '../service/route.service';
 import { ToastrService } from 'ngx-toastr';
+import { MatPaginator } from '@angular/material/paginator';
+import { BusDialogComponent } from './bus-dialog/bus-dialog.component';
 import { finalize } from 'rxjs';
-import { Routes } from '../model/route.model';
 import { ConfirmDialogComponent } from 'src/app/modules/share/components/confirm-dialog/confirm-dialog.component';
-
+import { Bus } from '../model/bus.model';
 
 @Component({
-  selector: 'app-route',
-  templateUrl: './route.component.html',
-  styleUrls: ['./route.component.scss']
+  selector: 'app-bus',
+  templateUrl: './bus.component.html',
+  styleUrls: ['./bus.component.scss']
 })
-export class RouteComponent implements OnInit, AfterViewInit {
+export class BusComponent implements OnInit {
+
   displayedColumns: string[] = [
     'startPoint',
     'endPoint',
     'action'
   ];
 
-  routes : Routes[] = [];
-  route : Routes = {}
+  routes : Bus[] = [];
+  route : Bus = {}
   user:any;
   isLoading : boolean = false;
 
@@ -49,10 +48,10 @@ export class RouteComponent implements OnInit, AfterViewInit {
     this.user = this.auth.userValue;
     this.getRoutes()
   }
-  openFormAddRoute(route:any){
-    const dialogRef =this.dialog.open(DialogCreateUpdateRouteComponent,{
+  openFormAddRoute(bus:any){
+    const dialogRef =this.dialog.open(BusDialogComponent,{
       data:{
-        route:route
+        bus:bus
       }
     })
     dialogRef.componentInstance.createOrUpdate.subscribe(
@@ -95,7 +94,7 @@ export class RouteComponent implements OnInit, AfterViewInit {
       }
     )
   }
-  deleteRoutegory(route: Routes) {
+  deleteRoutegory(route: any) {
     this.route = { ...route };
     let routeName ='Bạn chắc chắn xóa tuyến xe:'+
       this.route?.startPoint + ' - ' + this.route.endPoint;
@@ -103,28 +102,8 @@ export class RouteComponent implements OnInit, AfterViewInit {
       data: { name: routeName },
     });
     dialogRef.componentInstance.onConfirm.subscribe(() => {
-      this.confirmDelete(route.id);
+      // this.confirmDelete();
     });
   }
-  confirmDelete(routeId:any){
-    this.isLoading = true;
-    let value:any;
-    this.routeService.deleteRoute(routeId, this.user.data?.id).pipe(
-      finalize(()=>{
-        this.isLoading = false;
-        this.dataSource = new MatTableDataSource(value);
-      })
-    ).subscribe(
-      data=>{
-        if(data.success){
-          this.message.success("Xóa tuyến đường", "Thành công",{timeOut:2000, progressBar:true})
-          value = data.data
-          console.log("data", value)
-        }
-        else{
-          this.message.error(data.message,"Xoá thất bại",{timeOut:2000, progressBar:true})
-        }
-      }
-    )
-  }
+
 }

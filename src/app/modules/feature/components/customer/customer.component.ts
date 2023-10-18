@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { popularRoute } from 'src/assets/data/popularRoute';
 
 @Component({
   selector: 'app-customer',
@@ -6,10 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./customer.component.scss']
 })
 export class CustomerComponent implements OnInit {
-
+  popularRoute: any;
   constructor() { }
 
   ngOnInit(): void {
+    this.popularRoute = popularRoute.slice(0, 5);
   }
 
 }

@@ -1,5 +1,5 @@
 export enum routes {
-    VEHICLE = '/user/vehicle',
+    BUS = '/brand-owner/bus',
     BRAND = '/brand-owner/brand',
     CATEGORY = '/user/vehicle-category',
     ROUTE = '/brand-owner/route',

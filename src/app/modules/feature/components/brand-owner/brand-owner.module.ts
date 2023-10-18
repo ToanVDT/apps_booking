@@ -10,6 +10,8 @@ import { HeaderComponent } from './layout/header/header.component';
 import { DialogCreateBrandComponent } from './brand/dialog-create-brand/dialog-create-brand.component';
 import { RouteComponent } from './route/route.component';
 import { DialogCreateUpdateRouteComponent } from './route/dialog-create-update-route/dialog-create-update-route.component';
+import { BusComponent } from './bus/bus.component';
+import { BusDialogComponent } from './bus/bus-dialog/bus-dialog.component';
 
 
 @NgModule({
@@ -20,7 +22,9 @@ import { DialogCreateUpdateRouteComponent } from './route/dialog-create-update-r
     HeaderComponent,
     DialogCreateBrandComponent,
     RouteComponent,
-    DialogCreateUpdateRouteComponent
+    DialogCreateUpdateRouteComponent,
+    BusComponent,
+    BusDialogComponent
   ],
   imports: [
     CommonModule,

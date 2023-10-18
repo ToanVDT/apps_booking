@@ -22,14 +22,20 @@ import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { SpinnerComponent } from './components/spinner/spinner.component';
-
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { SearchWidgetComponent } from './components/search-widget/search-widget.component';
 @NgModule({
   declarations: [
     NavbarComponent,
     LoginComponent,
     RegisterComponent,
     FooterComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    ConfirmDialogComponent,
+    SearchWidgetComponent
   ],
   imports: [
     CommonModule,
@@ -51,6 +57,9 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     MatTableModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
+    MatAutocompleteModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   exports:[
     MatIconModule,
@@ -73,7 +82,12 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     MatTableModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
-    SpinnerComponent
+    SpinnerComponent,
+    ConfirmDialogComponent,
+    SearchWidgetComponent,
+    MatAutocompleteModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ]
 })
 export class ShareModule { }

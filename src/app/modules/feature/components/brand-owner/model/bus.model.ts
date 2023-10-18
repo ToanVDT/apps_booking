@@ -1,4 +1,4 @@
-export class Routes {
+export class Bus {
     id?: number;
     userId?:number;
     startPoint?: string;

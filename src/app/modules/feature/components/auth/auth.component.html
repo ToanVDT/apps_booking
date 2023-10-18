@@ -1,4 +1,4 @@
-<mat-card class="example-card">
+<!-- <mat-card class="example-card">
     <mat-card-header>
         <mat-card-title>Login</mat-card-title>
     </mat-card-header>
@@ -27,4 +27,46 @@
     <mat-card-actions>
         <button mat-raised-button (click)="login()" color="primary">Login</button>
     </mat-card-actions>
-  </mat-card>
+  </mat-card> -->
+  <div class="flex justify-between px-8 py-6 h-[100%] rounded-lg">
+
+    <div class="w-[60%]">
+        <img class="h-full w-[76%]"
+            src="https://static.vecteezy.com/system/resources/previews/005/962/374/non_2x/illustration-graphic-cartoon-character-of-login-vector.jpg"
+            alt="">
+    </div>
+    <div class="w-[40%] flex items-center p-10 border-gray-400 rounded-lg shadow-2xl shadow-neutral-800">
+        <form class="w-full">
+
+            <p class="text-center font-medium text-4xl"> Login</p>
+            <div class="mb-4">
+                <label>Username</label>
+                <div class="flex items-center justify-between border-b-2 border-b-gray-600">
+                    <input class="w-full outline-none" type="text" name="username" [(ngModel)]="username" required>
+                </div>
+            </div>
+            <div class="mb-2">
+                <label>Password</label>
+                <div class="flex items-center justify-between border-b-2 border-b-gray-600 ">
+                    <input class="w-[90%] outline-none" matInput [type]="hide ? 'password' : 'text'" placeholder="Password" [(ngModel)]="password" name="password" >
+                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                        [attr.aria-pressed]="hide" >
+                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                </div>
+
+            </div>
+
+            <div>
+                <a href="">Forgot password</a>
+            </div>
+            <button class="mt-[5%] text-[aliceblue] bg-[#1b2b36] w-full h-9 rounded-md cursor-pointer"
+                (click)="login()">
+                Login
+            </button>
+            <hr>
+
+        </form>
+    </div>
+</div>
+<app-spinner [isLoading]="isLoading"></app-spinner>

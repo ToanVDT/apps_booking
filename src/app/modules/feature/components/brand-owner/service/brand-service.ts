@@ -26,4 +26,14 @@ export class BrandService {
       retry(1), 
       delay(1000));
   }
+  checkDuplicatePhoneBrand(phone:any, userId:any): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/brand/phone?phone=${phone}&userId=${userId}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
+  checkDuplicateNameBrand(name:any,userId:any): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/brand/name?name=${name}&userId=${userId}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
 }

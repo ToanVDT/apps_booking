@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Xác nhận xóa</h2>
+<p>{{data.name}} ?</p>
+<mat-dialog-content class="mat-typography">
+ <div></div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Hủy</button>
+  <button mat-button (click)="confirm()" [mat-dialog-close]="true" cdkFocusInitial>Xác nhận</button>
+</mat-dialog-actions>

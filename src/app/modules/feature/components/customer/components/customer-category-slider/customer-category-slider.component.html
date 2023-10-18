@@ -1,0 +1,8 @@
+<div class="px-5 lg:px-20 lg:py-5">
+    <p class="py-5 px-32 text-2xl font-semibold opacity-75">{{ title }}</p>
+    <div class="flex flex-wrap justify-center">
+        <ng-container *ngFor="let item of categories">
+            <app-customer-category-card [category]="item"></app-customer-category-card>
+        </ng-container>
+    </div>
+</div>

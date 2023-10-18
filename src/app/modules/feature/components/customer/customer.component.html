@@ -6,9 +6,12 @@
         <app-marousel></app-marousel>
     </div>
     <div>
-        <h2>Tuyến đường phổ biến</h2>
-        <h2>Ưu đãi nổi bật</h2>
-        <h2>Dịch vụ nổi bật</h2>
+        <app-customer-category-slider title="Tuyến đường phổ biến" [categories]="popularRoute">
+        </app-customer-category-slider>
+        <app-customer-category-slider title="Ưu đãi nổi bật" [categories]="popularRoute">
+        </app-customer-category-slider>
+        <app-customer-category-slider title="Dịch vụ nổi bật" [categories]="popularRoute">
+        </app-customer-category-slider>
     </div>
 </div>
 <div class="py-8">

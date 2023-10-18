@@ -1,0 +1,36 @@
+<div class="container bg-white w-[100%] rounded-md p-5">
+    <mat-form-field appearance="outline">
+        <mat-label>Nơi xuất phát</mat-label>
+        <mat-icon class="text-[#2474E5] align-middle" matPrefix>my_location</mat-icon>
+        <input matInput [(ngModel)]="diemDi" [matAutocomplete]="auto" />
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let option of diemDiOptions" [value]="option">
+                {{ option }}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <button mat-icon-button class="swap-icon" (click)="daoNguocDiem()" aria-label="Đảo Ngược">
+        <mat-icon>swap_horiz</mat-icon>
+    </button>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Nơi đến</mat-label>
+        <input matInput [(ngModel)]="diemDen" [matAutocomplete]="auto" />
+        <mat-icon class="text-[#EB5757]" matPrefix>location_on</mat-icon>
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let option of diemDenOptions" [value]="option">
+                {{ option }}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Ngày Đi</mat-label>
+        <input matInput [matDatepicker]="picker" [(ngModel)]="ngayDi" />
+        <mat-datepicker-toggle class="text-[#2474E5]" matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <button class="button_search" mat-raised-button color="primary" (click)="muaVe()">Tìm kiếm</button>
+</div>
