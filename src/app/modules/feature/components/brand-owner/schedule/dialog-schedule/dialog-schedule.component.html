@@ -1,0 +1,86 @@
+<div class="flex col-span-1" style="width: 650px; height: 650px;">
+    <form [formGroup]="scheduleForm">
+      <div class="flex flex-col border-0 p-2 shadow-md shadow-slate-400">
+        <div class="flex flex-col" style="width: 640px;">
+          <span style="margin-bottom: 10px; font-weight: 600;"
+            >Chọn tuyến đường</span
+          >
+          <mat-form-field appearance="outline">
+            <mat-label>Tuyến đường</mat-label>
+            <mat-select formControlName="routeName" name="routeName">
+              <mat-option *ngFor="let route of routes" [value]="route">
+                {{route.startPoint}} - {{route.endPoint}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="flex flex-col" style="width: 640px;">
+          <span style="margin-bottom: 10px; font-weight: 600;"
+            >Chọn xe</span
+          >
+          <mat-form-field appearance="outline">
+            <mat-label>Xe</mat-label>
+            <mat-select formControlName="busName" name="busName">
+              <mat-option *ngFor="let bus of buses" [value]="bus">
+                {{bus.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+          <div style="margin-bottom: 10px;">
+            <span style="font-weight: 600;">
+              Khung ngày giờ xe chạy
+            </span>
+          </div>
+          <div
+            style="border: 1px solid #b9abab; border-radius: 5px; padding: 10px;"
+            class="flex flex-col"
+          >
+          <mat-form-field appearance="outline">
+            <mat-label>Thời gian xuất phát</mat-label>
+            <mat-select formControlName="startTime" name="startTime">
+              <mat-option *ngFor="let shuttle of shuttles" [value]="shuttle">
+                {{shuttle.startTime}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Ngày </mat-label>
+              <input matInput type="date" formControlName="dateStart" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label>Giá vé </mat-label>
+                <input matInput type="number" min="0"  formControlName="price" />
+              </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Tiền ăn cơm</mat-label>
+                <input matInput type="number" min="0"  formControlName="eatingFee" />
+              </mat-form-field>
+        </div>
+        <div>
+          <div class="mt-2">
+            <button
+              mat-button
+              mat-raised-button
+              [mat-dialog-close]="true"
+              style="margin-right: 3px; background: #B00020;color: white;">
+              Hủy
+            </button>
+            <button
+              mat-raised-button
+              (click)="onSubmit()"
+              [mat-dialog-close]="true"
+              [disabled]="!scheduleForm.valid"
+              style="margin-left: 3px; background: green;color: white;">
+              Lưu
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  

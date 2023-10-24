@@ -1,0 +1,193 @@
+<div
+  style="
+    width: 90%;
+    margin-top: 1%;
+    border-radius: 12px;
+    border: 1px solid #d0c9c9;
+    background: white;
+    margin-left: 4%;
+    margin-right: 4%;
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
+      0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+  "
+>
+  <div style="background-color: #ffffff;">
+    <div
+      style="
+        margin: 20px 0 0 0;
+        width: 90%;
+        height: 80px;
+        border-radius: 12px;
+        border: 1px solid #d0c9c9;
+        background: white;
+        margin-left: 4%;
+        margin-right: 4%;
+        background: #f0f0ee;
+      "
+      class="shadow-xl"
+    >
+      <div class="flex justify-between m-2">
+        <button
+          mat-raised-button
+          style="
+            background-color: #7dc0ce;
+            margin: 16px;
+            /* padding: 11px; */
+            border: 1px solid #7dc0ce;
+            border-radius: 3px;
+            width: 90px;
+            color: white;
+            font-size: initial;
+            font-weight: 400;
+            height: 40px;
+          "
+        >
+          Thêm
+        </button>
+        <div class="flex justify-between">
+          <form [formGroup]="parkingForm">
+            <mat-form-field appearance="outline" class="mr-3">
+              <mat-label>Tuyến đường</mat-label>
+              <mat-select formControlName="route" name="route">
+                <mat-option *ngFor="let route of routes" [value]="route">
+                  {{ route.startPoint }} - {{route.endPoint}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Khung giờ</mat-label>
+              <mat-select formControlName="shuttle" name="shuttle">
+                <mat-option *ngFor="let shuttle of shuttles" [value]="shuttle">
+                  {{ shuttle.startTime}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div
+      style="
+        display: flex;
+        justify-content: space-between;
+        padding: 45px 250px 0px 215px;
+      "
+    >
+      <span style="font-size: large; font-style: italic; font-weight: 500;"
+        >Điểm đón</span
+      >
+      <span style="font-size: large; font-style: italic; font-weight: 500;"
+        >Điểm trả</span
+      >
+    </div>
+    <div
+      style="display: flex; justify-content: space-around; padding: 20px 0px;"
+    >
+      <div style="padding: 25px 0;">
+        <table
+          mat-table
+          [dataSource]="dataSource1"
+          class="mat-elevation-z8"
+          style="
+            width: 90%;
+            margin-top: 2%;
+            border-radius: 12px;
+            border: 1px solid #d0c9c9;
+            background: white;
+            margin-left: 4%;
+            margin-right: 4%;
+          "
+        >
+          <!-- Position Column -->
+          <ng-container matColumnDef="pickUpPoint">
+            <th mat-header-cell *matHeaderCellDef>Điểm đón</th>
+            <td mat-cell *matCellDef="let pickUp">{{pickUp.pickUpPoint }}</td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="pickUpTime">
+            <th mat-header-cell *matHeaderCellDef>Thời gian đón</th>
+            <td mat-cell *matCellDef="let pickUp">{{pickUp.pickUpTime }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>Hành động</th>
+            <td mat-cell *matCellDef="let pickUp">
+              <button mat-button color="primary" (click)="openDialogPickUp(pickUp)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-button color="accent">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+          <tr mat-row *matRowDef="let emprow; columns: displayedColumns1"></tr>
+        </table>
+        <div style="padding: 0 30px 0 20px;">
+          <mat-paginator
+            #paginator
+            [pageSizeOptions]="[5,10,15]"
+            showFirstLastButtons
+          ></mat-paginator>
+        </div>
+      </div>
+      <div style="padding: 25px 0;">
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          class="mat-elevation-z8"
+          style="
+            width: 90%;
+            margin-top: 2%;
+            border-radius: 12px;
+            border: 1px solid #d0c9c9;
+            background: white;
+            margin-left: 4%;
+            margin-right: 4%;
+          "
+        >
+          <!-- Position Column -->
+          <ng-container matColumnDef="dropOffPoint">
+            <th mat-header-cell *matHeaderCellDef>Điểm trả</th>
+            <td mat-cell *matCellDef="let dropOff">
+              {{dropOff.dropOffPoint }}
+            </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="dropOffTime">
+            <th mat-header-cell *matHeaderCellDef>Thời gian trả</th>
+            <td mat-cell *matCellDef="let dropOff">{{dropOff.dropOffTime}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>Hành động</th>
+            <td mat-cell *matCellDef="let dropOff">
+              <button mat-button color="primary" (click)="openDialogDropOff(dropOff)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-button color="accent">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+        </table>
+        <div style="padding: 0 30px 0 20px;">
+          <mat-paginator
+            #paginator
+            [pageSizeOptions]="[5,10,15]"
+            showFirstLastButtons
+          ></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-spinner [isLoading]="isLoading"></app-spinner>

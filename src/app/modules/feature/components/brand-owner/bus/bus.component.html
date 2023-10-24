@@ -60,28 +60,43 @@
         "
       >
         <!-- Position Column -->
-  <ng-container matColumnDef="startPoint">
-    <th mat-header-cell *matHeaderCellDef> Điểm xuất phát </th>
-    <td mat-cell *matCellDef="let route"> {{route.startPoint}} </td>
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Tên  </th>
+    <td style="width: 15%" mat-cell *matCellDef="let bus"> {{bus.name}} </td>
   </ng-container>
 
   <!-- Name Column -->
-  <ng-container matColumnDef="endPoint">
-    <th mat-header-cell *matHeaderCellDef> Điểm kết thúc </th>
-    <td mat-cell *matCellDef="let route"> {{route.endPoint}} </td>
+  <ng-container matColumnDef="identityCode">
+    <th mat-header-cell *matHeaderCellDef> Biển số </th>
+    <td style="width: 15%" mat-cell *matCellDef="let bus"> {{bus.identityCode}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="seats">
+    <th mat-header-cell *matHeaderCellDef> Số chỗ </th>
+    <td style="width: 10%" mat-cell *matCellDef="let bus"> {{bus.seats}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="busType">
+    <th mat-header-cell *matHeaderCellDef> Loại xe </th>
+    <td style="width: 15%" mat-cell *matCellDef="let bus"> {{bus.busType}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="description">
+    <th mat-header-cell *matHeaderCellDef> Mô tả </th>
+    <td style="width: 25%" mat-cell *matCellDef="let bus"> {{bus.description}} </td>
   </ng-container>
 
   
   <ng-container matColumnDef="action">
     <th mat-header-cell *matHeaderCellDef> Hành động </th>
-    <td mat-cell *matCellDef="let route"> <button
+    <td style="width: 20%" mat-cell *matCellDef="let bus"> <button
         mat-button
         color="primary"
-        (click)="openFormAddRoute(route)" 
+        (click)="openFormAddRoute(bus)" 
       >
         <mat-icon>edit</mat-icon>
       </button>
-      <button mat-button color="accent" (click)="deleteRoutegory(route)">
+      <button mat-button color="accent" (click)="deleteBus(bus)">
         <mat-icon>delete</mat-icon>
       </button></td>
   </ng-container>

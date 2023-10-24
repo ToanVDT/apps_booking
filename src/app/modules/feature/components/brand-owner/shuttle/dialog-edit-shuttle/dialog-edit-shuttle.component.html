@@ -1,0 +1,50 @@
+<div style="height: 400px; width: 300px;">
+  <div style="padding: 15px 80px; font-family: monospace;">
+    <p>Thông tin chi tiết</p>
+  </div>
+  <form [formGroup]="shuttleForm">
+    <div
+      style="
+        border: 1px solid #b9abab;
+        border-radius: 5px;
+        padding: 10px;
+        height: 250px;
+      "
+      class="flex flex-col"
+    >
+      <mat-form-field appearance="outline" style="margin: 37px 2px;">
+        <mat-label>Thời gian xuất phát</mat-label>
+        <input matInput type="time" formControlName="startTime" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Thời gian đến theo dự kiến</mat-label>
+        <input matInput type="time" formControlName="endTime" />
+      </mat-form-field>
+    </div>
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        padding: 45px 60px 0px 200px;
+      "
+    >
+      <button
+        mat-button
+        mat-raised-button
+        [mat-dialog-close]="true"
+        class="bg-red-600 text-zinc-50"
+        style="margin-right: 25px;"
+      >
+        Hủy
+      </button>
+      <button
+        mat-raised-button
+        (click)="onSubmit()"
+        [mat-dialog-close]="true"
+        class="bg-green-600 text-zinc-50"
+      >
+        Lưu
+      </button>
+    </div>
+  </form>
+</div>

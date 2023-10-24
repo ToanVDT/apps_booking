@@ -7,7 +7,7 @@ import { Route } from '@angular/router';
 import { AuthenticationService } from '../../auth/service/authentication.service';
 import { RouteService } from '../service/route.service';
 import { ToastrService } from 'ngx-toastr';
-import { finalize } from 'rxjs';
+import { finalize, forkJoin } from 'rxjs';
 import { Routes } from '../model/route.model';
 import { ConfirmDialogComponent } from 'src/app/modules/share/components/confirm-dialog/confirm-dialog.component';
 
@@ -23,7 +23,7 @@ export class RouteComponent implements OnInit, AfterViewInit {
     'endPoint',
     'action'
   ];
-
+  provinces:any;
   routes : Routes[] = [];
   route : Routes = {}
   user:any;
@@ -47,12 +47,13 @@ export class RouteComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.user = this.auth.userValue;
-    this.getRoutes()
+    this.getRouteAndProvinces()
   }
   openFormAddRoute(route:any){
     const dialogRef =this.dialog.open(DialogCreateUpdateRouteComponent,{
       data:{
-        route:route
+        route:route,
+        provinces: this.provinces
       }
     })
     dialogRef.componentInstance.createOrUpdate.subscribe(
@@ -61,18 +62,28 @@ export class RouteComponent implements OnInit, AfterViewInit {
       }
     )
   }
-  getRoutes(){
-    this.isLoading = true;
-    this.routeService.getAllRoutes(this.user.data.id).pipe(
+  getRouteAndProvinces(){
+    forkJoin({
+      routes:this.getRoutes(),
+      provinces:this.getProvinces()
+    }).pipe(
       finalize(()=>{
-        this.dataSource = new MatTableDataSource(this.routes); 
-        this.isLoading = false;     
+        this.dataSource = new MatTableDataSource(this.routes)
+        this.isLoading = false;
       })
     ).subscribe(
       data=>{
-        this.routes = data.data
+        this.routes = data.routes.data;
+        this.provinces = data.provinces
       }
     )
+  }
+  getRoutes(){
+    this.isLoading = true;
+    return this.routeService.getAllRoutes(this.user.data.id)
+  }
+  getProvinces(){
+    return this.routeService.getProvinces();
   }
   handleCreateOrUpdate(route:any){
     let value: any;
@@ -119,9 +130,9 @@ export class RouteComponent implements OnInit, AfterViewInit {
         if(data.success){
           this.message.success("Xóa tuyến đường", "Thành công",{timeOut:2000, progressBar:true})
           value = data.data
-          console.log("data", value)
         }
         else{
+          this.getRouteAndProvinces()
           this.message.error(data.message,"Xoá thất bại",{timeOut:2000, progressBar:true})
         }
       }

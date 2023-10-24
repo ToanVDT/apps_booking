@@ -3,9 +3,8 @@ export enum routes {
     BRAND = '/brand-owner/brand',
     CATEGORY = '/user/vehicle-category',
     ROUTE = '/brand-owner/route',
-    SHUTTLE = '/user/vehicle-shuttle',
-    DRIVER = '/user/driver',
-    PARKING = '/user/parking',
-    TICKET = '/user/ticket',
-    LOGIN = '/auth'
+    SHUTTLE = '/brand-owner/shuttle',
+    PARKING = '/brand-owner/parking',
+    SCHEDULE = '/brand-owner/schedule',
+    // LOGIN = '/auth'
   }

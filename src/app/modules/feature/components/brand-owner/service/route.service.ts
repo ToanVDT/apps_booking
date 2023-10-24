@@ -20,6 +20,11 @@ export class RouteService {
       retry(1), 
       delay(1000));
   }
+  getRouteCustomName(userId:any):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/route/custom_name?userId=${userId}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
   createOrUpdate(route:any):Observable<any>{
     return this.http.post<any>(`${environment.apiUrl}/route`,route).pipe(
       retry(1), 

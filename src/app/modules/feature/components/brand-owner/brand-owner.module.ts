@@ -12,6 +12,15 @@ import { RouteComponent } from './route/route.component';
 import { DialogCreateUpdateRouteComponent } from './route/dialog-create-update-route/dialog-create-update-route.component';
 import { BusComponent } from './bus/bus.component';
 import { BusDialogComponent } from './bus/bus-dialog/bus-dialog.component';
+import { ShuttleComponent } from './shuttle/shuttle.component';
+import { DialogShuttleComponent } from './shuttle/dialog-shuttle/dialog-shuttle.component';
+import { DialogEditShuttleComponent } from './shuttle/dialog-edit-shuttle/dialog-edit-shuttle.component';
+import { ParkingComponent } from './parking/parking.component';
+import { DialogPickUpComponent } from './parking/dialog-pick-up/dialog-pick-up.component';
+import { DialogDropOffComponent } from './parking/dialog-drop-off/dialog-drop-off.component';
+import { ImageComponent } from './image/image.component';
+import { ScheduleComponent } from './schedule/schedule.component';
+import { DialogScheduleComponent } from './schedule/dialog-schedule/dialog-schedule.component';
 
 
 @NgModule({
@@ -24,7 +33,16 @@ import { BusDialogComponent } from './bus/bus-dialog/bus-dialog.component';
     RouteComponent,
     DialogCreateUpdateRouteComponent,
     BusComponent,
-    BusDialogComponent
+    BusDialogComponent,
+    ShuttleComponent,
+    DialogShuttleComponent,
+    DialogEditShuttleComponent,
+    ParkingComponent,
+    DialogPickUpComponent,
+    DialogDropOffComponent,
+    ImageComponent,
+    ScheduleComponent,
+    DialogScheduleComponent
   ],
   imports: [
     CommonModule,

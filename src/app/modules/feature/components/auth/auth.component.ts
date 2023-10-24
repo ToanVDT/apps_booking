@@ -43,7 +43,7 @@ export class AuthComponent implements OnInit {
       ?.valueChanges.subscribe((value) => (this.password = value));
   }
   login() {
-    console.log(this.username, "-", this.password);
+    // console.log(this.username, "-", this.password);
     this.isLoading = true;
     this.authenticationService
       .login(this.username, this.password)
@@ -70,7 +70,7 @@ export class AuthComponent implements OnInit {
         })
       )
       .subscribe((data) => {
-        (this.user = data), console.log("data " + data);
+        (this.user = data)
         if (data.success) {
           this.messService.success(data.message, "Thành công", {
             timeOut: 2000,

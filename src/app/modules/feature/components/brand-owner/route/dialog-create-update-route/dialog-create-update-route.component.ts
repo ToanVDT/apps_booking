@@ -15,17 +15,14 @@ export class DialogCreateUpdateRouteComponent implements OnInit {
   route!: Routes;
   startpoint: any;
   endpoint: any;
-  indexend:any;
-  indexStart:any;
-  startPointSelected:any;
-  endPointSelected:any;
-
+  indexend: any;
+  indexStart: any;
+  startPointSelected: any;
+  endPointSelected: any;
 
   @Output() createOrUpdate = new EventEmitter<any>();
 
-  constructor(
-    private routeService: RouteService,
-    @Inject(MAT_DIALOG_DATA) public data: any
+  constructor( @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.routeForm = new FormGroup({
       startPoint: new FormControl(this.startpoint, [Validators.required]),
@@ -41,39 +38,15 @@ export class DialogCreateUpdateRouteComponent implements OnInit {
     this.routeForm.get("endPoint")?.valueChanges.subscribe((data) => {
       this.endpoint = data.name;
     });
-    console.log(this.data.route)
-    // if (this.data.route) {
-    //   this.routeForm.patchValue({
-    //     startPoint: this.data.route?.startPoint,
-    //     endPoint: this.data.route?.endPoint,
-    //   });
-    // }
   }
   getProvices() {
-    this.routeService
-      .getProvinces()
-      .pipe()
-      .subscribe((data) => {
-        this.provinces = data;
-        for (let i = 0; i < this.provinces.length; i++) {
-          if (this.data.route?.endPoint == this.provinces[i].name) {
-            this.indexend = i;
-          }
-          if (this.data.route?.startPoint == this.provinces[i].name) {
-            this.indexStart = i;
-          }
-        }
-        this.startPointSelected = this.provinces[this.indexStart];
-        this.endPointSelected = this.provinces[this.indexend];
-      }
-    );
-  }
-  sendProvinces(value: any, check: boolean) {
-    // if (check) {
-    //   this.startPointSelected = value;
-    // } else {
-    //   this.endPointSelected = value;
-    // }
+    this.provinces = this.data.provinces;
+    if (this.data.route?.id) {
+      let selectedStartPoint = this.provinces.find((item: any) => item.name === this.data.route.startPoint);
+      let selectedEndPoint = this.provinces.find((item: any) => item.name === this.data.route.endPoint);
+      this.routeForm.get("startPoint")?.setValue(selectedStartPoint);
+      this.routeForm.get("endPoint")?.setValue(selectedEndPoint);
+    }
   }
   onSubmit() {
     if (this.routeForm.valid) {

@@ -1,0 +1,357 @@
+<mat-accordion class="ticket-card">
+    <mat-expansion-panel [disabled]="true" [expanded]="panelOpenState">
+        <!-- header -->
+        <mat-expansion-panel-header>
+            <div class="container p-4">
+                <div class="ticket-header w-full flex mb-4">
+                    <div class="ticket-note flex-1 mr-2">
+                        <div
+                            class="notification-tag inline-block relative mr-6 px-[6px] py-[3px] bg-[#007AFF] text-[#007AFF]"
+                        >
+                            <span class="text-white text-xs">Thông báo</span>
+                        </div>
+                        <div class="link inline-block text-[#007AFF] text-sm cursor-pointer underline">
+                            Giá vé không bao ăn
+                        </div>
+                    </div>
+                </div>
+                <div class="ticket-container bg-white min-h-[180px]">
+                    <div class="ticket-body flex">
+                        <div
+                            class="image bg-gradient-to-t relative w-[150px] h-[150px] bg-cover bg-center bg-no-repeat mr-4 rounded"
+                        >
+                            <img
+                                class="h-full w-full object-center-center object-cover"
+                                src="https://static.vexere.com/production/images/1688797612065.jpeg?w=250&h=250"
+                                alt="Image Nha Xe"
+                            />
+                            <img class="w-full h-auto absolute bottom-0 left-0" />
+                            <div class="confirm-ticket">
+                                <svg
+                                    class="TicketPC__ConfirmSVG-sc-1mxgwjh-5 kwcYbw"
+                                    width="14"
+                                    height="12"
+                                    viewBox="0 0 14 12"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        clip-rule="evenodd"
+                                        d="M13.666 2v2.667c-.733 0-1.333.6-1.333 1.333 0 .734.6 1.334 1.333 1.334V10c0 .734-.6 1.334-1.333 1.334H1.666c-.733 0-1.333-.6-1.333-1.334V7.334a1.333 1.333 0 0 0 .006-2.667V2C.34 1.26.933.667 1.666.667h10.667c.733 0 1.333.593 1.333 1.333zM6.391 8.965c-.016.125.07.235.182.235a.18.18 0 0 0 .16-.103l.244-.475c.301-.586.832-1.619 1.595-3.098.07-.167 0-.235-.128-.235H7.322l.287-2.254c.016-.125-.07-.235-.182-.235a.183.183 0 0 0-.16.103l-.972 1.899c-.337.657-.616 1.2-.835 1.632l-.001.002c-.016.025-.173.275.1.275h1.12L6.39 8.965z"
+                                        fill="#fff"
+                                    ></path>
+                                </svg>
+                                Xác nhận tức thì
+                                <div class="point"></div>
+                            </div>
+                        </div>
+
+                        <div class="ticket-rightbody relative min-h-[150px]">
+                            <div class="trip-info text-[#484848] text-sm">
+                                <div class="bus-info flex items-center">
+                                    <div class="bus-name text-base text-[#484848] font-bold mr-2">Dũng Lệ</div>
+                                    <button class="p-0 m-0 border-0">
+                                        <div
+                                            class="bus-rating rounded-sm bg-[#2474e5] text-white text-sm py-0 px-1 flex items-center"
+                                        >
+                                            <mat-icon class="mr-[2px] text-base">star</mat-icon>
+                                            <span>4.3 (43)</span>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="seat-type mb-5 mt-[10px] flex items-center">
+                                    <div class="mr-2">Limousine 34 Phòng Đơn</div>
+                                    <div class="sponsored flex items-center m-0">
+                                        <div class="icon text-[#858585] mr-1">
+                                            <img
+                                                src="https://storage.googleapis.com/fe-production/svgIcon/badge-sponsor.svg
+                                        "
+                                                alt=""
+                                                class="sponsored-icon w-4 h-4 align-middle border-none"
+                                            />
+                                        </div>
+                                        <div class="headline-text text-sm font-normal text-[#858585] p-0 m-0">
+                                            Tài trợ
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="from-to flex items-center text-[#707070]">
+                                    <svg
+                                        class="ticket_location_route h-[74px] w-3"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="14"
+                                        height="74"
+                                        viewBox="0 0 14 74"
+                                    >
+                                        <path
+                                            fill="none"
+                                            stroke="#787878"
+                                            stroke-linecap="round"
+                                            stroke-width="2"
+                                            stroke-dasharray="0 7"
+                                            d="M7 13.5v46"
+                                        ></path>
+                                        <g fill="none" stroke="#484848" stroke-width="3">
+                                            <circle cx="7" cy="7" r="7" stroke="none"></circle>
+                                            <circle cx="7" cy="7" r="5.5"></circle>
+                                        </g>
+                                        <path
+                                            d="M7 58a5.953 5.953 0 0 0-6 5.891 5.657 5.657 0 0 0 .525 2.4 37.124 37.124 0 0 0 5.222 7.591.338.338 0 0 0 .506 0 37.142 37.142 0 0 0 5.222-7.582A5.655 5.655 0 0 0 13 63.9 5.953 5.953 0 0 0 7 58zm0 8.95a3.092 3.092 0 0 1-3.117-3.06 3.117 3.117 0 0 1 6.234 0A3.092 3.092 0 0 1 7 66.95z"
+                                            fill="#787878"
+                                        ></path>
+                                    </svg>
+
+                                    <div class="from-to-content relative ml-[9px] h-[74px]">
+                                        <div class="content from top-0 absolute">
+                                            <div class="hour text-[#484848] text-xl font-bold">16:40</div>
+                                            <div class="place w-40 text-[#484848] truncate">• Big C Quy Nhơn</div>
+                                        </div>
+                                        <div class="duration absolute top-[26px] text-sm">12h15m</div>
+                                        <div class="content to absolute bottom-[2px]">
+                                            <div class="hour text-[#484848] text-xl font-bold">06:00</div>
+                                            <div class="place w-40 text-[#484848] truncate">• Bến xe An Sương</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="fare-info absolute top-0 right-0 w-[52%] text-right">
+                                <div>
+                                    <div
+                                        class="fare flex text-xl text-[#2474e5] items-baseline font-bold justify-end mb-1"
+                                    >
+                                        <div>400.000đ</div>
+                                    </div>
+                                    <div class="fareSmall flex items-baseline justify-end mb-1">
+                                        <div class="small text-sm text-[#707070] line-through font-normal"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="detail-action absolute bottom-0 right-0">
+                                <div class="info mb-2">
+                                    <div class="seat-available text-right text-base text-[#484848]">
+                                        Còn 24 chỗ trống
+                                    </div>
+                                </div>
+                                <div class="action flex items-end float-right">
+                                    <button
+                                        class="btn-detail text-[#2474e5] text-base h-[25px] flex items-center"
+                                        mat-raised-button
+                                        (click)="togglePanel()"
+                                    >
+                                        <span class="underline">Thông tin chi tiết</span>
+                                        <mat-icon *ngIf="!panelOpenState" class="ml-[6px]">arrow_drop_down </mat-icon>
+                                        <mat-icon *ngIf="panelOpenState" class="ml-[6px]">arrow_drop_up </mat-icon>
+                                    </button>
+                                    <button mat-raised-button class="btn-booking p-2 bg-[#ffc700] hover:bg-[#e6be2e]">
+                                        <span
+                                            class="text-[#484848] font-medium rounded-sm border-none py-4 px-2 h-[35px]"
+                                            >Chọn chuyến</span
+                                        >
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notify-trip flex justify-end items-center mt-3">
+                        <div class="content-has-cop text-black font-bold text-sm uppercase text-right w-[40%]">
+                            <div>Không cần thanh toán trước</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-expansion-panel-header>
+        <!-- details -->
+        <div class="detail-info-container relative border-t-2 py-2">
+            <div class="flex justify-end">
+                <button mat-button (click)="togglePanel()">
+                    <mat-icon class="text-[#F10000]">cancel</mat-icon>
+                </button>
+            </div>
+            <mat-tab-group>
+                <mat-tab label="Hình ảnh">
+                    <div class="carousel">
+                        <div class="main-image">
+                            <button
+                                mat-button
+                                (click)="prevImage()"
+                                [disabled]="selectedImageIndex === 0"
+                                class="control-button left-button"
+                            >
+                                <mat-icon>keyboard_arrow_left</mat-icon>
+                            </button>
+                            <div class="w-full flex justify-center">
+                                <img
+                                    [@imageAnimation]="selectedImageIndex"
+                                    class="mainimage"
+                                    [src]="images[selectedImageIndex]"
+                                    alt="Main Image"
+                                />
+                            </div>
+                            <button
+                                (click)="nextImage()"
+                                [disabled]="selectedImageIndex === images.length - 1"
+                                class="control-button right-button"
+                            >
+                                <mat-icon>keyboard_arrow_right</mat-icon>
+                            </button>
+                        </div>
+
+                        <div class="image-info">{{ selectedImageIndex + 1 }}/{{ images.length }}</div>
+
+                        <div class="thumbnails">
+                            <div
+                                *ngFor="let image of getVisibleThumbnails(); let i = index"
+                                class="thumbnail"
+                                [class.selected]="i + startIndex === selectedImageIndex"
+                                (click)="selectImage(i + startIndex)"
+                            >
+                                <img [src]="image" alt="Thumbnail {{ i + startIndex + 1 }}" class="thumbnail-image" />
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Tiện ích">
+                    <div class="flex flex-col px-16 mt-7">
+                        <div class="bg-[#f5f5f5] p-3">
+                            <div class="flex items-center">
+                                <mat-icon class="mr-2 text-[#F2C94C]">360</mat-icon>
+                                <div class="text-black">Dây đai an toàn</div>
+                            </div>
+                            <div class="pt-3 text-[#000000a6]">
+                                Trên xe có trang bị dây đai an toàn cho hành khách khi ngồi trên xe
+                            </div>
+                        </div>
+                        <div class="h-[1px] bg-[#c0c0c0] w-full"></div>
+                        <div class="bg-[#f5f5f5] p-3">
+                            <div class="flex items-center">
+                                <mat-icon class="mr-2 text-[#F2C94C]">free_breakfast</mat-icon>
+                                <div class="text-black">Nước uống</div>
+                            </div>
+                            <div class="pt-3 text-[#000000a6]">Nhà xe phục vụ nước cho hành khách</div>
+                        </div>
+                        <div class="h-[1px] bg-[#c0c0c0] w-full"></div>
+                        <div class="bg-[#f5f5f5] p-3">
+                            <div class="flex items-center">
+                                <mat-icon class="mr-2 text-[#F2C94C]">call_to_action</mat-icon>
+                                <div class="text-black">Gối nằm</div>
+                            </div>
+                            <div class="pt-3 text-[#000000a6]">Trên xe có trang bị gối nằm</div>
+                        </div>
+                        <div class="h-[1px] bg-[#c0c0c0] w-full"></div>
+                        <div class="bg-[#f5f5f5] p-3">
+                            <div class="flex items-center">
+                                <mat-icon class="mr-2 text-[#F2C94C]">fitness_center</mat-icon>
+                                <div class="text-black">Búa phá kính</div>
+                            </div>
+                            <div class="pt-3 text-[#000000a6]">
+                                Dùng để phá kính ô tô thoát hiểm trong trường hợp khẩn cấp
+                            </div>
+                        </div>
+                        <div class="grid gap-x-8 gap-y-4 grid-cols-3 mt-6">
+                            <div class="flex items-center">
+                                <mat-icon class="mr-2 text-[#F2C94C]">usb</mat-icon>
+                                <div>Sạc điện thoại</div>
+                            </div>
+                            <div class="flex items-center">
+                                <mat-icon class="mr-2 text-[#F2C94C]">wifi</mat-icon>
+                                <div>Wifi</div>
+                            </div>
+                            <div class="flex items-center">
+                                <mat-icon class="mr-2 text-[#F2C94C]">ac_unit</mat-icon>
+                                <div>Điều hòa</div>
+                            </div>
+                            <div class="flex items-center">
+                                <mat-icon class="mr-2 text-[#F2C94C]">view_day</mat-icon>
+                                <div>Rèm cửa</div>
+                            </div>
+                            <div class="flex items-center">
+                                <mat-icon class="mr-2 text-[#F2C94C]">pages</mat-icon>
+                                <div>Khăn lạnh</div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Điểm đón, trả">
+                    <div class="px-16 flex flex-col mt-7">
+                        <div>
+                            <div class="text-base font-bold text-[#0060c4]">Lưu ý</div>
+                            <div class="text-[#4d4d4d] text-base">
+                                Các mốc thời gian đón, trả bên dưới là thời gian dự kiến. <br />
+                                Lịch này có thể thay đổi tùy tình hình thực tế.
+                            </div>
+                        </div>
+                        <div class="grid gap-x-8 gap-y-4 grid-cols-2 mt-6">
+                            <div class="flex flex-col">
+                                <div class="text-lg text-[#4d4d4d] font-bold mb-3">Điểm Đón</div>
+                                <div class="flex flex-col" *ngFor="let item of listpickup">
+                                    <div class="flex mb-2">
+                                        <div class="font-bold">{{ item.time }}</div>
+                                        <span class="mx-2">•</span>
+                                        <div>{{ item.name }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col">
+                                <div class="text-lg text-[#4d4d4d] font-bold mb-3">Điểm Trả</div>
+                                <div class="flex flex-col" *ngFor="let item of listdropoff">
+                                    <div class="flex mb-2">
+                                        <div class="font-bold">{{ item.time }}</div>
+                                        <span class="mx-2">•</span>
+                                        <div>{{ item.name }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Chính sách">
+                    <div class="px-16 mt-7">
+                        <div class="text-lg font-bold leading-6 mb-3">Chính sách nhà xe</div>
+                        <div>
+                            <div class="text-base font-bold text-[#484848] leading-6 mt-4">Yêu cầu khi lên xe</div>
+                            <ul class="list-disc ml-10">
+                                <li>Có mặt tại văn phòng/quầy vé/bến xe trước 30 phút để làm thủ tục lên xe</li>
+                                <li>Xuất trình SMS/Email đặt vé trước khi lên xe</li>
+                                <li>Không mang đồ ăn, thức ăn có mùi lên xe</li>
+                                <li>Không hút thuốc, uống rượu, sử dụng chất kích thích trên xe</li>
+                                <li>Không mang các vật dễ cháy nổ lên xe</li>
+                                <li>Không vứt rác trên xe</li>
+                                <li>Không làm ồn, gây mất trật tự trên xe</li>
+                                <li>Không mang giày, dép trên xe</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="text-base font-bold text-[#484848] leading-6 mt-4">Hành lý xách tay</div>
+                            <ul class="list-disc ml-10">
+                                <li>Tổng trọng lượng hành lý không vượt quá 15 kg</li>
+                                <li>Phụ phí hành lý vượt quá quy định: 30000 VND/kg</li>
+                                <li>Không vận chuyển hàng hóa cồng kềnh</li>
+                                <li>Không hoàn tiền trong trường hợp hủy vé do vi phạm các quy định về hành lý</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="text-base font-bold text-[#484848] leading-6 mt-4">
+                                Trẻ em và phụ nữ có thai
+                            </div>
+                            <ul class="list-disc ml-10">
+                                <li>Phụ nữ có thai cần đảm bảo sức khỏe trong suốt quá trình di chuyển</li>
+                                <li>
+                                    Nhà xe có quyền từ chối phục vụ nếu hành khách không tuân thủ quy định về trẻ em và
+                                    phụ nữ có thai
+                                </li>
+                                <li>Trẻ em dưới 3 tuổi được miễn phí vé nếu ngồi cùng ghế/giường với bố mẹ</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="text-base font-bold text-[#484848] leading-6 mt-4">Động vật cảnh/Thú cưng</div>
+                            <ul class="list-disc ml-10">
+                                <li>Nhà xe không nhận chở động vật cảnh/thú cưng</li>
+                            </ul>
+                        </div>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>

@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CustomerComponent } from './modules/feature/components/customer/customer.component';
+import { UnauthorizedComponent } from './modules/share/components/unauthorized/unauthorized.component';
 
 const routes: Routes = [
   {path:'', redirectTo:'customer', pathMatch:'full'},
+  {path:'unauthorized', component:UnauthorizedComponent},
   {
     path: 'admin',
     loadChildren: () =>

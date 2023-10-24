@@ -1,19 +1,9 @@
-<div class="py-8">
+<div>
     <app-navbar></app-navbar>
 </div>
 <div>
-    <div>
-        <app-marousel></app-marousel>
-    </div>
-    <div>
-        <app-customer-category-slider title="Tuyến đường phổ biến" [categories]="popularRoute">
-        </app-customer-category-slider>
-        <app-customer-category-slider title="Ưu đãi nổi bật" [categories]="popularRoute">
-        </app-customer-category-slider>
-        <app-customer-category-slider title="Dịch vụ nổi bật" [categories]="popularRoute">
-        </app-customer-category-slider>
-    </div>
+    <router-outlet></router-outlet>
 </div>
-<div class="py-8">
+<div>
     <app-footer></app-footer>
 </div>

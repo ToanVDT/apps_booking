@@ -6,9 +6,10 @@ import { RouteService } from '../service/route.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatPaginator } from '@angular/material/paginator';
 import { BusDialogComponent } from './bus-dialog/bus-dialog.component';
-import { finalize } from 'rxjs';
+import { finalize, forkJoin, pipe } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/modules/share/components/confirm-dialog/confirm-dialog.component';
 import { Bus } from '../model/bus.model';
+import { BusService } from '../service/bus.service';
 
 @Component({
   selector: 'app-bus',
@@ -18,21 +19,25 @@ import { Bus } from '../model/bus.model';
 export class BusComponent implements OnInit {
 
   displayedColumns: string[] = [
-    'startPoint',
-    'endPoint',
+    'name',
+    'identityCode',
+    'seats',
+    'busType',
+    'description',
     'action'
   ];
 
-  routes : Bus[] = [];
-  route : Bus = {}
+  buses : Bus[] = [];
+  bus : Bus = {}
   user:any;
   isLoading : boolean = false;
+  type:any;
 
-  dataSource = new MatTableDataSource(this.routes);
-  dataSourceWithPageSize = new MatTableDataSource(this.routes);
+  dataSource = new MatTableDataSource(this.buses);
+  dataSourceWithPageSize = new MatTableDataSource(this.buses);
 
   constructor(private dialog:MatDialog, private auth:AuthenticationService,
-    private routeService:RouteService, private message:ToastrService) {}
+    private busService:BusService, private message:ToastrService) {}
 
   @ViewChild('paginator') paginator!: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize!: MatPaginator;
@@ -46,12 +51,13 @@ export class BusComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.auth.userValue;
-    this.getRoutes()
+    this.getTypeAnfRoute()
   }
   openFormAddRoute(bus:any){
     const dialogRef =this.dialog.open(BusDialogComponent,{
       data:{
-        bus:bus
+        bus:bus,
+        type:this.type
       }
     })
     dialogRef.componentInstance.createOrUpdate.subscribe(
@@ -60,46 +66,58 @@ export class BusComponent implements OnInit {
       }
     )
   }
-  getRoutes(){
+  getTypeAnfRoute(){
     this.isLoading = true;
-    this.routeService.getAllRoutes(this.user.data.id).pipe(
+    forkJoin({
+      types:this.getType(),
+      routes:this.getRoutes()
+    }).pipe(
       finalize(()=>{
-        this.dataSource = new MatTableDataSource(this.routes); 
-        this.isLoading = false;     
+        this.dataSource = new MatTableDataSource(this.buses); 
+        this.isLoading = false; 
       })
     ).subscribe(
       data=>{
-        this.routes = data.data
+        this.buses = data.routes.data
+        this.type = data.types.data
+        console.log("buses", this.buses)
       }
     )
   }
-  handleCreateOrUpdate(route:any){
+  getType(){
+  return  this.busService.getType().pipe()
+  }
+  getRoutes(){
+   return this.busService.getAllBuses(this.user.data.id).pipe()
+  }
+  handleCreateOrUpdate(bus:any){
     let value: any;
-    const request = {...route, userId:this.user.data.id}
+    const request = {...bus, userId:this.user.data.id}
     this.isLoading = true;
-    this.routeService.createOrUpdate(request).pipe(
+    this.busService.createOrUpdate(request).pipe(
       finalize(()=>{
         this.isLoading = false;
+        console.log("value", value)
         this.dataSource = new MatTableDataSource(value);
       })
     ).subscribe(
       data=>{
         value = data.data;
         if(data.success && data.message == "Thêm"){
-          this.message.success("Thêm tuyến xe","Thành công",{timeOut:2000,progressBar:true})
+          this.message.success("Thêm xe","Thành công",{timeOut:2000,progressBar:true})
         }
         if(data.success && data.message == "Chỉnh sửa"){
-          this.message.success("Chỉnh sửa tuyến xe","Thành công",{timeOut:2000,progressBar:true})
+          this.message.success("Chỉnh sửa xe","Thành công",{timeOut:2000,progressBar:true})
         }
       }
     )
   }
-  deleteRoutegory(route: any) {
-    this.route = { ...route };
-    let routeName ='Bạn chắc chắn xóa tuyến xe:'+
-      this.route?.startPoint + ' - ' + this.route.endPoint;
+  deleteBus(bus: any) {
+    this.bus = { ...bus };
+    let busName ='Bạn chắc chắn xóa xe:'+
+      this.bus?.name + ' - biển số: ' + this.bus.identityCode;
     let dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { name: routeName },
+      data: { bus: busName },
     });
     dialogRef.componentInstance.onConfirm.subscribe(() => {
       // this.confirmDelete();

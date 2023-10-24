@@ -1,6 +1,9 @@
 export class Bus {
     id?: number;
     userId?:number;
-    startPoint?: string;
-    endPoint?: string;
+    identityCode?: string;
+    name?: string;
+    busType?:any;
+    description?:string;
+    seats?:number;
 }

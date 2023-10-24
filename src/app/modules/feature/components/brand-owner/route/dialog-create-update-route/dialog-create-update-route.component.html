@@ -3,7 +3,7 @@
   <form [formGroup]="routeForm">
     <mat-form-field appearance="outline">
       <mat-label>Điểm xuất phát</mat-label>
-      <mat-select formControlName="startPoint" [value]="startPointSelected" name="startPoint">
+      <mat-select formControlName="startPoint"  name="startPoint">
           <mat-option *ngFor="let province of provinces" [value]="province">
               {{ province.name }}
           </mat-option>

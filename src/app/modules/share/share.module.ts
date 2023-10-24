@@ -27,6 +27,12 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { SearchWidgetComponent } from './components/search-widget/search-widget.component';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatRadioModule} from '@angular/material/radio';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 @NgModule({
   declarations: [
     NavbarComponent,
@@ -35,7 +41,8 @@ import { SearchWidgetComponent } from './components/search-widget/search-widget.
     FooterComponent,
     SpinnerComponent,
     ConfirmDialogComponent,
-    SearchWidgetComponent
+    SearchWidgetComponent,
+    UnauthorizedComponent
   ],
   imports: [
     CommonModule,
@@ -59,7 +66,12 @@ import { SearchWidgetComponent } from './components/search-widget/search-widget.
     MatProgressSpinnerModule,
     MatAutocompleteModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    NgxMaterialTimepickerModule,
+    MatTabsModule,
+    MatExpansionModule,
+    MatCheckboxModule,
+    MatRadioModule
   ],
   exports:[
     MatIconModule,
@@ -87,7 +99,13 @@ import { SearchWidgetComponent } from './components/search-widget/search-widget.
     SearchWidgetComponent,
     MatAutocompleteModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    NgxMaterialTimepickerModule,
+    MatTabsModule,
+    MatExpansionModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    UnauthorizedComponent
   ]
 })
 export class ShareModule { }

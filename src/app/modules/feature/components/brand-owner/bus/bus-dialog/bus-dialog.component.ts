@@ -2,6 +2,7 @@ import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { RouteService } from '../../service/route.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Bus } from '../../model/bus.model';
 
 @Component({
   selector: 'app-bus-dialog',
@@ -10,16 +11,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class BusDialogComponent implements OnInit {
 
-  routeForm: FormGroup;
-  provinces: any;
-  bus:any; //bus
-  startpoint: any;
-  endpoint: any;
-  indexend:any;
-  indexStart:any;
-  startPointSelected:any;
-  endPointSelected:any;
-
+  busForm: FormGroup;
+  bus:Bus={}; 
+  typeBuses:any;
 
   @Output() createOrUpdate = new EventEmitter<any>();
 
@@ -27,60 +21,51 @@ export class BusDialogComponent implements OnInit {
     private routeService: RouteService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.routeForm = new FormGroup({
-      startPoint: new FormControl(this.startpoint, [Validators.required]),
-      endPoint: new FormControl(this.endpoint, [Validators.required]),
+    this.busForm = new FormGroup({
+      busType: new FormControl(this.bus.busType, [Validators.required]),
+      description: new FormControl(this.bus.description),
+      identityCode: new FormControl(this.bus.identityCode, [Validators.required]),
+      name: new FormControl(this.bus.name, [Validators.required]),
+      seats: new FormControl(this.bus.seats, [Validators.required, Validators.pattern("^[0-9]*$")]),
     });
   }
 
   ngOnInit(): void {
-    this.getProvices();
-    this.routeForm.get("startPoint")?.valueChanges.subscribe((data) => {
-      this.startpoint = data.name;
+    // console.log("data", this.data)
+    this.typeBuses = this.data.type
+    this.busForm.get("busType")?.valueChanges.subscribe((data) => {
+      this.bus.busType = data;
     });
-    this.routeForm.get("endPoint")?.valueChanges.subscribe((data) => {
-      this.endpoint = data.name;
+    this.busForm.get("description")?.valueChanges.subscribe((data) => {
+      this.bus.description = data;
     });
-    console.log(this.data.route)
-    // if (this.data.route) {
-    //   this.routeForm.patchValue({
-    //     startPoint: this.data.route?.startPoint,
-    //     endPoint: this.data.route?.endPoint,
-    //   });
-    // }
-  }
-  getProvices() {
-    this.routeService
-      .getProvinces()
-      .pipe()
-      .subscribe((data) => {
-        this.provinces = data;
-        for (let i = 0; i < this.provinces.length; i++) {
-          if (this.data.route?.endPoint == this.provinces[i].name) {
-            this.indexend = i;
-          }
-          if (this.data.route?.startPoint == this.provinces[i].name) {
-            this.indexStart = i;
-          }
-        }
-        this.startPointSelected = this.provinces[this.indexStart];
-        this.endPointSelected = this.provinces[this.indexend];
-      }
-    );
-  }
-  sendProvinces(value: any, check: boolean) {
-    // if (check) {
-    //   this.startPointSelected = value;
-    // } else {
-    //   this.endPointSelected = value;
-    // }
+    this.busForm.get("identityCode")?.valueChanges.subscribe((data) => {
+      this.bus.identityCode = data;
+    });
+    this.busForm.get("name")?.valueChanges.subscribe((data) => {
+      this.bus.name = data;
+    });
+    this.busForm.get("seats")?.valueChanges.subscribe((data) => {
+      this.bus.seats = data;
+    });
+   if(this.data.bus){
+    let selectedBusType = this.typeBuses.find((item: any) => item.type === this.data.bus.busType);
+    this.busForm.get("busType")?.setValue(selectedBusType)
+    this.busForm.get("description")?.setValue(this.data.bus.description)
+    this.busForm.get("identityCode")?.setValue(this.data.bus.identityCode)
+    this.busForm.get("name")?.setValue(this.data.bus.name)
+    this.busForm.get("seats")?.setValue(this.data.bus.seats)
+   }
   }
   onSubmit() {
-    if (this.routeForm.valid) {
+    if (this.busForm.valid) {
       this.createOrUpdate.emit({
-        id: this.data.route?.id,
-        startPoint: this.startpoint,
-        endPoint: this.endpoint,
+        id: this.data.bus?.id,
+        typeId: this.bus.busType?.id,
+        description: this.bus.description,
+        identityCode: this.bus.identityCode,
+        name: this.bus.name,
+        seats: this.bus.seats,
       });
     }
   }

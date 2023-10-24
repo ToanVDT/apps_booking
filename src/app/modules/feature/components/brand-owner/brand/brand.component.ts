@@ -91,6 +91,9 @@ export class BrandComponent implements OnInit {
           this.isSuccess = true;
           this.editBrand();
         }
+        else{
+          this.isSuccess = false;
+        }
       });
   }
   handleCreateOrUpdate(data: any) {
@@ -113,6 +116,7 @@ export class BrandComponent implements OnInit {
             timeOut: 2000,
             progressBar: true,
           });
+          this.brand = data.data
           this.isSuccess = true;
         }
       });
@@ -128,7 +132,7 @@ export class BrandComponent implements OnInit {
     }
   }
   saveBrand() {
-    console.log("brand", this.brand, this.selectedFile);
+    // console.log("brand", this.brand, this.selectedFile);
     let request: FormData = new FormData();
     if (this.selectedFile) {
       request.append("file", this.selectedFile);
@@ -144,12 +148,14 @@ export class BrandComponent implements OnInit {
             timeOut: 2000,
             progressBar: true,
           });
+          this.brand = data.data
           this.isSuccess = true;
           this.editBrand();
         }
       });
   }
   editBrand() {
+    // console.log("brand", this.brand)
     this.brandForm.get("name")?.setValue(this.brand.name);
     this.brandForm.get("address")?.setValue(this.brand.address);
     this.brandForm.get("description")?.setValue(this.brand.description);
