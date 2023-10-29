@@ -8,3 +8,8 @@ export class Schedule{
     eatingFee?:number;
     routeName?:string;
 }
+export class ScheduleDTO{
+    id?:number;
+    startTime?:string;
+    routeName?:string;
+}

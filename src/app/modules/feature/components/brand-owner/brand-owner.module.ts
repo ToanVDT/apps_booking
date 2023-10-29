@@ -21,6 +21,8 @@ import { DialogDropOffComponent } from './parking/dialog-drop-off/dialog-drop-of
 import { ImageComponent } from './image/image.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { DialogScheduleComponent } from './schedule/dialog-schedule/dialog-schedule.component';
+import { TicketComponent } from './ticket/ticket.component';
+import { OrderComponent } from './order/order.component';
 
 
 @NgModule({
@@ -42,7 +44,9 @@ import { DialogScheduleComponent } from './schedule/dialog-schedule/dialog-sched
     DialogDropOffComponent,
     ImageComponent,
     ScheduleComponent,
-    DialogScheduleComponent
+    DialogScheduleComponent,
+    TicketComponent,
+    OrderComponent
   ],
   imports: [
     CommonModule,

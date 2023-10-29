@@ -1,31 +1,29 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 import { ToastrService } from 'ngx-toastr';
-import { forkJoin, finalize } from 'rxjs';
+import { finalize, forkJoin } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/modules/share/components/confirm-dialog/confirm-dialog.component';
 import { AuthenticationService } from '../../auth/service/authentication.service';
-import { Shuttle } from '../model/shuttle.model';
-import { RouteService } from '../service/route.service';
-import { ShuttleService } from '../service/shuttle.service';
-import { DialogEditShuttleComponent } from '../shuttle/dialog-edit-shuttle/dialog-edit-shuttle.component';
-import { DialogShuttleComponent } from '../shuttle/dialog-shuttle/dialog-shuttle.component';
-import { DialogScheduleComponent } from './dialog-schedule/dialog-schedule.component';
-import { BusService } from '../service/bus.service';
 import { Bus } from '../model/bus.model';
 import { Schedule } from '../model/schedule.model';
+import { Shuttle } from '../model/shuttle.model';
+import { DialogScheduleComponent } from '../schedule/dialog-schedule/dialog-schedule.component';
+import { BusService } from '../service/bus.service';
+import { RouteService } from '../service/route.service';
 import { ScheduleService } from '../service/schedule.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { ShuttleService } from '../service/shuttle.service';
 import { Routes } from '../model/route.model';
 
 @Component({
-  selector: 'app-schedule',
-  templateUrl: './schedule.component.html',
-  styleUrls: ['./schedule.component.scss']
+  selector: 'app-order',
+  templateUrl: './order.component.html',
+  styleUrls: ['./order.component.scss']
 })
-export class ScheduleComponent implements OnInit {
+export class OrderComponent implements OnInit {
 
   displayedColumns: string[] = [
     'busName',

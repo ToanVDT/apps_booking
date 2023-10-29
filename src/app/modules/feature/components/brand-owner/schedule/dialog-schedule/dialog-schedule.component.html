@@ -1,6 +1,7 @@
-<div class="flex col-span-1" style="width: 650px; height: 650px;">
+<div class="flex flex-col" style="width: 650px; height: fit-content;">
+  <div class="text-center text-lg font-bold">Thông tin lịch trình</div>
     <form [formGroup]="scheduleForm">
-      <div class="flex flex-col border-0 p-2 shadow-md shadow-slate-400">
+      <!-- <div class="flex flex-col border-0 p-2 shadow-md shadow-slate-400"> -->
         <div class="flex flex-col" style="width: 640px;">
           <span style="margin-bottom: 10px; font-weight: 600;"
             >Chọn tuyến đường</span
@@ -51,12 +52,12 @@
             </mat-form-field>
           </div>
         </div>
-        <div>
-            <mat-form-field appearance="outline">
+        <div class="flex justify-between">
+            <mat-form-field appearance="outline" class="w-[45%]">
                 <mat-label>Giá vé </mat-label>
                 <input matInput type="number" min="0"  formControlName="price" />
               </mat-form-field>
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" class="w-[45%]">
                 <mat-label>Tiền ăn cơm</mat-label>
                 <input matInput type="number" min="0"  formControlName="eatingFee" />
               </mat-form-field>
@@ -74,13 +75,12 @@
               mat-raised-button
               (click)="onSubmit()"
               [mat-dialog-close]="true"
-              [disabled]="!scheduleForm.valid"
+              
               style="margin-left: 3px; background: green;color: white;">
               Lưu
             </button>
           </div>
         </div>
-      </div>
+      <!-- </div> -->
     </form>
   </div>
-  

@@ -61,20 +61,20 @@
       >
         <!-- Position Column -->
   <ng-container matColumnDef="startPoint">
-    <th mat-header-cell *matHeaderCellDef> Điểm xuất phát </th>
-    <td mat-cell *matCellDef="let route"> {{route.startPoint}} </td>
+    <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Điểm xuất phát </th>
+    <td style="text-align: center;width: 30%;" mat-cell *matCellDef="let route"> {{route.startPoint}} </td>
   </ng-container>
 
   <!-- Name Column -->
   <ng-container matColumnDef="endPoint">
-    <th mat-header-cell *matHeaderCellDef> Điểm kết thúc </th>
-    <td mat-cell *matCellDef="let route"> {{route.endPoint}} </td>
+    <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Điểm kết thúc </th>
+    <td style="text-align: center;width: 30%;" mat-cell *matCellDef="let route"> {{route.endPoint}} </td>
   </ng-container>
 
   
   <ng-container matColumnDef="action">
-    <th mat-header-cell *matHeaderCellDef> Hành động </th>
-    <td mat-cell *matCellDef="let route"> <button
+    <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Hành động </th>
+    <td style="text-align: center;width: 30%;" mat-cell *matCellDef="let route"> <button
         mat-button
         color="primary"
         (click)="openFormAddRoute(route)" 

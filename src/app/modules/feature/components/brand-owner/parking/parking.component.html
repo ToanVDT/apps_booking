@@ -101,19 +101,19 @@
         >
           <!-- Position Column -->
           <ng-container matColumnDef="pickUpPoint">
-            <th mat-header-cell *matHeaderCellDef>Điểm đón</th>
-            <td mat-cell *matCellDef="let pickUp">{{pickUp.pickUpPoint }}</td>
+            <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Điểm đón</th>
+            <td style="width: 30%; text-align: center;" mat-cell *matCellDef="let pickUp">{{pickUp.pickUpPoint }}</td>
           </ng-container>
 
           <!-- Name Column -->
           <ng-container matColumnDef="pickUpTime">
-            <th mat-header-cell *matHeaderCellDef>Thời gian đón</th>
-            <td mat-cell *matCellDef="let pickUp">{{pickUp.pickUpTime }}</td>
+            <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Thời gian đón</th>
+            <td style="width: 30%; text-align: center;" mat-cell *matCellDef="let pickUp">{{pickUp.pickUpTime }}</td>
           </ng-container>
 
           <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef>Hành động</th>
-            <td mat-cell *matCellDef="let pickUp">
+            <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Hành động</th>
+            <td style="width: 40%; text-align: center;" mat-cell *matCellDef="let pickUp">
               <button mat-button color="primary" (click)="openDialogPickUp(pickUp)">
                 <mat-icon>edit</mat-icon>
               </button>
@@ -151,21 +151,21 @@
         >
           <!-- Position Column -->
           <ng-container matColumnDef="dropOffPoint">
-            <th mat-header-cell *matHeaderCellDef>Điểm trả</th>
-            <td mat-cell *matCellDef="let dropOff">
+            <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Điểm trả</th>
+            <td style="width: 30%; text-align: center;" mat-cell *matCellDef="let dropOff">
               {{dropOff.dropOffPoint }}
             </td>
           </ng-container>
 
           <!-- Name Column -->
           <ng-container matColumnDef="dropOffTime">
-            <th mat-header-cell *matHeaderCellDef>Thời gian trả</th>
-            <td mat-cell *matCellDef="let dropOff">{{dropOff.dropOffTime}}</td>
+            <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Thời gian trả</th>
+            <td style="width: 30%; text-align: center;" mat-cell *matCellDef="let dropOff">{{dropOff.dropOffTime}}</td>
           </ng-container>
 
           <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef>Hành động</th>
-            <td mat-cell *matCellDef="let dropOff">
+            <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Hành động</th>
+            <td style="width: 40%; text-align: center;" mat-cell *matCellDef="let dropOff">
               <button mat-button color="primary" (click)="openDialogDropOff(dropOff)">
                 <mat-icon>edit</mat-icon>
               </button>

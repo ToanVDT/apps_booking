@@ -8,6 +8,8 @@ import { ShuttleComponent } from "./shuttle/shuttle.component";
 import { ParkingComponent } from "./parking/parking.component";
 import { AuthGuard } from "../auth/hepler/auth.guard";
 import { ScheduleComponent } from "./schedule/schedule.component";
+import { TicketComponent } from "./ticket/ticket.component";
+import { OrderComponent } from "./order/order.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "brand", pathMatch: "full" },
@@ -21,7 +23,9 @@ const routes: Routes = [
       { path: "bus", component: BusComponent },
       { path: "shuttle", component:ShuttleComponent},
       { path: "parking", component:ParkingComponent},
-      { path: "schedule", component:ScheduleComponent}
+      { path: "schedule", component:ScheduleComponent},
+      { path: "ticket",component:TicketComponent},
+      { path: "order", component:OrderComponent}
     ],
   },
 ];

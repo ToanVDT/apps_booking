@@ -6,5 +6,7 @@ export enum routes {
     SHUTTLE = '/brand-owner/shuttle',
     PARKING = '/brand-owner/parking',
     SCHEDULE = '/brand-owner/schedule',
+    TICKET = '/brand-owner/ticket',
+    ORDER = '/brand-owner/order',
     // LOGIN = '/auth'
   }
