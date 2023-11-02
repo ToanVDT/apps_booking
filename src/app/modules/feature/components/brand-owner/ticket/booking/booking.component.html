@@ -1,0 +1,87 @@
+<mat-stepper linear #stepper>
+    <mat-step>
+        <form>
+            <ng-template matStepLabel>Điểm đón trả</ng-template>
+            <div class="flex justify-around mt-7 px-16">
+                <div>
+                    <div class="text-left text-lg font-bold bg-[#f7f7f7] mb-3 px-5 py-3">Điểm đón</div>
+                    <mat-radio-group [(ngModel)]="selectedPickup" name="pickupLocations"
+                        class="location-list">
+                        <mat-radio-button *ngFor="let location of pickupLocations" [value]="location" class="p-2">
+                            <span class="font-bold">{{ location.time }}</span> <span class="mx-2">•</span>
+                            {{ location.name }}
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <div class="w-[2px] bg-gray-300 h-[364px] mx-5"></div>
+                <div>
+                    <div class="text-left text-lg font-bold bg-[#f7f7f7] mb-3 px-5 py-3">Điểm trả</div>
+                    <mat-radio-group [(ngModel)]="selectedDropOff" name="dropOffLocations"
+                        class="location-list">
+                        <mat-radio-button *ngFor="let location of dropOffLocations" [value]="location" class="p-2">
+                            <span class="font-bold">{{ location.time }}</span> <span class="mx-2">•</span>
+                            {{ location.name }}
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+
+            <div class="info-panel">
+                <button class="button-back" mat-button matStepperPrevious>&#60; Quay lại</button>
+                <button class="button-next" mat-button matStepperNext
+                    [disabled]="!selectedPickup || !selectedDropOff">
+                    Tiếp tục
+                </button>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step>
+        <ng-template matStepLabel>Nhập thông tin</ng-template>
+        <div class="mx-[80px] py-4">
+            <form class="flex flex-col justify-center space-y-5" [formGroup]="infoCustomerForm">
+                <mat-form-field appearance="outline">
+                    <mat-label>Họ tên</mat-label>
+                    <input matInput formControlName="fullName" placeholder="Nguyen Van A" />
+                    <mat-error style="margin: 20px -10px;" *ngIf="infoCustomerForm.get('fullName')?.hasError('required')">
+                        Họ tên không được để trống
+                    </mat-error>
+                    <mat-error style="margin: 20px -10px;" *ngIf="infoCustomerForm.get('fullName')?.hasError('pattern')">
+                        Họ tên chỉ chấp nhận chữ cái và dấu cách
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Số điện thoại</mat-label>
+                    <input matInput formControlName="phoneNumber" placeholder="1234567890" />
+                    <mat-error style="margin: 20px -10px;" *ngIf="infoCustomerForm.get('phoneNumber')?.hasError('required')">
+                        Số điện thoại không được để trống
+                    </mat-error>
+                    <mat-error style="margin: 20px -10px;" *ngIf="infoCustomerForm.get('phoneNumber')?.hasError('pattern')">
+                        Số điện thoại chỉ chấp nhận số
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Email để nhận thông tin vé</mat-label>
+                    <input matInput formControlName="email" placeholder="john@example.com" />
+                    <!-- <mat-error *ngIf="infoCustomerForm.get('email')?.hasError('required')">
+                        Email không được để trống
+                    </mat-error>
+                    <mat-error *ngIf="infoCustomerForm.get('email')?.hasError('email')">
+                        Email không hợp lệ
+                    </mat-error> -->
+                </mat-form-field>
+
+                <div class="flex items-center">
+                    <mat-slide-toggle formControlName="isEating">
+                        <div class="text-lg font-medium mx-2">Suất cơm</div>
+                    </mat-slide-toggle>
+                </div>
+            </form>
+        </div>
+        <div class="info-panel">
+            <button class="button-back" mat-button matStepperPrevious>&#60; Quay lại</button>
+            <button class="button-next" mat-button [disabled]="infoCustomerForm.invalid" >Đặt vé</button>
+        </div>
+    </mat-step>
+</mat-stepper>

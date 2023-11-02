@@ -1,0 +1,16 @@
+<div>
+    <div class="flex items-center">
+        <div class="text-lg font-bold">
+            {{data.name}}
+        </div>
+        <button mat-flat-button mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div>
+        <mat-dialog-actions align="center">
+            <button style="width: 500px;" mat-raised-button color="primary" [mat-dialog-close]="true" cdkFocusInitial>Đã hiểu</button>
+        </mat-dialog-actions>
+    </div>
+</div>
+

@@ -1,43 +1,26 @@
-<div class="flex col-span-1 w-[500px] h-[600px]">
-  <form [formGroup]="busForm">
-    <div>
-      <div>
-        <div class="flex flex-col">
-          <span class="my-4 text-center font-semibold">Thông tin xe</span>
-          <mat-form-field appearance="outline" class="w-[400px] ml-9">
-            <mat-label>Tên xe</mat-label>
-            <input matInput placeholder="Placeholder" formControlName="name" />
-            <!-- <div>
+<form [formGroup]="busForm" class="w-full">
+  <div class="form-container flex flex-col items-center w-full">
+    <div class="mb-4 text-xl font-semibold">Thông tin xe</div>
+    <mat-form-field appearance="outline">
+      <mat-label>Tên xe</mat-label>
+      <input matInput placeholder="Placeholder" formControlName="name" />
+      <!-- <div>
                 <p *ngIf="nameDuplicated" style="color: red;">Tên nhà xe đã tồn tại</p>
             </div> -->
-          </mat-form-field>
-        </div>
-        <div class="flex">
-          <mat-form-field appearance="outline" class="w-[400px] ml-9">
-            <mat-label>Biển số</mat-label>
-            <input
-              matInput
-              placeholder="Placeholder"
-              formControlName="identityCode"
-            />
-          </mat-form-field>
-        </div>
-      </div>
-      <div>
-        <div class="flex">
-          <mat-form-field appearance="outline" class="w-[400px] ml-9">
-            <mat-label>Số chỗ</mat-label>
-            <input
-              matInput
-              placeholder="Placeholder"
-              formControlName="seats"
-              id="phone"
-            />
-          </mat-form-field>
-          <!-- <div>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Biển số</mat-label>
+      <input matInput placeholder="Placeholder" formControlName="identityCode" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Số chỗ</mat-label>
+      <input matInput type="number" min="0" placeholder="Placeholder" formControlName="seats" id="phone" />
+    </mat-form-field>
+    <!-- <div>
               <p *ngIf="phoneDuplicated" style="color: red;">Số điện thoại đã tồn tại</p>
           </div> -->
-          <!-- <div
+    <!-- <div
               *ngIf="brandForm.controls['phone'].invalid && (brandForm.controls['phone'].dirty || brandForm.controls['phone'].touched)"
              style="    display: flex;
              /* justify-items: center; */
@@ -56,46 +39,28 @@
                 Số điện thoại tối đa 11 số
               </div>
             </div> -->
-        </div>
-        <mat-form-field appearance="outline" class="w-[400px] ml-9">
-          <mat-label>Loại xe</mat-label>
-          <mat-select formControlName="busType" name="busType">
-            <mat-option *ngFor="let busType of typeBuses" [value]="busType">
-              {{ busType.type }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="w-[400px] ml-9">
-          <mat-label>Mô tả</mat-label>
-          <input
-            matInput
-            placeholder="Placeholder"
-            formControlName="description"
-          />
-        </mat-form-field>
-      </div>
-    </div>
-    <div
-      class="my-8"
-      style="display: flex; margin: 75px 73px; justify-content: flex-end;"
-    >
-      <button
-        mat-button
-        mat-raised-button
-        [mat-dialog-close]="true"
-        style="margin-right: 20px;"
-        class=" bg-red-800 text-cyan-50"
-      >
-        Hủy
-      </button>
-      <button
-        mat-raised-button
-        (click)="onSubmit()"
-        [mat-dialog-close]="true"
-        class="bg-green-600 text-cyan-50"
-      >
-        Lưu
-      </button>
-    </div>
-  </form>
-</div>
+    <mat-form-field appearance="outline">
+      <mat-label>Loại xe</mat-label>
+      <mat-select formControlName="busType" name="busType">
+        <mat-option *ngFor="let busType of typeBuses" [value]="busType">
+          {{ busType.type }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Mô tả</mat-label>
+      <input matInput placeholder="Placeholder" formControlName="description" />
+    </mat-form-field>
+
+  </div>
+  <div style="display: flex; justify-content: flex-end;">
+    <button mat-button mat-raised-button [mat-dialog-close]="true" style="margin-right: 20px;"
+      class=" bg-red-800 text-cyan-50">
+      Hủy
+    </button>
+    <button mat-raised-button (click)="onSubmit()" [mat-dialog-close]="true" class="bg-green-600 text-cyan-50">
+      Lưu
+    </button>
+  </div>
+</form>
+

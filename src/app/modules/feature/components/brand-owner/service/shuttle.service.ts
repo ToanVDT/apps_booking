@@ -9,7 +9,6 @@ import { environment } from 'src/environments/environment';
 export class ShuttleService {
 
   constructor(private http:HttpClient) { }
-
   getAllShuttles(userId:any):Observable<any>{
     return this.http.get<any>(`${environment.apiUrl}/shuttles?userId=${userId}`).pipe(
       retry(1), 
@@ -30,5 +29,4 @@ export class ShuttleService {
       retry(1), 
       delay(1000));
     }
-
 }

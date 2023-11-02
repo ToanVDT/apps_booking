@@ -18,6 +18,7 @@ import { Routes } from '../model/route.model';
 import { Ticket } from '../model/ticket.model';
 import { ScheduleDTO } from '../model/schedule.model';
 import * as moment from 'moment';
+import { BookingComponent } from './booking/booking.component';
 
 @Component({
   selector: 'app-ticket',
@@ -48,6 +49,7 @@ export class TicketComponent implements OnInit {
   tickets:Ticket[]=[]
   ticket:Ticket ={}
   emptyTicket:any;
+  dateStart:any;
   isLoading : boolean = false;
   schedules:ScheduleDTO[]=[];
   schedule:ScheduleDTO ={}
@@ -64,31 +66,24 @@ export class TicketComponent implements OnInit {
         dateStart:new FormControl("")
       })
     }
-
- 
-
-
-  ngAfterViewInit() {
-   
-  }
-
   ngOnInit(): void {
     this.user = this.auth.userValue;
     this.ticketForm.get("dateStart")?.valueChanges.subscribe((value) => {
       this.getScheduleByTravelDate(value)
+      this.dateStart = value;
     });
     this.ticketForm.get("schedule")?.valueChanges.subscribe(
       (value)=>{
         this.schedule = value;
-        this.getEmptySeatAndSeatInTicketPage(this.schedule?.id)
+        this.getEmptySeatAndSeatInTicketPage(this.dateStart,this.schedule?.id)
       }
     )
     let todayFormat = moment(this.today).format('yyyy-MM-DD');
     this.ticketForm.get("dateStart")?.setValue(todayFormat)
   }
-  getEmptySeatAndSeatInTicketPage(scheduleId:any){
+  getEmptySeatAndSeatInTicketPage(dateStart:any,scheduleId:any){
     forkJoin({
-      emptySeat:this.getEmptySeat(scheduleId),
+      emptySeat:this.getEmptySeat(dateStart,scheduleId),
       tickets:this.getSeatInTicketPage(scheduleId)
     }).pipe(
       finalize(()=>{
@@ -100,7 +95,6 @@ export class TicketComponent implements OnInit {
       data=>{
         this.tickets = data.tickets.data
         this.emptyTicket = data.emptySeat
-        console.log("quantityEmpty", this.emptyTicket)
         this.tickets.map((item)=>{
           if(item.statusTicket === "ORDERED"){
             item.statusTicket = this.status[0]
@@ -119,8 +113,8 @@ export class TicketComponent implements OnInit {
       }
     )
   }
-  getEmptySeat(scheduleId:any){
-    return this.ticketService.getEmptySeat(scheduleId).pipe()
+  getEmptySeat(dateStart:any,scheduleId:any){
+    return this.ticketService.getEmptySeat(dateStart,scheduleId).pipe()
   }
 
   getSeatInTicketPage(scheduleId:any){
@@ -131,10 +125,8 @@ export class TicketComponent implements OnInit {
     this.isLoading = true;
     this.scheduleService.getScheduleByTravelDate(dateStart).pipe(
       finalize(()=>{
-        
         if(value[0]?.id){
           this.noData = false;
-          
           this.ticketForm.get("schedule")?.setValue(this.schedules[0])
         }
         else{
@@ -150,46 +142,13 @@ export class TicketComponent implements OnInit {
       }
     )
   }
-  
-  handleCreateOrUpdate(schedule:any){
-    // this.isLoading = true;
-    // if(schedule?.id){
-    //   this.scheduleService.updateSchedule(schedule).pipe(
-    //     finalize(()=>{
-    //       this.getBusAndRoute()
-    //     })
-    //   ).subscribe(
-    //     data=>{ 
-    //       if(data.success){
-    //         this.message.success("Chỉnh sửa lịch trình","Thành công",{timeOut:2000, progressBar:true})
-    //       }
-    //     }
-    //   )
-    // }
-    // else{
-    //   this.scheduleService.createSchedule(schedule).pipe(
-    //     finalize(()=>{
-    //       this.getBusAndRoute()
-    //     })
-    //   ).subscribe(
-    //     data=>{
-    //       if(data.success){
-    //         this.message.success("Thêm lịch trình","Thành công",{timeOut:2000,progressBar:true})
-    //       }
-    //     }
-    //   )
-    // }
-  }
-  deleteSchedule(shuttle: any) {
-    this.shuttle = { ...shuttle };
-    let shuttleName ='Bạn chắc chắn xóa khung giờ:'+
-      this.shuttle?.startTime + ' - trong tuyến: ' + this.shuttle.routeName;
-    let dialogRef = this.dialog.open( ConfirmDialogComponent, {
-      data: { name: shuttleName },
-    });
-    dialogRef.componentInstance.onConfirm.subscribe(() => {
-      // this.confirmDelete();
-    });
+  openBookingTicket(ticket:any){
+    const dialogRef = this.dialog.open(BookingComponent,{
+      data:{
+        ticket:ticket
+      },
+    width:'700px'
+    })
   }
 
 }

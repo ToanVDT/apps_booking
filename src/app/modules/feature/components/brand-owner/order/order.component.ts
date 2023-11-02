@@ -9,7 +9,7 @@ import { finalize, forkJoin } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/modules/share/components/confirm-dialog/confirm-dialog.component';
 import { AuthenticationService } from '../../auth/service/authentication.service';
 import { Bus } from '../model/bus.model';
-import { Schedule } from '../model/schedule.model';
+import { Schedule, ScheduleDTO } from '../model/schedule.model';
 import { Shuttle } from '../model/shuttle.model';
 import { DialogScheduleComponent } from '../schedule/dialog-schedule/dialog-schedule.component';
 import { BusService } from '../service/bus.service';
@@ -17,6 +17,13 @@ import { RouteService } from '../service/route.service';
 import { ScheduleService } from '../service/schedule.service';
 import { ShuttleService } from '../service/shuttle.service';
 import { Routes } from '../model/route.model';
+import * as moment from 'moment';
+import { DetailMoney, DateAndTime, DetailInfoCustomer, Orders } from '../model/order.model';
+import { OrderService } from '../service/order.service';
+import { DialogConfirmOrderComponent } from './dialog-confirm-order/dialog-confirm-order.component';
+import { DialogDepositOrderComponent } from './dialog-deposit-order/dialog-deposit-order.component';
+import { DialogInformComponent } from './dialog-inform/dialog-inform.component';
+import { DialogDetailComponent } from './dialog-detail/dialog-detail.component';
 
 @Component({
   selector: 'app-order',
@@ -24,147 +31,248 @@ import { Routes } from '../model/route.model';
   styleUrls: ['./order.component.scss']
 })
 export class OrderComponent implements OnInit {
-
+  @ViewChild('paginator') paginator!: MatPaginator;
   displayedColumns: string[] = [
-    'busName',
-    'price',
-    'dateTime',
+    'orderCode',
+    'tickets',
+    'orderDate',
+    'totalPrice',
+    'deposit',
+    'orderStatus',
+    'paymentStatus',
     'action'
   ];
+  today = new Date();
+  status = ["Đã đặt", "Đã hủy", "Chờ duyệt"]
   routes:Routes[]=[];
   route: Routes = {};
-  buses : Bus[] = [];
   shuttle : Shuttle = {}
+  detailMoney:DetailMoney= {};
+  openingMenu:boolean = false;
+  dateTime:DateAndTime = {}
+  detailInfoCustomer:DetailInfoCustomer ={}
+  customerInfo:boolean = true;
   user:any;
+  timeValidToCancelBooking:boolean = true;
+  noData:boolean = true;
+  order:Orders = {};
+  orders:Orders[]=[]
   isLoading : boolean = false;
-  schedules:Schedule[]=[];
-  schedule:Schedule={}
-  scheduleForm:FormGroup
+  isApproval : boolean = true;
+  schedules:ScheduleDTO[]=[];
+  schedule:ScheduleDTO ={}
+  orderForm:FormGroup
 
-  dataSource = new MatTableDataSource(this.schedules);
-  dataSourceWithPageSize = new MatTableDataSource(this.schedules);
+  dataSource = new MatTableDataSource(this.orders);
+  dataSourceWithPageSize = new MatTableDataSource(this.orders);
 
   constructor(private dialog:MatDialog, private auth:AuthenticationService,
-    private routeService:RouteService,private busService:BusService,private scheduleService:ScheduleService,
-    private shuttleService:ShuttleService, private message:ToastrService) {
-      this.scheduleForm = new FormGroup({
-        route:new FormControl("")
+    private scheduleService:ScheduleService,private orderService:OrderService,
+    private message:ToastrService) {
+      this.orderForm = new FormGroup({
+        schedule:new FormControl(""),
+        dateStart:new FormControl("")
       })
     }
-
-  @ViewChild('paginator') paginator!: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize!: MatPaginator;
-
-  pageSizes = [3, 5, 7];
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
-  }
-
   ngOnInit(): void {
     this.user = this.auth.userValue;
-    this.getBusAndRoute()
-    this.scheduleForm.get("route")?.valueChanges.subscribe((value) => {
-      if (value) {
-        this.route = value;
-        this.isLoading = true;
-        this.getSchedule(value?.id);
-      }
+    this.orderForm.get("dateStart")?.valueChanges.subscribe((value) => {
+      this.getScheduleByTravelDate(value)
     });
+    this.orderForm.get("schedule")?.valueChanges.subscribe(
+      (value)=>{
+        this.schedule = value;
+        this.getOrders(this.schedule?.id)
+      }
+    )
+    let todayFormat = moment(this.today).format('yyyy-MM-DD');
+    this.orderForm.get("dateStart")?.setValue(todayFormat)
+    // this.orderForm.get("dateStart")?.setValue('2023-10-30')
   }
-  openFormSchedule(schedule:any){
-    const dialogRef =this.dialog.open(DialogScheduleComponent,{
+ getOrders(scheduleId:any){
+  let response:any;
+  this.orderService.getOrderInSchedule(scheduleId).pipe(
+    finalize(()=>{
+      if(response[0]?.id){
+        this.noData = false;
+        this.dataSource = new MatTableDataSource(this.orders)
+        this.dataSource.paginator = this.paginator;
+      }
+      else{
+        this.noData = true;
+      }
+      this.isLoading = false
+    })
+  ).subscribe(
+    data=>{
+      this.orders = data.data
+      response = data.data
+      this.orders.map((item)=>{
+        if(item.orderStatus === "ORDERED"){
+          item.orderStatus = this.status[0]
+        }
+        else if (item.orderStatus === "CANCELED"){
+          item.orderStatus = this.status[1]
+        }
+        else{
+          item.orderStatus = this.status[2]
+        }
+      })
+
+    }
+  )
+ }
+  getScheduleByTravelDate(dateStart:any){
+    let value:any;
+    this.isLoading = true;
+    this.scheduleService.getScheduleByTravelDate(dateStart).pipe(
+      finalize(()=>{
+        
+        if(value[0]?.id){
+          this.noData = false;
+          this.orderForm.get("schedule")?.setValue(this.schedules[0])
+        }
+        else{
+          this.noData = true;
+          this.isLoading = false;
+        }
+      })
+    ).subscribe(
+      data=>{
+        this.schedules = data
+        value = data;
+      }
+    )
+  }
+  getOrderId(order:any){
+    this.openingMenu = true;
+    this.getDetailMoneyAndInfoCustomerAndDateTimeWithOrderId(order?.id);
+  }
+  ApprovalOrder(order:any){
+    this.isLoading = true;
+    this.orderService.approvalOrder(order?.id).pipe(
+      finalize(()=>{
+        this.message.success("Duyệt đơn đặt vé","Thành công",{timeOut:2000, progressBar:true})
+        this.getOrders(this.schedule?.id)
+      })
+    ).subscribe()
+  }
+  CancelBooking(order:any){
+    if(!this.timeValidToCancelBooking){
+      this.dialog.open(DialogInformComponent,{
+        data:{
+          name:'Chỉ được hủy đơn đặt vé trước 2 tiếng trước giờ xe chạy!'
+        }})
+    }
+    else{
+      const dialogRef = this.dialog.open(DialogConfirmOrderComponent,{
+        data:{name:'Hủy đơn đặt'}
+      })
+      dialogRef.componentInstance.onConfirm.subscribe(
+        this.handleCancelBooking(order?.id)
+      )
+    }
+  }
+  openOrderDetail(order:any){
+    const dialogRef = this.dialog.open(DialogDetailComponent,{
       data:{
-        schedule:schedule,
-        routes:this.routes,
-        bus:this.buses,
-        routeId:this.route?.id
+        detailMoney:this.detailMoney,
+        detailInfoCustomer:this.detailInfoCustomer
       }
     })
-    dialogRef.componentInstance.createOrUpdate.subscribe(
+  }
+
+  getDetailMoneyAndInfoCustomerAndDateTimeWithOrderId(orderId:any){
+    forkJoin({
+      detailMoney:this.getDetailMoney(orderId),
+      detailInfoCustomer:this.getDetailInfoCustomer(orderId),
+      dateAndTime:this.getDateAndTime(orderId)
+    }).pipe(
+      finalize(()=>{
+        let dateCancelBooking = moment(this.today).format('yyyy-MM-DD');
+        let timeCancelBooking = moment(this.today).add(2,'hours').format('hh:mm')
+        // console.log("today", dateCancelBooking, timeCancelBooking)
+        // let dateCancelBooking = '2023-11-03'
+        // // time 12:30
+        // let timeCancelBooking = '15:30'
+        if(this.dateTime?.date < dateCancelBooking){
+          this.timeValidToCancelBooking = false;
+        }
+        else if(this.dateTime?.date == dateCancelBooking && this.dateTime?.time < timeCancelBooking){
+          this.timeValidToCancelBooking = false;
+        }
+        else{
+          this.timeValidToCancelBooking = true;
+        }
+        this.openingMenu = false;
+      })
+    ).subscribe(
       data=>{
-        // console.log("datarecieves", data)
-        this.handleCreateOrUpdate(data)
+        this.detailMoney = data.detailMoney.data
+        this.detailInfoCustomer = data.detailInfoCustomer.data
+        this.dateTime = data.dateAndTime.data
+      }
+    )
+  }
+  getDetailMoney(orderId:any){
+    return this.orderService.getDetailMonerByOrder(orderId).pipe()
+  }
+  getDetailInfoCustomer(orderId:any){
+    return this.orderService.getInfoCustomerByOrder(orderId).pipe()
+  }  
+  getDateAndTime(orderId:any){
+    return this.orderService.getDateAndTimeByOrder(orderId).pipe()
+  }
+  confirmPaid(order:any){
+    const dialogRef = this.dialog.open(DialogConfirmOrderComponent,{
+      data:{name:'Đơn đặt đã thanh toán'}
+    })
+    dialogRef.componentInstance.onConfirm.subscribe(()=>{
+      this.handleConfirmPaid(order?.id)
+    })
+  }
+
+  openDialogEnterDeposit(order:any){
+    const dialogRef = this.dialog.open(DialogDepositOrderComponent,{
+      data:{order:order}
+    })
+    dialogRef.componentInstance.updateDeposit.subscribe(
+      data=>{
+        this.handleUpdateEnterDeposit(data.orderId, data.deposit)
+      }
+    )
+  }
+  handleUpdateEnterDeposit(orderId:any, deposit:any){
+    this.isLoading = true;
+    this.orderService.updateDeposit(orderId,deposit).pipe(
+      finalize(()=>{
+        this.getOrders(this.schedule?.id)
+      })
+    ).subscribe(
+      data=>{
+        if(data.success){
+          this.message.success("Cập nhập tiền cọc", "Thành công",{timeOut:2000, progressBar:true})
+        }
       }
     )
   }
 
-  getSchedule(routeId:any){
-    this.scheduleService.getAllSchedule(routeId).pipe(
+  handleCancelBooking(orderId:any){
+    this.orderService.cancelTicket(orderId).pipe(
       finalize(()=>{
-        this.isLoading = false;
-        this.dataSource  =new MatTableDataSource(this.schedules)
+        this.message.success("Hủy đơn đặt vé","Thành công",{timeOut:2000, progressBar:true})
+        this.getOrders(this.schedule?.id)
       })
-    ).subscribe(
-      data=>{
-        this.schedules = data.data
-        // console.log("data", this.schedules)
-      }
-    )
+    ).subscribe()
   }
-  getBusAndRoute(){
-    this.isLoading = true
-    forkJoin({
-      routes:this.getRoutes(),
-      bus:this.getBus()
-    }).pipe(
-      finalize(()=>{
-  
-      })
-    ).subscribe(
-      data=>{
-        this.routes = data.routes.data;
-        this.scheduleForm.get("route")?.setValue(this.routes[0])
-        this.buses = data.bus;
-      }
-    )
-  }
-  getBus(){
-   return this.busService.getBusForDropDown(this.user.data.id).pipe()
-  }
-  getRoutes(){
-   return this.routeService.getAllRoutes(this.user.data.id).pipe()
-  }
-  handleCreateOrUpdate(schedule:any){
+  handleConfirmPaid(orderId:any){
     this.isLoading = true;
-    if(schedule?.id){
-      this.scheduleService.updateSchedule(schedule).pipe(
-        finalize(()=>{
-          this.getBusAndRoute()
-        })
-      ).subscribe(
-        data=>{ 
-          if(data.success){
-            this.message.success("Chỉnh sửa lịch trình","Thành công",{timeOut:2000, progressBar:true})
-          }
-        }
-      )
-    }
-    else{
-      this.scheduleService.createSchedule(schedule).pipe(
-        finalize(()=>{
-          this.getBusAndRoute()
-        })
-      ).subscribe(
-        data=>{
-          if(data.success){
-            this.message.success("Thêm lịch trình","Thành công",{timeOut:2000,progressBar:true})
-          }
-        }
-      )
-    }
-  }
-  deleteSchedule(shuttle: any) {
-    this.shuttle = { ...shuttle };
-    let shuttleName ='Bạn chắc chắn xóa khung giờ:'+
-      this.shuttle?.startTime + ' - trong tuyến: ' + this.shuttle.routeName;
-    let dialogRef = this.dialog.open( ConfirmDialogComponent, {
-      data: { name: shuttleName },
-    });
-    dialogRef.componentInstance.onConfirm.subscribe(() => {
-      // this.confirmDelete();
-    });
+    this.orderService.confirmPaid(orderId).pipe(
+      finalize(()=>{
+        this.getOrders(this.schedule?.id)
+        this.message.success("Xác nhận thanh toán","Thành công",{timeOut:2000, progressBar:true})
+      })
+    ).subscribe()
   }
 
 }

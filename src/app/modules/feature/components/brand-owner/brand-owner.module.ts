@@ -23,6 +23,12 @@ import { ScheduleComponent } from './schedule/schedule.component';
 import { DialogScheduleComponent } from './schedule/dialog-schedule/dialog-schedule.component';
 import { TicketComponent } from './ticket/ticket.component';
 import { OrderComponent } from './order/order.component';
+import { BookingComponent } from './ticket/booking/booking.component';
+import { ProfileComponent } from './profile/profile.component';
+import { DialogConfirmOrderComponent } from './order/dialog-confirm-order/dialog-confirm-order.component';
+import { DialogDepositOrderComponent } from './order/dialog-deposit-order/dialog-deposit-order.component';
+import { DialogInformComponent } from './order/dialog-inform/dialog-inform.component';
+import { DialogDetailComponent } from './order/dialog-detail/dialog-detail.component';
 
 
 @NgModule({
@@ -46,7 +52,13 @@ import { OrderComponent } from './order/order.component';
     ScheduleComponent,
     DialogScheduleComponent,
     TicketComponent,
-    OrderComponent
+    OrderComponent,
+    BookingComponent,
+    ProfileComponent,
+    DialogConfirmOrderComponent,
+    DialogDepositOrderComponent,
+    DialogInformComponent,
+    DialogDetailComponent
   ],
   imports: [
     CommonModule,

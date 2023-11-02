@@ -33,6 +33,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 @NgModule({
   declarations: [
     NavbarComponent,
@@ -71,7 +73,9 @@ import { UnauthorizedComponent } from './components/unauthorized/unauthorized.co
     MatTabsModule,
     MatExpansionModule,
     MatCheckboxModule,
-    MatRadioModule
+    MatRadioModule,
+    MatStepperModule,
+    MatSlideToggleModule
   ],
   exports:[
     MatIconModule,
@@ -105,7 +109,9 @@ import { UnauthorizedComponent } from './components/unauthorized/unauthorized.co
     MatExpansionModule,
     MatCheckboxModule,
     MatRadioModule,
-    UnauthorizedComponent
+    UnauthorizedComponent,
+    MatStepperModule,
+    MatSlideToggleModule
   ]
 })
 export class ShareModule { }

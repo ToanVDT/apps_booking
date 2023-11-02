@@ -1,73 +1,104 @@
 <div class="w-full mt-3">
-    <!-- Main container -->
-    <div class="border-2 rounded-t-lg shadow-lg mx-10 bg-white px-14 py-4">
-      <!-- Header section with button and form -->
-      <div class="flex justify-between items-center border-2 h-20 px-4 bg-[#F0F0EE] rounded-lg">
-        <!-- Add button -->
-        <button mat-raised-button class="w-[100px] h-[40px] bg-[#7DC0CE] text-white" (click)="openFormSchedule(null)"> 
-          Thêm
-        </button>
-        <!-- Form for selecting a route -->
-        <form [formGroup]="scheduleForm">
-          <mat-form-field appearance="outline">
-            <mat-label>Tuyến đường</mat-label>
-            <mat-select formControlName="route" name="route">
-              <mat-option *ngFor="let route of routes" [value]="route">
-                {{ route.startPoint }} - {{route.endPoint}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </form>
-      </div>
-  
-      <!-- Table section for displaying schedules -->
+  <div class="border-2 rounded-t-lg shadow-lg mx-10 bg-white px-14 py-4">
+    <div class="flex justify-between items-center border-2 h-24 p-6 bg-[#F0F0EE] rounded-lg">
+      <form [formGroup]="orderForm">
+        <mat-form-field appearance="outline">
+          <mat-label>Thời gian xuất phát</mat-label>
+          <input matInput type="date" formControlName="dateStart" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Lịch trình</mat-label>
+          <mat-select formControlName="schedule" name="schedule">
+            <mat-option *ngFor="let schedule of schedules" [value]="schedule">
+              {{ schedule.routeName }} {{schedule.startTime}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+
+    </div>
+    <div *ngIf="noData" class="flex py-7 px-5 justify-center text-xl">Không có dữ liệu</div>
+    <div *ngIf="!noData">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full mt-[2%] rounded-xl border bg-white">
+        <!-- Position Column -->
+        <ng-container matColumnDef="orderCode">
+          <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Mã đơn đặt </th>
+          <td style="width: 10%;text-align: center;" mat-cell *matCellDef="let order"> {{order.orderCode }}</td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="tickets">
+          <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Vé</th>
+          <td style="width: 15%;text-align: center;" mat-cell *matCellDef="let order">{{order.listSeat}}
+        </ng-container>
+
+        <ng-container matColumnDef="orderDate">
+          <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Ngày đặt</th>
+          <td style="width: 10%; text-align: center;padding:0 60px" mat-cell *matCellDef="let order">
+              {{order.orderDate |date: 'HH:mm dd/MM/yyyy'}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="totalPrice">
+          <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Tổng tiền</th>
+          <td style="width: 7.5%; text-align: center;" mat-cell *matCellDef="let order">
+            {{order.totalPrice | currency:'VND':'symbol':'3.0-2':'fr' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="deposit">
+          <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Tiền cọc</th>
+          <td style="width: 7.5%; text-align: center;" mat-cell *matCellDef="let order">{{order.deposit | currency:'VND':'symbol':'1.0':'fr' }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="orderStatus">
+          <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Trạng thái đơn đặt</th>
+          <td style="width: 15%; text-align: center;" mat-cell *matCellDef="let order">
+            <div class="rounded-lg border-4 h-[34px] py-1 w-[130px] px-7 text-cyan-50"
+              [ngStyle]="{'background': (order.orderStatus === 'Đã hủy') ? 'red' : (order.orderStatus === 'Đã đặt') ? 'green' : (order.orderStatus === 'Chờ duyệt') ? '#F59E08' : ''}">
+              {{order.orderStatus}}
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="paymentStatus">
+          <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Thanh toán</th>
+          <td style="width: 15%; text-align: center;" mat-cell *matCellDef="let order">
+            <div class="rounded-lg border-4 h-[34px] py-1 w-[168px] px-7 text-cyan-50"
+              [ngStyle]="{'background': (order.paymentStatus === 'Chưa thanh toán') ? 'red' : (order.paymentStatus === 'Đã thanh toán') ? 'green' : (order.paymentStatus === 'Đã cọc') ? '#F59E08' : ''}">
+              {{order.paymentStatus}}
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action"  >
+          <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Hành động </th>
+          <td style="width: 20%;text-align: center;" mat-cell *matCellDef="let order" >
+            <button style="background: #3F51B5;" mat-button [matMenuTriggerFor]="menu" (click)="getOrderId(order)">
+              
+              <mat-icon style="color: white;">menu</mat-icon>
+              
+            </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item [disabled]="(order.orderStatus === 'Chờ duyệt') ? false : true" (click)="ApprovalOrder(order)">Duyệt đơn đặt</button>
+                <button mat-menu-item [disabled]="(order.orderStatus === 'Đã hủy') ? true : false" (click)="CancelBooking(order)">Hủy đơn đặt</button>
+                <button mat-menu-item (click)="openOrderDetail(order)" [disabled]="(order.orderStatus === 'Đã hủy') ? true : false">Chi tiết đơn đặt</button>
+                <button mat-menu-item [disabled]="(order.paymentStatus === 'Đã thanh toán' || order.orderStatus === 'Đã hủy') ? true : false" (click)="confirmPaid(order)">Xác nhận thanh toán</button>
+                <button mat-menu-item 
+                [disabled]="(order.paymentStatus === 'Đã thanh toán' || order.paymentStatus === 'Đã cọc' || order.orderStatus === 'Đã hủy') ? true : false"
+                (click)="openDialogEnterDeposit(order)">Nhập tiền cọc</button>
+                <!-- <button mat-menu-item>Hủy đơn đặt</button>  -->
+            </mat-menu>
+            <!-- <mat-spinner *ngIf="openingMenu" [diameter]="40" style="color: white;"></mat-spinner> -->
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+      </table>
       <div>
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full mt-[2%] rounded-xl border bg-white">
-          <!-- Column definitions -->
-          <!-- 'busName' column -->
-          <ng-container matColumnDef="busName">
-            <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Xe </th>
-            <td style="width: 15%;text-align: center;" mat-cell *matCellDef="let schedule"> {{schedule.busName }} <br><div class="font-bold">Xe {{schedule.seats }} chỗ</div> </td>
-          </ng-container>
-  
-          <!-- 'price' column -->
-          <ng-container matColumnDef="price">
-            <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Giá</th>
-            <td style="width: 25%;text-align: center;" mat-cell *matCellDef="let schedule">Giá vé: {{schedule.price }}<br> <div >Tiền cơm: {{schedule.eatingFee }}</div></td>
-          </ng-container>
-  
-          <!-- 'dateTime' column -->
-          <ng-container matColumnDef="dateTime">
-            <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Thời gian</th>
-            <td style="width: 35%; text-align: center;" mat-cell *matCellDef="let schedule"> Ngày xuất phát: {{schedule.dateStart | date:'dd-MM-yyyy'}} 
-              <br> Giờ đi: {{schedule.startTime}}
-            </td>
-          </ng-container>
-  
-          <!-- 'action' column -->
-          <ng-container matColumnDef="action">
-            <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Hành động </th>
-            <td style="width: 25%;text-align: center;" mat-cell *matCellDef="let schedule"> 
-              <!-- Edit button -->
-              <button mat-button color="primary" (click)="openFormSchedule(schedule)">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <!-- Delete button -->
-              <button mat-button color="accent" (click)="deleteSchedule(schedule)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </ng-container>
-  
-          <!-- Table rows and pagination -->
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
-        </table>
-        <div>
-          <mat-paginator #paginator [pageSizeOptions]="[5,10,15]" showFirstLastButtons></mat-paginator>
-        </div>
+        <mat-paginator #paginator  [pageSizeOptions]="[8,16,24, 100]">
+        </mat-paginator>
       </div>
     </div>
   </div>
-  <app-spinner [isLoading]="isLoading"></app-spinner>
-  
+</div>
+<app-spinner [isLoading]="isLoading"></app-spinner>

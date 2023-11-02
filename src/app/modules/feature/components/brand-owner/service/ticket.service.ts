@@ -15,8 +15,8 @@ export class TicketService {
       retry(1), 
       delay(1000));
   }
-  getEmptySeat(scheduleId:any):Observable<any>{
-    return this.http.get<any>(`${environment.apiUrl}/empty_seat?scheduleId=${scheduleId}`).pipe(
+  getEmptySeat(dateStart:any,scheduleId:any):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/empty_seat?dateStart=${dateStart}&scheduleId=${scheduleId}`).pipe(
       retry(1), 
       delay(1000));
   }

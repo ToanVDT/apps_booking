@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
   user!:User;
 
   
-  constructor() { }
+  // constructor() { }
   @Output() logInResponse = new EventEmitter<any>();
   ngOnInit(): void {
     this.form = new FormGroup({
@@ -26,13 +26,20 @@ export class LoginComponent implements OnInit {
     this.form.get('password')?.valueChanges.subscribe((value)=>this.password = value);
   }
 
-  public togglePasswordVisibility():void{
-    this.showPassword = !this.showPassword;
-  }
+  // public togglePasswordVisibility():void{
+  //   this.showPassword = !this.showPassword;
+  // }
   login(){
     console.log("username", this.username,"pass", this.password)
     this.logInResponse.emit({
       isLoggedIn:true
     })
+  }
+  constructor() {}
+
+  hidePassword = true;
+
+  togglePassword() {
+      this.hidePassword = !this.hidePassword;
   }
 }

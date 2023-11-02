@@ -1,0 +1,36 @@
+.form-login {
+    margin: 0 auto;
+    padding: 30px 80px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-login > mat-form-field {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+}
+
+.form-login > a{
+    margin-bottom: 10px;
+}
+
+.form-login > button{
+    width: 100%;
+}
+
+.password-toggle {
+    position: relative;
+    cursor: pointer;
+}
+  
+.password-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}

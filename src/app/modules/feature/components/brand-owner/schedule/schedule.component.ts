@@ -35,10 +35,10 @@ export class ScheduleComponent implements OnInit {
   ];
   routes:Routes[]=[];
   route: Routes = {};
-  buses : Bus[] = [];
   shuttle : Shuttle = {}
   user:any;
   isLoading : boolean = false;
+  noData:boolean = true;
   schedules:Schedule[]=[];
   schedule:Schedule={}
   scheduleForm:FormGroup
@@ -47,8 +47,8 @@ export class ScheduleComponent implements OnInit {
   dataSourceWithPageSize = new MatTableDataSource(this.schedules);
 
   constructor(private dialog:MatDialog, private auth:AuthenticationService,
-    private routeService:RouteService,private busService:BusService,private scheduleService:ScheduleService,
-    private shuttleService:ShuttleService, private message:ToastrService) {
+    private routeService:RouteService,private scheduleService:ScheduleService,
+    private message:ToastrService) {
       this.scheduleForm = new FormGroup({
         route:new FormControl("")
       })
@@ -66,7 +66,7 @@ export class ScheduleComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.auth.userValue;
-    this.getBusAndRoute()
+    this.getRoutes()
     this.scheduleForm.get("route")?.valueChanges.subscribe((value) => {
       if (value) {
         this.route = value;
@@ -80,60 +80,55 @@ export class ScheduleComponent implements OnInit {
       data:{
         schedule:schedule,
         routes:this.routes,
-        bus:this.buses,
         routeId:this.route?.id
       }
     })
     dialogRef.componentInstance.createOrUpdate.subscribe(
       data=>{
-        // console.log("datarecieves", data)
+
         this.handleCreateOrUpdate(data)
       }
     )
   }
 
   getSchedule(routeId:any){
+    let response:any;
     this.scheduleService.getAllSchedule(routeId).pipe(
       finalize(()=>{
+        if(response[0]?.id){
+          this.noData = false;
+          this.dataSource  =new MatTableDataSource(this.schedules)
+        }
+        else{
+          this.noData = true;
+        }
         this.isLoading = false;
-        this.dataSource  =new MatTableDataSource(this.schedules)
       })
     ).subscribe(
       data=>{
         this.schedules = data.data
-        // console.log("data", this.schedules)
+        response = this.schedules
       }
     )
-  }
-  getBusAndRoute(){
-    this.isLoading = true
-    forkJoin({
-      routes:this.getRoutes(),
-      bus:this.getBus()
-    }).pipe(
-      finalize(()=>{
-  
-      })
-    ).subscribe(
-      data=>{
-        this.routes = data.routes.data;
-        this.scheduleForm.get("route")?.setValue(this.routes[0])
-        this.buses = data.bus;
-      }
-    )
-  }
-  getBus(){
-   return this.busService.getBusForDropDown(this.user.data.id).pipe()
   }
   getRoutes(){
-   return this.routeService.getAllRoutes(this.user.data.id).pipe()
+  this.isLoading = true
+   this.routeService.getAllRoutes(this.user.data.id).pipe(
+    finalize(()=>{
+    })
+  ).subscribe(
+    data=>{
+      this.routes = data.data;
+      this.scheduleForm.get("route")?.setValue(this.routes[0])
+    }
+  )
   }
   handleCreateOrUpdate(schedule:any){
     this.isLoading = true;
     if(schedule?.id){
       this.scheduleService.updateSchedule(schedule).pipe(
         finalize(()=>{
-          this.getBusAndRoute()
+          this.getRoutes()
         })
       ).subscribe(
         data=>{ 
@@ -146,7 +141,7 @@ export class ScheduleComponent implements OnInit {
     else{
       this.scheduleService.createSchedule(schedule).pipe(
         finalize(()=>{
-          this.getBusAndRoute()
+          this.getRoutes()
         })
       ).subscribe(
         data=>{

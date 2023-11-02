@@ -35,4 +35,10 @@ export class BusService {
       retry(1), 
       delay(1000));
   }
+  getBusForDropDownByTravelDate(userId:any, travelDate:any):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/bus/dropdown1?userId=${userId}&travelDate=${travelDate}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
+
 }

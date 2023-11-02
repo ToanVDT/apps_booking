@@ -1,0 +1,26 @@
+<div>
+    <form [formGroup]="depositForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Tiền cọc</mat-label>
+        <input
+          matInput
+          type="number"
+          min="0"
+          [max]="totalPrice"
+          placeholder="Nhập tiền cọc"
+          formControlName="deposit"
+        />
+        <mat-error style="margin: 20px -10px;" *ngIf="depositForm.get('deposit')?.hasError('max')">
+          Số tiền cọc phải nhỏ hơn tổng tiền cần thanh toán
+        </mat-error>
+        <mat-error style="margin: 20px -10px;" *ngIf="depositForm.get('deposit')?.hasError('required')">
+          Không được để trống tiền cọc
+        </mat-error>
+      </mat-form-field>
+      <div class="mt-8" style="display: flex;justify-content: flex-end;">
+        <button mat-raised-button [mat-dialog-close]="true" style="margin-right: 20px;" class="bg-red-800 text-cyan-50"> Hủy</button>
+        <button mat-raised-button (click)="onSubmit()" [mat-dialog-close]="true" class="bg-green-600 text-cyan-50" [disabled]="depositForm.invalid">Lưu</button>
+      </div>
+    </form>
+  </div>
+  

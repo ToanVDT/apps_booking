@@ -14,11 +14,8 @@
                                     <div class="scroll-py-4">
                                         <div *ngFor="let option of item.options">
                                             <div class="flex items-center">
-                                                <mat-radio-button
-                                                    id="'filter - '+ option.value"
-                                                    [name]="item.id"
-                                                    [value]="option.value"
-                                                >
+                                                <mat-radio-button id="'filter - '+ option.value" [name]="item.id"
+                                                    [value]="option.value">
                                                     <span class="text-sm text-[#141414]">{{ option.label }}</span>
                                                 </mat-radio-button>
                                             </div>
@@ -43,11 +40,8 @@
                                         <div class="scroll-py-4">
                                             <div *ngFor="let option of item.options">
                                                 <div class="flex items-center">
-                                                    <mat-checkbox
-                                                        id="'filter - '+ option.value"
-                                                        [name]="item.id"
-                                                        [value]="option.value"
-                                                    >
+                                                    <mat-checkbox id="'filter - '+ option.value" [name]="item.id"
+                                                        [value]="option.value">
                                                         <span class="text-sm text-[#141414]">{{ option.label }}</span>
                                                     </mat-checkbox>
                                                 </div>
@@ -62,11 +56,9 @@
 
                 <div class="lg:col-span-3 flex flex-col items-center">
                     <app-customer-ticket-card
-                        class="w-full bg-white border rounded-md shadow-md mb-6 hover:shadow-2xl"
-                    ></app-customer-ticket-card>
+                        class="w-full bg-white border rounded-md shadow-md mb-6 hover:shadow-2xl"></app-customer-ticket-card>
                     <app-customer-ticket-card
-                        class="w-full bg-white border rounded-md shadow-md mb-6 hover:shadow-2xl"
-                    ></app-customer-ticket-card>
+                        class="w-full bg-white border rounded-md shadow-md mb-6 hover:shadow-2xl"></app-customer-ticket-card>
                 </div>
             </div>
         </section>
