@@ -1,6 +1,6 @@
-<div style="height: 400px; width: 300px;">
-  <div style="padding: 15px 80px; font-family: monospace;">
-    <p>Thông tin chi tiết</p>
+<div style="width: 300px;">
+  <div class="text-xl text-center font-semibold mb-4">
+   Thông tin chi tiết
   </div>
   <form [formGroup]="shuttleForm">
     <div
@@ -8,7 +8,7 @@
         border: 1px solid #b9abab;
         border-radius: 5px;
         padding: 10px;
-        height: 250px;
+      
       "
       class="flex flex-col"
     >
@@ -21,19 +21,12 @@
         <input matInput type="time" formControlName="endTime" />
       </mat-form-field>
     </div>
-    <div
-      style="
-        display: flex;
-        justify-content: center;
-        padding: 45px 60px 0px 200px;
-      "
-    >
+    <div class="flex justify-end mt-4 space-x-4">
       <button
         mat-button
         mat-raised-button
         [mat-dialog-close]="true"
         class="bg-red-600 text-zinc-50"
-        style="margin-right: 25px;"
       >
         Hủy
       </button>

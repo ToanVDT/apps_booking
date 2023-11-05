@@ -32,7 +32,7 @@ export class DialogCreateBrandComponent implements OnInit {
         Validators.required,
         Validators.pattern("^[0-9]*$"),
         Validators.minLength(10),
-        Validators.maxLength(11),
+        Validators.maxLength(10),
       ]),
       description: new FormControl(this.brand.description),
       // image: new FormControl(this.brand.image,[Validators.required]),
@@ -41,18 +41,13 @@ export class DialogCreateBrandComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.auth.userValue;
-    console.log("this.user", this.user);
-    this.brandForm
-      .get("name")
-      ?.valueChanges.pipe(debounceTime(700), distinctUntilChanged())
+    this.brandForm.get("name")?.valueChanges.pipe(debounceTime(700), distinctUntilChanged())
       .subscribe((data) => {
         if (data) {
           this.checkDuplicateName(data, this.user.data?.id);
         }
       });
-    this.brandForm
-      .get("phone")
-      ?.valueChanges.pipe(debounceTime(700), distinctUntilChanged())
+    this.brandForm.get("phone")?.valueChanges.pipe(debounceTime(700), distinctUntilChanged())
       .subscribe((data) => {
         if (data) {
           this.checkDuplicatePhone(data, this.user.data?.id);
@@ -87,17 +82,21 @@ export class DialogCreateBrandComponent implements OnInit {
     }
   }
   checkDuplicatePhone(phone: any, userId: any) {
-    this.brandService
-      .checkDuplicatePhoneBrand(phone, userId)
+    this.brandService.checkDuplicatePhoneBrand(phone, userId)
       .subscribe((data) => {
         this.phoneDuplicated = data;
+        if(data){
+          this.brandForm.get('phone')?.setErrors({phoneDuplicated:true})
+        }
       });
   }
   checkDuplicateName(name: any, userId: any) {
-    this.brandService
-      .checkDuplicateNameBrand(name, userId)
+    this.brandService.checkDuplicateNameBrand(name, userId)
       .subscribe((data) => {
         this.nameDuplicated = data;
+        if(data){
+          this.brandForm.get('name')?.setErrors({nameDuplicated:true})
+        }
       });
   }
 }

@@ -8,5 +8,6 @@ export enum routes {
     SCHEDULE = '/brand-owner/schedule',
     TICKET = '/brand-owner/ticket',
     ORDER = '/brand-owner/order',
+    PROFILE = '/brand-owner/profile'
     // LOGIN = '/auth'
   }

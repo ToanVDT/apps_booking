@@ -8,8 +8,8 @@
                     <mat-radio-group [(ngModel)]="selectedPickup" name="pickupLocations"
                         class="location-list">
                         <mat-radio-button *ngFor="let location of pickupLocations" [value]="location" class="p-2">
-                            <span class="font-bold">{{ location.time }}</span> <span class="mx-2">•</span>
-                            {{ location.name }}
+                            <span class="font-bold">{{ location.pickUpTime }}</span> <span class="mx-2">•</span>
+                            {{ location.pickUpPoint }}
                         </mat-radio-button>
                     </mat-radio-group>
                 </div>
@@ -19,16 +19,17 @@
                     <mat-radio-group [(ngModel)]="selectedDropOff" name="dropOffLocations"
                         class="location-list">
                         <mat-radio-button *ngFor="let location of dropOffLocations" [value]="location" class="p-2">
-                            <span class="font-bold">{{ location.time }}</span> <span class="mx-2">•</span>
-                            {{ location.name }}
+                            <span class="font-bold">{{ location.dropOffTime }}</span> <span class="mx-2">•</span>
+                            {{ location.dropOffPoint }}
                         </mat-radio-button>
                     </mat-radio-group>
                 </div>
             </div>
 
             <div class="info-panel">
-                <button class="button-back" mat-button matStepperPrevious>&#60; Quay lại</button>
+                <button class="button-back" mat-button mat-dialog-close="true">&#60; Đóng</button>
                 <button class="button-next" mat-button matStepperNext
+                (click)="getPickUpAndDropOff()"
                     [disabled]="!selectedPickup || !selectedDropOff">
                     Tiếp tục
                 </button>
@@ -64,12 +65,6 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Email để nhận thông tin vé</mat-label>
                     <input matInput formControlName="email" placeholder="john@example.com" />
-                    <!-- <mat-error *ngIf="infoCustomerForm.get('email')?.hasError('required')">
-                        Email không được để trống
-                    </mat-error>
-                    <mat-error *ngIf="infoCustomerForm.get('email')?.hasError('email')">
-                        Email không hợp lệ
-                    </mat-error> -->
                 </mat-form-field>
 
                 <div class="flex items-center">
@@ -81,7 +76,8 @@
         </div>
         <div class="info-panel">
             <button class="button-back" mat-button matStepperPrevious>&#60; Quay lại</button>
-            <button class="button-next" mat-button [disabled]="infoCustomerForm.invalid" >Đặt vé</button>
+            <button class="button-next" mat-button mat-dialog-close="true"
+            [disabled]="infoCustomerForm.invalid" (click)="bookingTicket()" >Đặt vé</button>
         </div>
     </mat-step>
 </mat-stepper>

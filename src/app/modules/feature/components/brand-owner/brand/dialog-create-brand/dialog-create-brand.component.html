@@ -1,88 +1,69 @@
-<div class="flex col-span-1">
-  <form [formGroup]="brandForm">
-    <div>
-      <div class="flex mb-3">
-        <div class="flex">
-          <mat-form-field appearance="outline" style="margin-right: 20px;">
-            <mat-label>Tên nhà xe</mat-label>
-            <input matInput placeholder="Placeholder" formControlName="name" />
-            <div>
-              <p *ngIf="nameDuplicated" style="color: red;">Tên nhà xe đã tồn tại</p>
-          </div>
-          </mat-form-field>
-        </div>
-        <div class="flex">
-          <mat-form-field appearance="outline">
-            <mat-label>Địa chỉ</mat-label>
-            <input
-              matInput
-              placeholder="Placeholder"
-              formControlName="address"
-            />
-          </mat-form-field>
-        </div>
-      </div>
-      <div>
-        <div class="flex">
-          <mat-form-field appearance="outline" style="margin-right: 20px;">
-            <mat-label>Số điện thoại</mat-label>
-            <input
-              matInput
-              placeholder="Placeholder"
-              formControlName="phone"
-              id="phone"
-            />
-          </mat-form-field>
-          <div>
-            <p *ngIf="phoneDuplicated" style="color: red;">Số điện thoại đã tồn tại</p>
-        </div>
-          <div
-            *ngIf="brandForm.controls['phone'].invalid && (brandForm.controls['phone'].dirty || brandForm.controls['phone'].touched)"
-           style="    display: flex;
-           /* justify-items: center; */
-           align-items: center;"
-          >
-            <div *ngIf="brandForm.controls['phone'].errors?.['pattern']">
-              <p style="color: red;">Số điện thoại không hợp lệ</p>
-            </div>
-            <div *ngIf="brandForm.controls['phone'].errors?.['minLength']">
-              Số điện thoại tối thiểu 10 số
-            </div>
-            <div
-              *ngIf="brandForm.controls['phone'].errors?.['maxLength']"
-              class="validation-message"
-            >
-              Số điện thoại tối đa 11 số
-            </div>
-          </div>
-        </div>
-        <mat-form-field appearance="outline">
-          <mat-label>Mô tả</mat-label>
-          <input
-            matInput
-            placeholder="Placeholder"
-            formControlName="description"
-          />
-        </mat-form-field>
-      </div>
-      <div class="ml-16">
-        <mat-form-field appearance="outline">
-          <!-- <mat-label>Hình ảnh</mat-label> -->
-          <img [src]="img" />
-          <label htmlFor="fileUpload"> <mat-icon>cloud_upload</mat-icon></label>
-          <input id="fileUpload" matInput placeholder="img" hidden />
-          <input
-            id="fileUpload"
-            type="file"
-            class="file-upload"
-            (change)="upLoad($event)"
-          />
-        </mat-form-field>
-      </div>
-    </div>
-    <button mat-button mat-raised-button [mat-dialog-close]="true">Hủy</button>
-    <button mat-raised-button (click)="onSubmit()" [mat-dialog-close]="true">
-      Lưu
-    </button>
-  </form>
-</div>
+<form [formGroup]="brandForm" class="w-full">
+  <div class="form-container flex flex-col items-center w-full">
+    <div class="mb-4 text-xl font-semibold">Thông tin nhà xe</div>
+      <mat-form-field appearance="outline">
+        <mat-label>Tên nhà xe</mat-label>
+        <input matInput placeholder="Placeholder" formControlName="name" />
+        <mat-error *ngIf="nameDuplicated">
+          Tên nhà xe đã tồn tại
+        </mat-error>
+        <mat-error *ngIf="brandForm.get('name')?.hasError('required')">
+          Tên nhà xe không được để trống
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Địa chỉ</mat-label>
+        <input matInput placeholder="Placeholder" formControlName="address" />
+        <mat-error *ngIf="brandForm.get('address')?.hasError('required')">
+          Địa chỉ nhà xe không được để trống
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Số điện thoại</mat-label>
+        <input
+          matInput
+          type="number"
+          placeholder="Placeholder"
+          formControlName="phone"
+          id="phone"/>
+        <mat-error *ngIf="brandForm.get('phone')?.hasError('required')">
+          Số điện thoại nhà xe không được để trống
+        </mat-error>
+        <mat-error *ngIf="phoneDuplicated">
+          Số điện thoại đã tồn tại
+        </mat-error>
+        <mat-error  *ngIf="brandForm.get('phone')?.hasError('pattern')">
+          Số điện thoại chỉ bao gồm số
+        </mat-error>
+        <mat-error  *ngIf="brandForm.get('phone')?.hasError('minLength')">
+          Số điện thoại tối thiểu 10 số
+        </mat-error>
+        <mat-error *ngIf="brandForm.get('phone')?.hasError('maxLength')">
+          Số điện thoại tối đa 10 số
+        </mat-error>
+      </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Mô tả</mat-label>
+      <input matInput placeholder="Placeholder" formControlName="description" />
+    </mat-form-field>
+  
+    <mat-form-field appearance="outline">
+      <!-- <mat-label>Hình ảnh</mat-label> -->
+      <img [src]="img" />
+      <label htmlFor="fileUpload"> <mat-icon>cloud_upload</mat-icon></label>
+      <input id="fileUpload" matInput placeholder="img" hidden />
+      <input
+        id="fileUpload"
+        type="file"
+        class="file-upload"
+        (change)="upLoad($event)"
+      />
+    </mat-form-field>
+  </div>
+  <div class="flex justify-end space-x-4">
+    <button mat-button mat-raised-button [mat-dialog-close]="true" class=" bg-red-800 text-cyan-50"> Hủy</button>
+    <button mat-raised-button (click)="onSubmit()" [mat-dialog-close]="true" 
+     [disabled]="brandForm.invalid" class="bg-green-600 text-cyan-50">Lưu</button>
+  </div>
+</form>

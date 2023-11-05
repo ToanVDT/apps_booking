@@ -19,6 +19,10 @@ import { Ticket } from '../model/ticket.model';
 import { ScheduleDTO } from '../model/schedule.model';
 import * as moment from 'moment';
 import { BookingComponent } from './booking/booking.component';
+import { ParkingService } from '../service/parking.service';
+import { DropOff } from '../model/drop_off.model';
+import { PickUp } from '../model/pick_up.model';
+import { OrderService } from '../service/order.service';
 
 @Component({
   selector: 'app-ticket',
@@ -45,6 +49,8 @@ export class TicketComponent implements OnInit {
   shuttle : Shuttle = {}
   customerInfo:boolean = true;
   user:any;
+  dropOffs:DropOff[]=[]
+  pickUps:PickUp[]=[]
   noData:boolean = true;
   tickets:Ticket[]=[]
   ticket:Ticket ={}
@@ -59,8 +65,8 @@ export class TicketComponent implements OnInit {
   dataSourceWithPageSize = new MatTableDataSource(this.tickets);
 
   constructor(private dialog:MatDialog, private auth:AuthenticationService,
-    private routeService:RouteService,private ticketService:TicketService,private scheduleService:ScheduleService,
-    private shuttleService:ShuttleService, private message:ToastrService) {
+    private parkingService:ParkingService,private ticketService:TicketService,private scheduleService:ScheduleService,
+    private orderService:OrderService, private message:ToastrService) {
       this.ticketForm = new FormGroup({
         schedule:new FormControl(""),
         dateStart:new FormControl("")
@@ -75,16 +81,18 @@ export class TicketComponent implements OnInit {
     this.ticketForm.get("schedule")?.valueChanges.subscribe(
       (value)=>{
         this.schedule = value;
-        this.getEmptySeatAndSeatInTicketPage(this.dateStart,this.schedule?.id)
+        this.getEmptySeatAndSeatInTicketPage(this.dateStart,this.schedule?.id, this.schedule?.shuttleId)
       }
     )
     let todayFormat = moment(this.today).format('yyyy-MM-DD');
     this.ticketForm.get("dateStart")?.setValue(todayFormat)
   }
-  getEmptySeatAndSeatInTicketPage(dateStart:any,scheduleId:any){
+  getEmptySeatAndSeatInTicketPage(dateStart:any,scheduleId:any, shuttleId:any){
     forkJoin({
       emptySeat:this.getEmptySeat(dateStart,scheduleId),
-      tickets:this.getSeatInTicketPage(scheduleId)
+      tickets:this.getSeatInTicketPage(scheduleId),
+      dropOffs:this.getDropOffInShuttle(shuttleId),
+      pickUps:this.getPickUpInShuttle(shuttleId)
     }).pipe(
       finalize(()=>{
         this.isLoading = false;
@@ -93,6 +101,8 @@ export class TicketComponent implements OnInit {
       })
     ).subscribe(
       data=>{
+        this.dropOffs = data.dropOffs.data
+        this.pickUps = data.pickUps.data
         this.tickets = data.tickets.data
         this.emptyTicket = data.emptySeat
         this.tickets.map((item)=>{
@@ -120,6 +130,12 @@ export class TicketComponent implements OnInit {
   getSeatInTicketPage(scheduleId:any){
     return this.ticketService.getSeatInTicketPage(scheduleId).pipe()
   }
+  getDropOffInShuttle(shuttleId:any){
+    return this.parkingService.getAllDropOff(shuttleId).pipe()
+  }
+  getPickUpInShuttle(shuttleId:any){
+    return this.parkingService.getAllPickUp(shuttleId).pipe()
+  }
   getScheduleByTravelDate(dateStart:any){
     let value:any;
     this.isLoading = true;
@@ -145,10 +161,32 @@ export class TicketComponent implements OnInit {
   openBookingTicket(ticket:any){
     const dialogRef = this.dialog.open(BookingComponent,{
       data:{
-        ticket:ticket
+        ticket:ticket,
+        dropOffs:this.dropOffs,
+        pickUps:this.pickUps
       },
     width:'700px'
     })
-  }
+    dialogRef.componentInstance.bookingTickets.subscribe(
+      data=>{
+        let dataBooking = {...data,scheduleId:this.schedule?.shuttleId}
+        this.handleBooking(dataBooking)
 
+      }
+    )
+  }
+  handleBooking(dataBooking:any){
+    this.isLoading = true;
+    this.orderService.orderTicket(dataBooking).pipe(
+      finalize(()=>{
+        this.getEmptySeatAndSeatInTicketPage(this.dateStart,this.schedule?.id, this.schedule?.shuttleId)
+      })
+    ).subscribe(
+      data=>{
+        if(data.success){
+          this.message.success("Đặt vé","Thành công",{timeOut:2000, progressBar:true})
+        }
+      }
+    )
+}
 }

@@ -3,6 +3,8 @@ import { RouteService } from '../../service/route.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Bus } from '../../model/bus.model';
+import { BusService } from '../../service/bus.service';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-bus-dialog',
@@ -14,11 +16,15 @@ export class BusDialogComponent implements OnInit {
   busForm: FormGroup;
   bus:Bus={}; 
   typeBuses:any;
+  duplicateNameBus!:boolean;
+  duplicateIdentityCode!:boolean;
+  existName: any;
+  existIdentityCode:any;
 
   @Output() createOrUpdate = new EventEmitter<any>();
 
   constructor(
-    private routeService: RouteService,
+    private busService:BusService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.busForm = new FormGroup({
@@ -31,7 +37,6 @@ export class BusDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // console.log("data", this.data)
     this.typeBuses = this.data.type
     this.busForm.get("busType")?.valueChanges.subscribe((data) => {
       this.bus.busType = data;
@@ -39,16 +44,28 @@ export class BusDialogComponent implements OnInit {
     this.busForm.get("description")?.valueChanges.subscribe((data) => {
       this.bus.description = data;
     });
-    this.busForm.get("identityCode")?.valueChanges.subscribe((data) => {
+    this.busForm.get("identityCode")?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((data) => {
       this.bus.identityCode = data;
+      if(data !== this.existIdentityCode){
+        if(data){
+          this.checkDuplicateIdentityCode(data)
+        }
+      }
     });
-    this.busForm.get("name")?.valueChanges.subscribe((data) => {
+    this.busForm.get("name")?.valueChanges.pipe(debounceTime(700), distinctUntilChanged()).subscribe((data) => {
       this.bus.name = data;
+      if (data !== this.existName) {
+        if(data){
+          this.checkDuplicateBusName(data)
+        }
+      }
     });
     this.busForm.get("seats")?.valueChanges.subscribe((data) => {
       this.bus.seats = data;
     });
    if(this.data.bus){
+    this.existName = this.data.bus.name
+    this.existIdentityCode = this.data.bus.identityCode
     let selectedBusType = this.typeBuses.find((item: any) => item.type === this.data.bus.busType);
     this.busForm.get("busType")?.setValue(selectedBusType)
     this.busForm.get("description")?.setValue(this.data.bus.description)
@@ -68,5 +85,25 @@ export class BusDialogComponent implements OnInit {
         seats: this.bus.seats,
       });
     }
+  }
+  checkDuplicateBusName(name:any){
+    this.busService.checkDuplicateBusName(name).pipe().subscribe(
+      data=>{
+        this.duplicateNameBus = data
+        if(data){
+          this.busForm.get('name')?.setErrors({duplicateNameBus:true})
+        }
+      }
+    )
+  }
+  checkDuplicateIdentityCode(identityCode:any){
+    this.busService.checkDuplicateIdentityCode(identityCode).pipe().subscribe(
+      data=>{
+        this.duplicateIdentityCode = data
+        if(data){
+          this.busForm.get('identityCode')?.setErrors({duplicateIdentityCode:true})
+        }
+      }
+    )
   }
 }

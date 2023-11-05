@@ -20,8 +20,8 @@ export class BusService {
       retry(1), 
       delay(1000));
   }
-  deleteBus(id:any,userId:any):Observable<any>{
-    return this.http.delete<any>(`${environment.apiUrl}/bus/${id}?userId=${userId}`).pipe(
+  deleteBus(id:any):Observable<any>{
+    return this.http.delete<any>(`${environment.apiUrl}/bus/${id}`).pipe(
       retry(1), 
       delay(1000));
   }
@@ -40,5 +40,14 @@ export class BusService {
       retry(1), 
       delay(1000));
   }
-
+  checkDuplicateBusName(name:any):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/bus/duplicateName?name=${name}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
+  checkDuplicateIdentityCode(identityCode:any):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/bus/duplicateIdentityCode?identityCode=${identityCode}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
 }

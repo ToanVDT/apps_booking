@@ -6,16 +6,6 @@
           <mat-label>Thời gian xuất phát</mat-label>
           <input matInput type="date" formControlName="dateStart" />
         </mat-form-field>
-        <!-- <form [formGroup]="scheduleForm">
-          <mat-form-field appearance="outline">
-            <mat-label>Tuyến đường</mat-label>
-            <mat-select formControlName="route" name="route">
-              <mat-option *ngFor="let route of routes" [value]="route">
-                {{ route.startPoint }} - {{route.endPoint}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </form> -->
         <mat-form-field appearance="outline">
           <mat-label>Lịch trình</mat-label>
           <mat-select formControlName="schedule" name="schedule">
@@ -30,7 +20,7 @@
     <div *ngIf="noData" class="flex py-7 px-5 justify-center text-xl">Không có dữ liệu</div>
     <!-- <mat-slide-toggle [(ngModel)]="isChecked">Slide Toggle Checked: {{isChecked}}</mat-slide-toggle> -->
     <div *ngIf="!noData">
-      <div>Số vé trống:{{emptyTicket?.seatEmpty || ''}}</div>
+      <div class="font-semibold">Số vé trống:{{emptyTicket?.seatEmpty || ''}}</div>
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full mt-[2%] rounded-xl border bg-white">
         <!-- Position Column -->
         <ng-container matColumnDef="seatName">

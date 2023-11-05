@@ -16,6 +16,7 @@ import { RouteService } from "../service/route.service";
 import { ShuttleService } from "../service/shuttle.service";
 import { DialogPickUpComponent } from "./dialog-pick-up/dialog-pick-up.component";
 import { DialogDropOffComponent } from "./dialog-drop-off/dialog-drop-off.component";
+import { DialogParkingComponent } from "./dialog-parking/dialog-parking.component";
 
 @Component({
   selector: "app-parking",
@@ -216,5 +217,23 @@ export class ParkingComponent implements OnInit {
       // this.confirmDelete();
     });
   }
-  
+  openDialogAddParking(){
+    const dialogRef = this.dialog.open(DialogParkingComponent,{width:'500px'})
+  }
+  openDialogConfirmDeletePickUp(pickUp:any){
+    let pickUpPoint = "Điểm đón"
+    const dialogRef = this.dialog.open(ConfirmDialogComponent,{
+      data:{
+        name:pickUpPoint
+      },width:'300px'
+    })
+  }
+  openDialogConfirmDeleteDropOff(dropOff:any){
+    let dropOffPoint = "Điểm trả"
+    const dialogRef = this.dialog.open(ConfirmDialogComponent,{
+      data:{
+        name:dropOffPoint
+      },width:'300px'
+    })
+  }
 }

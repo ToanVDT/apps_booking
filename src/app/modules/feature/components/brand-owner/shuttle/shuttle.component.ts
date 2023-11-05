@@ -30,6 +30,7 @@ export class ShuttleComponent implements OnInit {
     'routeName',
     'action'
   ];
+  noData:boolean = true;
   routes:Routes[]=[];
   shuttles : Shuttle[] = [];
   shuttle : Shuttle = {}
@@ -47,11 +48,6 @@ export class ShuttleComponent implements OnInit {
   @ViewChild('paginatorPageSize') paginatorPageSize!: MatPaginator;
 
   pageSizes = [3, 5, 7];
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
-  }
 
   ngOnInit(): void {
     this.user = this.auth.userValue;
@@ -85,18 +81,27 @@ export class ShuttleComponent implements OnInit {
   }
   getShuttleAndRoute(){
     this.isLoading = true
+    let response:any
     forkJoin({
       routes:this.getRoutes(),
       shuttles:this.getShuttle()
     }).pipe(
       finalize(()=>{
-        this.dataSource = new MatTableDataSource(this.shuttles)
+        if(response[0]?.id){
+          this.noData = false
+          this.dataSource = new MatTableDataSource(this.shuttles)
+          this.dataSource.paginator = this.paginator;
+        }
+        else{
+          this.noData = true
+        }
         this.isLoading = false;
       })
     ).subscribe(
       data=>{
         this.routes = data.routes.data;
         this.shuttles = data.shuttles.data;
+        response = data.shuttles.data
       }
     )
   }

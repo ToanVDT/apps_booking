@@ -10,6 +10,7 @@ import { AuthGuard } from "../auth/hepler/auth.guard";
 import { ScheduleComponent } from "./schedule/schedule.component";
 import { TicketComponent } from "./ticket/ticket.component";
 import { OrderComponent } from "./order/order.component";
+import { ProfileComponent } from "./profile/profile.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "brand", pathMatch: "full" },
@@ -25,7 +26,8 @@ const routes: Routes = [
       { path: "parking", component:ParkingComponent},
       { path: "schedule", component:ScheduleComponent},
       { path: "ticket",component:TicketComponent},
-      { path: "order", component:OrderComponent}
+      { path: "order", component:OrderComponent},
+      { path: "profile", component:ProfileComponent}
     ],
   },
 ];

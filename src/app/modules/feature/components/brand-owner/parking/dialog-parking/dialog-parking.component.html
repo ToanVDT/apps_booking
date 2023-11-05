@@ -1,0 +1,68 @@
+<form [formGroup]="pakringForm" class="w-full h-auto">
+    <div class="text-xl text-center font-semibold mb-4">Thêm thông tin điểm đón trả</div>
+    <div class="my-3">
+        <span style="font-weight: 600;">Thêm điểm đón/thời gian đón</span>
+      </div>
+      <div formArrayName="pickUps" class="border-0 p-2">
+        <div *ngFor="let pickUpForm of pickUps?.controls; let i = index">
+          <div [formGroupName]="i" class="flex flex-row justify-between">
+            <mat-form-field>
+              <mat-label>Điểm đón</mat-label>
+              <input matInput type="text" formControlName="pickUpPoint" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Thời gian đón</mat-label>
+              <input matInput type="time" formControlName="pickUpTime" />
+            </mat-form-field>
+            <button
+              type="button"
+              title="Remove Request"
+              (click)="onRemovePickUp(i)">
+              <mat-icon style="color: red;">remove_circle</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <button type="button" (click)="addNewPickUp()">
+          <mat-icon style="color: green;">library_add</mat-icon>
+        </button>
+      </div>
+
+      <div class="my-3">
+        <span style="font-weight: 600;">Thêm điểm trả/thời gian trả</span>
+      </div>
+      <div formArrayName="dropOffs" class="border-0 p-2">
+        <div *ngFor="let dropOffForm of dropOffs?.controls; let i = index">
+          <div [formGroupName]="i" class="flex flex-row justify-between">
+            <mat-form-field>
+              <mat-label>Điểm trả</mat-label>
+              <input matInput type="text" formControlName="dropOffPoint" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Thời gian trả</mat-label>
+              <input matInput type="time" formControlName="dropOffTime" />
+            </mat-form-field>
+            <button
+              type="button"
+              title="Remove Request"
+              (click)="onRemoveDropOff(i)">
+              <mat-icon style="color: red;">remove_circle</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <button type="button" (click)="addNewDropOff()">
+          <mat-icon style="color: green;">library_add</mat-icon>
+        </button>
+      </div>
+      <div style="display: flex; justify-content: flex-end;">
+        <button mat-button mat-raised-button [mat-dialog-close]="true" style="margin-right: 20px;"class=" bg-red-800 text-cyan-50"> Hủy</button>
+        <button mat-raised-button (click)="onSubmit()" 
+        [disabled]="pakringForm.invalid"
+        [mat-dialog-close]="true" class="bg-green-600 text-cyan-50">
+          Lưu
+        </button>
+      </div>
+</form>

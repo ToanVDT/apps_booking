@@ -29,10 +29,10 @@
       <div class="flex justify-between m-2">
         <button
           mat-raised-button
+          (click)="openDialogAddParking()"
           style="
             background-color: #7dc0ce;
             margin: 16px;
-            /* padding: 11px; */
             border: 1px solid #7dc0ce;
             border-radius: 3px;
             width: 90px;
@@ -117,7 +117,7 @@
               <button mat-button color="primary" (click)="openDialogPickUp(pickUp)">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-button color="accent">
+              <button mat-button color="accent" (click)="openDialogConfirmDeletePickUp(pickUp)">
                 <mat-icon>delete</mat-icon>
               </button>
             </td>
@@ -169,7 +169,7 @@
               <button mat-button color="primary" (click)="openDialogDropOff(dropOff)">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-button color="accent">
+              <button mat-button color="accent" (click)="openDialogConfirmDeleteDropOff(dropOff)">
                 <mat-icon>delete</mat-icon>
               </button>
             </td>
@@ -189,5 +189,6 @@
     </div>
   </div>
 </div>
-
 <app-spinner [isLoading]="isLoading"></app-spinner>
+
+

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup, FormArray } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Shuttle } from '../../model/shuttle.model';
@@ -8,13 +8,14 @@ import { Bus } from '../../model/bus.model';
 import { ShuttleService } from '../../service/shuttle.service';
 import { BusService } from '../../service/bus.service';
 import { AuthenticationService } from '../../../auth/service/authentication.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-dialog-schedule',
   templateUrl: './dialog-schedule.component.html',
   styleUrls: ['./dialog-schedule.component.scss']
 })
-export class DialogScheduleComponent implements OnInit {
+export class DialogScheduleComponent implements OnInit, OnDestroy {
 
   buses: Bus[]=[];
   user:any;
@@ -24,6 +25,7 @@ export class DialogScheduleComponent implements OnInit {
   schedule:Schedule = {}
   routes:any;
   startTime:any;
+  selectCar: any
 
   @Output() createOrUpdate = new EventEmitter<any>();
 
@@ -41,9 +43,12 @@ export class DialogScheduleComponent implements OnInit {
       eatingFee:new FormControl(this.schedule.eatingFee,[Validators.required]),
     })
   }
+  ngOnDestroy(): void {
+    this.buses = []
+  }
 
   ngOnInit(): void {
-  // this.buses = this.data.bus,
+    console.log("schedule", this.data)
   this.user = this.auth.userValue;
   this.routes = this.data.routes
   this.getShuttle(this.data.routeId)
@@ -69,10 +74,11 @@ export class DialogScheduleComponent implements OnInit {
       this.schedule.eatingFee = data
     })
     if(this.data.schedule){
-      console.log("data",this.data,this.data.routeId)
+      this.selectCar = {name: this.data.schedule.busName, id:this.data.schedule.busId}
+     
       let selectedRouteName = this.routes.find((item: any) => item.id === this.data.routeId);
       this.scheduleForm.get("routeName")?.setValue(selectedRouteName)
-      this.scheduleForm.get("busName")?.setValue(this.data.schedule.busName)
+      this.scheduleForm.get("busName")?.setValue(this.selectCar)
       let selectedShuttle = this.shuttles.find((item: any) => item.startTime === this.data.schedule.startTime);
       this.scheduleForm.get("startTime")?.setValue(selectedShuttle)
       this.scheduleForm.get("dateStart")?.setValue(this.data.schedule.dateStart)
@@ -85,13 +91,29 @@ getShuttle(routeId:any){
   this.shuttleService.getShuttleByRoute(routeId).pipe().subscribe(
     data=>{
       this.shuttles = data.data
+      this.scheduleForm.get("startTime")?.setValue(this.shuttles[0])
     }
   )
 }
+
+getBusById(busId: any): boolean {
+  let result: any
+  result = this.buses.find(item => item.id === busId)
+  return !!result
+}
+
 getBus(travelDate:any, startTime:any){
- this.busService.getBusForDropDownByTravelDate(this.user.data?.id,travelDate).pipe().subscribe(
+  this.buses = []
+ this.busService.getBusForDropDownByTravelDate(this.user.data?.id,travelDate).pipe(
+  finalize(() => {
+    if (!this.getBusById(this.selectCar.id)) {
+      this.buses.push(this.selectCar)
+    }
+  })
+ ).subscribe(
   data=>{
     this.buses = data
+    
   }
  )
 }

@@ -35,6 +35,8 @@ import {MatRadioModule} from '@angular/material/radio';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {MatTooltipModule} from '@angular/material/tooltip';
+
 @NgModule({
   declarations: [
     NavbarComponent,
@@ -75,7 +77,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatCheckboxModule,
     MatRadioModule,
     MatStepperModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatTooltipModule
   ],
   exports:[
     MatIconModule,
@@ -111,7 +114,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatRadioModule,
     UnauthorizedComponent,
     MatStepperModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatTooltipModule
   ]
 })
 export class ShareModule { }

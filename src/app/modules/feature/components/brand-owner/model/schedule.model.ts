@@ -7,9 +7,11 @@ export class Schedule{
     seats?:number;
     eatingFee?:number;
     routeName?:string;
+    busId?:number;
 }
 export class ScheduleDTO{
     id?:number;
     startTime?:string;
     routeName?:string;
+    shuttleId?:number;
 }

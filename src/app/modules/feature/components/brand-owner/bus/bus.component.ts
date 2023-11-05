@@ -6,7 +6,7 @@ import { RouteService } from '../service/route.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatPaginator } from '@angular/material/paginator';
 import { BusDialogComponent } from './bus-dialog/bus-dialog.component';
-import { finalize, forkJoin, pipe } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, forkJoin, pipe } from 'rxjs';
 import { ConfirmDialogComponent } from 'src/app/modules/share/components/confirm-dialog/confirm-dialog.component';
 import { Bus } from '../model/bus.model';
 import { BusService } from '../service/bus.service';
@@ -26,12 +26,14 @@ export class BusComponent implements OnInit {
     'description',
     'action'
   ];
-
+  typeBus = ["Phòng","Ghế ngồi", "Giường nằm"]
+  noData:boolean = true;
   buses : Bus[] = [];
   bus : Bus = {}
   user:any;
   isLoading : boolean = false;
   type:any;
+
 
   dataSource = new MatTableDataSource(this.buses);
   dataSourceWithPageSize = new MatTableDataSource(this.buses);
@@ -44,21 +46,16 @@ export class BusComponent implements OnInit {
 
   pageSizes = [3, 5, 7];
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
-  }
-
   ngOnInit(): void {
     this.user = this.auth.userValue;
-    this.getTypeAnfRoute()
+    this.getTypeAndBus()
   }
   openFormAddRoute(bus:any){
     const dialogRef =this.dialog.open(BusDialogComponent,{
       data:{
         bus:bus,
         type:this.type
-      }
+      },width:'500px'
     })
     dialogRef.componentInstance.createOrUpdate.subscribe(
       data=>{
@@ -66,39 +63,48 @@ export class BusComponent implements OnInit {
       }
     )
   }
-  getTypeAnfRoute(){
+  getTypeAndBus(){
+    let response:any;
     this.isLoading = true;
     forkJoin({
       types:this.getType(),
-      routes:this.getRoutes()
+      buses:this.getBuses()
     }).pipe(
       finalize(()=>{
-        this.dataSource = new MatTableDataSource(this.buses); 
+        if(response[0]?.id){
+          this.noData = false;
+          this.dataSource = new MatTableDataSource(this.buses); 
+          this.dataSource.paginator = this.paginator;
+        }
+        else{
+          this.noData = true;
+        }
         this.isLoading = false; 
       })
     ).subscribe(
       data=>{
-        this.buses = data.routes.data
+        this.buses = data.buses.data
         this.type = data.types.data
-        console.log("buses", this.buses)
+        response = data.buses.data
       }
     )
   }
   getType(){
   return  this.busService.getType().pipe()
   }
-  getRoutes(){
+  getBuses(){
    return this.busService.getAllBuses(this.user.data.id).pipe()
   }
   handleCreateOrUpdate(bus:any){
+    console.log("databus", bus)
     let value: any;
     const request = {...bus, userId:this.user.data.id}
     this.isLoading = true;
     this.busService.createOrUpdate(request).pipe(
       finalize(()=>{
         this.isLoading = false;
-        console.log("value", value)
         this.dataSource = new MatTableDataSource(value);
+        this.dataSource.paginator = this.paginator;
       })
     ).subscribe(
       data=>{
@@ -114,14 +120,30 @@ export class BusComponent implements OnInit {
   }
   deleteBus(bus: any) {
     this.bus = { ...bus };
-    let busName ='Bạn chắc chắn xóa xe:'+
+    let busName ='Bạn chắc chắn xóa xe: '+
       this.bus?.name + ' - biển số: ' + this.bus.identityCode;
     let dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { bus: busName },
+      data: { name: busName },
     });
     dialogRef.componentInstance.onConfirm.subscribe(() => {
-      // this.confirmDelete();
+      this.handleDeleteBus(bus?.id);
     });
   }
-
+  handleDeleteBus(busId:any){
+    this.isLoading = true;
+    this.busService.deleteBus(busId).pipe(
+      finalize(()=>{
+        this.getTypeAndBus()
+      })
+    ).subscribe(
+      data=>{
+        if(data.success){
+          this.message.success("Xóa xe","Thành công",{timeOut:2000, progressBar:true})
+        }
+        else{
+          this.message.error("Xe đang có lịch trình","Thất bại",{timeOut:2000,progressBar:true})
+        }
+      }
+    )
+  }
 }

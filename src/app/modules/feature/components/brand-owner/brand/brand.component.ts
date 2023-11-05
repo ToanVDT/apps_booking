@@ -71,15 +71,14 @@ export class BrandComponent implements OnInit {
     this.img = this.brand.image;
   }
   openFormAddBrand() {
-    const dialogRef = this.dialog.open(DialogCreateBrandComponent);
+    const dialogRef = this.dialog.open(DialogCreateBrandComponent,{width:'500px'});
     dialogRef.componentInstance.createOrUpdate.subscribe((data) => {
       this.handleCreateOrUpdate(data);
     });
   }
   getBrandByUserId() {
     this.isLoading = true;
-    this.brandService
-      .getBrandByUserId(this.user.data.id)
+    this.brandService.getBrandByUserId(this.user.data.id)
       .pipe(
         finalize(() => {
           this.isLoading = false;
@@ -103,10 +102,11 @@ export class BrandComponent implements OnInit {
     }
     const dataBrand = { ...data.brand, userId: this.user.data?.id };
     request.append("data", JSON.stringify(dataBrand));
-    this.brandService
-      .createOrUpdateBrand(request)
+    this.isLoading = true;
+    this.brandService.createOrUpdateBrand(request)
       .pipe(
         finalize(() => {
+          this.isLoading = false;
           this.editBrand();
         })
       )
@@ -132,16 +132,17 @@ export class BrandComponent implements OnInit {
     }
   }
   saveBrand() {
-    // console.log("brand", this.brand, this.selectedFile);
+    this.isLoading = true;
     let request: FormData = new FormData();
     if (this.selectedFile) {
       request.append("file", this.selectedFile);
     }
     const dataBrand = { ...this.brand, userId: this.user.data?.id };
     request.append("data", JSON.stringify(dataBrand));
-    this.brandService
-      .createOrUpdateBrand(request)
-      .pipe(finalize(() => {}))
+    this.brandService.createOrUpdateBrand(request)
+      .pipe(finalize(() => {
+        this.isLoading = false
+      }))
       .subscribe((data) => {
         if (data.success) {
           this.message.success("Cập nhật thông tin nhà xe", "Thành công", {
@@ -155,25 +156,28 @@ export class BrandComponent implements OnInit {
       });
   }
   editBrand() {
-    // console.log("brand", this.brand)
     this.brandForm.get("name")?.setValue(this.brand.name);
     this.brandForm.get("address")?.setValue(this.brand.address);
     this.brandForm.get("description")?.setValue(this.brand.description);
     this.brandForm.get("phone")?.setValue(this.brand.phone);
     this.img = this.brand.image;
   }
-  checkDuplicatePhone(phone: any, userId:any) {
-    this.brandService.checkDuplicatePhoneBrand(phone, userId).subscribe(
-      data=>{
-        this.phoneDuplicated = data
-      }
-    )
+  checkDuplicatePhone(phone: any, userId: any) {
+    this.brandService.checkDuplicatePhoneBrand(phone, userId)
+      .subscribe((data) => {
+        this.phoneDuplicated = data;
+        if(data){
+          this.brandForm.get('phone')?.setErrors({phoneDuplicated:true})
+        }
+      });
   }
-  checkDuplicateName(name:any,userId:any){
-    this.brandService.checkDuplicateNameBrand(name, userId).subscribe(
-      data=>{
+  checkDuplicateName(name: any, userId: any) {
+    this.brandService.checkDuplicateNameBrand(name, userId)
+      .subscribe((data) => {
         this.nameDuplicated = data;
-      }
-    )
+        if(data){
+          this.brandForm.get('name')?.setErrors({nameDuplicated:true})
+        }
+      });
   }
 }

@@ -17,12 +17,13 @@ import { ConfirmDialogComponent } from 'src/app/modules/share/components/confirm
   templateUrl: './route.component.html',
   styleUrls: ['./route.component.scss']
 })
-export class RouteComponent implements OnInit, AfterViewInit {
+export class RouteComponent implements OnInit {
   displayedColumns: string[] = [
     'startPoint',
     'endPoint',
     'action'
   ];
+  noData:boolean = true;
   provinces:any;
   routes : Routes[] = [];
   route : Routes = {}
@@ -40,10 +41,10 @@ export class RouteComponent implements OnInit, AfterViewInit {
 
   pageSizes = [3, 5, 7];
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
-  }
+  // ngAfterViewInit() {
+  //   this.dataSource.paginator = this.paginator;
+  //   this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
+  // }
 
   ngOnInit(): void {
     this.user = this.auth.userValue;
@@ -63,18 +64,27 @@ export class RouteComponent implements OnInit, AfterViewInit {
     )
   }
   getRouteAndProvinces(){
+    let response:any
     forkJoin({
       routes:this.getRoutes(),
       provinces:this.getProvinces()
     }).pipe(
       finalize(()=>{
-        this.dataSource = new MatTableDataSource(this.routes)
+        if(response[0]?.id){
+          this.noData = false;
+          this.dataSource = new MatTableDataSource(this.routes)
+          this.dataSource.paginator = this.paginator;
+        }
+        else{
+          this.noData = true
+        }
         this.isLoading = false;
       })
     ).subscribe(
       data=>{
         this.routes = data.routes.data;
         this.provinces = data.provinces
+        response = data.routes.data
       }
     )
   }
@@ -122,17 +132,14 @@ export class RouteComponent implements OnInit, AfterViewInit {
     let value:any;
     this.routeService.deleteRoute(routeId, this.user.data?.id).pipe(
       finalize(()=>{
-        this.isLoading = false;
-        this.dataSource = new MatTableDataSource(value);
+        this.getRouteAndProvinces()
       })
     ).subscribe(
       data=>{
         if(data.success){
           this.message.success("Xóa tuyến đường", "Thành công",{timeOut:2000, progressBar:true})
-          value = data.data
         }
         else{
-          this.getRouteAndProvinces()
           this.message.error(data.message,"Xoá thất bại",{timeOut:2000, progressBar:true})
         }
       }

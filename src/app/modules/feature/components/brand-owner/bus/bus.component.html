@@ -43,8 +43,8 @@
         Thêm
       </button>
     </div>
-
-    <div>
+    <div *ngIf="noData" class="flex py-7 px-5 justify-center text-xl">Không có dữ liệu</div>
+    <div *ngIf="!noData">
       <table
         mat-table
         [dataSource]="dataSource"
@@ -78,15 +78,14 @@
 
   <ng-container matColumnDef="busType">
     <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Loại xe </th>
-    <td style="width: 15%;text-align: center;" mat-cell *matCellDef="let bus"> {{bus.busType}} </td>
+    <td style="width: 15%;text-align: center;" mat-cell *matCellDef="let bus">
+       {{(bus.busType === 'PHONG')?'Phòng':(bus.busType === 'GHE NGOI')?'Ghế ngồi':'Giường nằm'}} </td>
   </ng-container>
 
   <ng-container matColumnDef="description">
     <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Mô tả </th>
     <td style="width: 25%;text-align: center;" mat-cell *matCellDef="let bus"> {{bus.description}} </td>
   </ng-container>
-
-  
   <ng-container matColumnDef="action">
     <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Hành động </th>
     <td style="width: 20%;text-align: center;" mat-cell *matCellDef="let bus"> <button

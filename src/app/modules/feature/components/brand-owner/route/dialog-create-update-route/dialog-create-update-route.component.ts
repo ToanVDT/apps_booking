@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Inject, OnInit, Output } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { RouteService } from "../../service/route.service";
-import { Routes } from "../../model/route.model";
+import { Provinces, ProvinesCustom, Routes } from "../../model/route.model";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 
 @Component({
@@ -11,7 +11,10 @@ import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 })
 export class DialogCreateUpdateRouteComponent implements OnInit {
   routeForm: FormGroup;
-  provinces: any;
+  provinces: Provinces[]=[];
+  province:Provinces={}
+  provincesCustoms:ProvinesCustom[]=[]
+  provincesCustom:ProvinesCustom={}
   route!: Routes;
   startpoint: any;
   endpoint: any;
@@ -41,9 +44,15 @@ export class DialogCreateUpdateRouteComponent implements OnInit {
   }
   getProvices() {
     this.provinces = this.data.provinces;
+    this.provincesCustoms = this.provinces.map(({code,codename,districts,division_type,phone_code,...name})=>name)
+    this.provincesCustoms.map((item)=>{
+      if(item.name?.startsWith("Tỉnh")){
+       item.name = item.name.substring(5)
+      }
+    })
     if (this.data.route?.id) {
-      let selectedStartPoint = this.provinces.find((item: any) => item.name === this.data.route.startPoint);
-      let selectedEndPoint = this.provinces.find((item: any) => item.name === this.data.route.endPoint);
+      let selectedStartPoint = this.provincesCustoms.find((item: any) => item.name === this.data.route.startPoint);
+      let selectedEndPoint = this.provincesCustoms.find((item: any) => item.name === this.data.route.endPoint);
       this.routeForm.get("startPoint")?.setValue(selectedStartPoint);
       this.routeForm.get("endPoint")?.setValue(selectedEndPoint);
     }

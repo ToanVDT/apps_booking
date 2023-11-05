@@ -43,8 +43,8 @@
         Thêm
       </button>
     </div>
-
-    <div>
+    <div *ngIf="noData" class="flex py-7 px-5 justify-center text-xl">Không có dữ liệu</div>
+    <div *ngIf="!noData">
       <table
         mat-table
         [dataSource]="dataSource"

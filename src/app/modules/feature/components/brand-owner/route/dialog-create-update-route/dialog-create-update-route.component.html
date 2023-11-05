@@ -3,24 +3,65 @@
   <form [formGroup]="routeForm">
     <mat-form-field appearance="outline">
       <mat-label>Điểm xuất phát</mat-label>
-      <mat-select formControlName="startPoint"  name="startPoint">
-          <mat-option *ngFor="let province of provinces" [value]="province">
-              {{ province.name }}
-          </mat-option>
-      </mat-select>
-  </mat-form-field>
-  <br>
-  <mat-form-field appearance="outline">
-    <mat-label>Điểm kết thúc</mat-label>
-    <mat-select formControlName="endPoint" [value]="endPointSelected" name="endPoint">
-        <mat-option *ngFor="let province of provinces" [value]="province">
-            {{ province.name }}
+      <mat-select formControlName="startPoint" name="startPoint">
+        <mat-option
+          *ngFor="let provincesCustom of provincesCustoms"
+          [value]="provincesCustom"
+        >
+          {{ provincesCustom.name }}
         </mat-option>
-    </mat-select>
-</mat-form-field>
+      </mat-select>
+      <!-- <input type="text"
+           placeholder="Chọn điểm đi"
+           matInput
+           formControlName="startPoint"
+           [matAutocomplete]="auto">
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      <mat-option *ngFor="let provincesCustom of provincesCustoms" [value]="provincesCustom">
+        {{ provincesCustom.name }}
+    </mat-option>
+    </mat-autocomplete> -->
+      <mat-error *ngIf="routeForm.get('startPoint')?.hasError('required')">
+        Điểm xuất phát không được để trống
+      </mat-error>
+    </mat-form-field>
+    <br />
+    <mat-form-field appearance="outline">
+      <mat-label>Điểm kết thúc</mat-label>
+      <mat-select
+        formControlName="endPoint"
+        [value]="endPointSelected"
+        name="endPoint"
+      >
+        <mat-option
+          *ngFor="let provincesCustom of provincesCustoms"
+          [value]="provincesCustom"
+        >
+          {{ provincesCustom.name }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="routeForm.get('endPoint')?.hasError('required')">
+        Điểm kết thúc không được để trống
+      </mat-error>
+    </mat-form-field>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Hủy</button>
-  <button mat-button [mat-dialog-close]="true" cdkFocusInitial (click)="onSubmit()">Lưu</button>
+  <button
+    mat-button
+    mat-raised-button
+    [mat-dialog-close]="true"
+    class="bg-red-800 text-cyan-50"
+  >
+    Hủy
+  </button>
+  <button
+    mat-raised-button
+    (click)="onSubmit()"
+    [mat-dialog-close]="true"
+    [disabled]="routeForm.invalid"
+    class="bg-green-600 text-cyan-50"
+  >
+    Lưu
+  </button>
 </mat-dialog-actions>

@@ -168,8 +168,11 @@ export class OrderComponent implements OnInit {
       const dialogRef = this.dialog.open(DialogConfirmOrderComponent,{
         data:{name:'Hủy đơn đặt'}
       })
-      dialogRef.componentInstance.onConfirm.subscribe(
+      dialogRef.componentInstance.onConfirm.subscribe(()=>
+      {
+
         this.handleCancelBooking(order?.id)
+      }
       )
     }
   }
@@ -258,6 +261,7 @@ export class OrderComponent implements OnInit {
   }
 
   handleCancelBooking(orderId:any){
+    this.isLoading = true;
     this.orderService.cancelTicket(orderId).pipe(
       finalize(()=>{
         this.message.success("Hủy đơn đặt vé","Thành công",{timeOut:2000, progressBar:true})

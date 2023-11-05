@@ -1,10 +1,8 @@
-<div class="flex col-span-1" style="width: 650px; height: 650px;">
+<div class="flex col-span-1" style="width: 650px;">
   <form [formGroup]="shuttleForm">
-    <div class="flex flex-col border-0 p-2 shadow-md shadow-slate-400">
+    <div class="mb-4 text-lg font-semibold text-center">Thông tin khung giờ và địa điểm xe chạy</div>
       <div class="flex flex-col" style="width: 640px;">
-        <span style="margin-bottom: 10px; font-weight: 600;"
-          >Chọn tuyến đường</span
-        >
+        <span style="margin-bottom: 10px; font-weight: 600;">Chọn tuyến đường</span>
         <mat-form-field appearance="outline">
           <mat-label>Tuyến đường</mat-label>
           <mat-select formControlName="startPoint" name="startPoint">
@@ -12,6 +10,9 @@
               Từ {{route.startPoint}} đi {{route.endPoint}}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="shuttleForm.get('startPoint')?.hasError('required')">
+            Chưa chọn tuyến đường 
+          </mat-error>
         </mat-form-field>
       </div>
       <div>
@@ -27,14 +28,19 @@
           <mat-form-field appearance="outline">
             <mat-label>Thời gian xuất phát</mat-label>
             <input matInput type="time" formControlName="startTime" />
+            <mat-error *ngIf="shuttleForm.get('startTime')?.hasError('required')">
+              Thời gian xuất phát không được để trống
+            </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Thời gian đến theo dự kiến</mat-label>
             <input matInput type="time" formControlName="endTime" />
+            <mat-error *ngIf="shuttleForm.get('endTime')?.hasError('required')">
+              Thời gian dự kiến đến không được để trống
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
-      <div>
         <div class="my-3">
           <span style="font-weight: 600;">Thêm điểm đón/thời gian đón</span>
         </div>
@@ -46,14 +52,13 @@
                 <input matInput type="text" formControlName="pickUpPoint" />
               </mat-form-field>
               <mat-form-field>
-                <mat-label>Thời gian đến</mat-label>
+                <mat-label>Thời gian đón</mat-label>
                 <input matInput type="time" formControlName="pickUpTime" />
               </mat-form-field>
               <button
                 type="button"
                 title="Remove Request"
-                (click)="onRemovePickUp(i)"
-              >
+                (click)="onRemovePickUp(i)">
                 <mat-icon style="color: red;">remove_circle</mat-icon>
               </button>
             </div>
@@ -82,8 +87,7 @@
               <button
                 type="button"
                 title="Remove Request"
-                (click)="onRemoveDropOff(i)"
-              >
+                (click)="onRemoveDropOff(i)">
                 <mat-icon style="color: red;">remove_circle</mat-icon>
               </button>
             </div>
@@ -94,24 +98,10 @@
             <mat-icon style="color: green;">library_add</mat-icon>
           </button>
         </div>
-        <div class="mt-2">
-          <button
-            mat-button
-            mat-raised-button
-            [mat-dialog-close]="true"
-            style="margin-right: 3px; background: #B00020;color: white;">
-            Hủy
-          </button>
-          <button
-            mat-raised-button
-            (click)="onSubmit()"
-            [mat-dialog-close]="true"
-            [disabled]="!shuttleForm.valid"
-            style="margin-left: 3px; background: green;color: white;">
-            Lưu
-          </button>
+        <div   class="flex justify-end space-x-4">
+          <button mat-button mat-raised-button [mat-dialog-close]="true" class=" bg-red-800 text-cyan-50"> Hủy</button>
+          <button mat-raised-button (click)="onSubmit()" [mat-dialog-close]="true" 
+           [disabled]="shuttleForm.invalid" class="bg-green-600 text-cyan-50">Lưu</button>
         </div>
-      </div>
-    </div>
   </form>
 </div>

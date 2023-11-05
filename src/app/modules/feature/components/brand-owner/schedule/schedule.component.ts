@@ -85,7 +85,6 @@ export class ScheduleComponent implements OnInit {
     })
     dialogRef.componentInstance.createOrUpdate.subscribe(
       data=>{
-
         this.handleCreateOrUpdate(data)
       }
     )
@@ -152,16 +151,4 @@ export class ScheduleComponent implements OnInit {
       )
     }
   }
-  deleteSchedule(shuttle: any) {
-    this.shuttle = { ...shuttle };
-    let shuttleName ='Bạn chắc chắn xóa khung giờ:'+
-      this.shuttle?.startTime + ' - trong tuyến: ' + this.shuttle.routeName;
-    let dialogRef = this.dialog.open( ConfirmDialogComponent, {
-      data: { name: shuttleName },
-    });
-    dialogRef.componentInstance.onConfirm.subscribe(() => {
-      // this.confirmDelete();
-    });
-  }
-
 }

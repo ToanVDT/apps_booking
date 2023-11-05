@@ -15,6 +15,7 @@ export class DialogDetailComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
   
   ngOnInit(): void {
+    
     this.detailInfoCustomer = this.data.detailInfoCustomer;
     this.detailMoney = this.data.detailMoney;
   }

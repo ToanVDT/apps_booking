@@ -15,8 +15,8 @@
         </mat-form-field>
       </form>
     </div>
-
-    <div>
+    <div *ngIf="noData" class="flex py-7 px-5 justify-center text-xl">Không có dữ liệu</div>
+    <div *ngIf="!noData">
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full mt-[2%] rounded-xl border bg-white">
         <!-- Position Column -->
         <ng-container matColumnDef="busName">
@@ -39,13 +39,16 @@
 
         <ng-container matColumnDef="action">
           <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Hành động </th>
-          <td style="width: 25%;text-align: center;" mat-cell *matCellDef="let schedule"> <button mat-button color="primary"
+          <td style="width: 25%;text-align: center;" mat-cell *matCellDef="let schedule"> 
+            <button mat-button color="primary"
+            matTooltip="Chỉnh sửa lịch trình"
+            matTooltipPosition="right"
               (click)="openFormSchedule(schedule)">
               <mat-icon>edit</mat-icon>
             </button>
-            <button mat-button color="accent" (click)="deleteSchedule(schedule)">
+            <!-- <button mat-button color="accent" (click)="deleteSchedule(schedule)">
               <mat-icon>delete</mat-icon>
-            </button>
+            </button> -->
           </td>
         </ng-container>
 

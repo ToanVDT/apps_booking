@@ -8,91 +8,66 @@
     Thêm thông tin nhà xe
   </button>
 </div>
-<div
-  *ngIf="isSuccess"
-  style="
-    height: 40%;
-    width: 60%;
-    border: 1px solid black;
-    border-radius: 12px;
-    background: white;
-    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
-    margin-left: 20%;
-    margin-top: 6%;
-  "
->
-  <div
-    style="
-      display: flex;
-      justify-content: center;
-      margin-top: 3%;
-      font-family: monospace;
-    "
-  >
-    <span>Thông tin về nhà xe</span>
-  </div>
-  <form [formGroup]="brandForm">
-    <div style="display: flex; padding: 20px;">
-      <div style="margin-top: 10%;">
-        <div style="display: flex; margin-right: 10px; margin-bottom: 5%;">
-          <mat-form-field appearance="outline" style="margin-right: 10px;">
-            <mat-label>Tên nhà xe</mat-label>
-            <input matInput placeholder="Placeholder" formControlName="name" />
-            <div>
-              <p *ngIf="nameDuplicated" style="color: red;">Tên nhà xe đã tồn tại</p>
-          </div>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Địa chỉ</mat-label>
-            <input
-              matInput
-              placeholder="Placeholder"
-              formControlName="address"
-            />
-          </mat-form-field>
-        </div>
-        <div>
-          <mat-form-field appearance="outline" style="margin-right: 10px;">
-            <mat-label>Số điện thoại</mat-label>
-            <input matInput placeholder="Placeholder" formControlName="phone" />
-            <div>
-              <p *ngIf="phoneDuplicated" style="color: red;">SĐT nhà xe đã tồn tại</p>
-          </div>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Mô tả</mat-label>
-            <input
-              matInput
-              placeholder="Placeholder"
-              formControlName="description"
-            />
-          </mat-form-field>
-        </div>
-      </div>
-      <mat-form-field
-        appearance="outline"
-        style="margin-left: 5%; margin-top: 10%;"
-      >
-        <img [src]="thumb || img" />
-        <label htmlFor="fileUpload"> <mat-icon>cloud_upload</mat-icon></label>
-        <input id="fileUpload" matInput placeholder="img" hidden />
-        <input
-          id="fileUpload"
-          type="file"
-          class="file-upload"
-          (change)="upLoad($event)"
-        />
-      </mat-form-field>
+<div class="mt-3 mx-7 w-[900px]">
+  <div *ngIf="isSuccess" class="border bg-white rounded-lg p-8">
+    <div class="text-xl text-center font-semibold pb-4">
+      Thông tin về nhà xe
     </div>
-    <div style="margin: 20px;">
+    <form [formGroup]="brandForm" class="w-full flex justify-between space-x-8 items-start">
+      <div class="flex flex-col justify-center w-1/2">
+        <mat-form-field appearance="outline">
+          <mat-label>Tên nhà xe</mat-label>
+          <input matInput placeholder="Tên nhà xe" formControlName="name" />
+          <mat-error *ngIf="nameDuplicated">Tên nhà xe đã tồn tại</mat-error>
+          <mat-error *ngIf="brandForm.get('name')?.hasError('required')">
+            Tên nhà xe không được để trống
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Địa chỉ</mat-label>
+          <input matInput placeholder="Địa chỉ" formControlName="address" />
+          <mat-error *ngIf="brandForm.get('address')?.hasError('required')">
+            Địa chỉ nhà xe không được để trống
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Số điện thoại</mat-label>
+          <input matInput placeholder="Số điện thoại" formControlName="phone" />
+          <mat-error *ngIf="phoneDuplicated">SĐT nhà xe đã tồn tại</mat-error>
+          <mat-error *ngIf="brandForm.get('phone')?.hasError('required')">
+            Số điện thoại nhà xe không được để trống
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Mô tả</mat-label>
+          <input matInput placeholder="Mô tả" formControlName="description" />
+        </mat-form-field>
+      </div>
+      <div class="w-1/2">
+        <mat-form-field appearance="outline" class="w-[325px] h-[325px]">
+          <img [src]="thumb || img" />
+          <label htmlFor="fileUpload"> <mat-icon>cloud_upload</mat-icon></label>
+          <input id="fileUpload" matInput placeholder="img" hidden />
+          <input
+            id="fileUpload"
+            type="file"
+            class="file-upload"
+            (change)="upLoad($event)"
+          />
+        </mat-form-field>
+      </div>
+    </form>
+    <div>
       <button
         mat-raised-button
-        style="background: #fff9c4;"
         (click)="saveBrand()"
+        [disabled]="brandForm.invalid"
+        class="bg-green-600 text-cyan-50"
       >
         Lưu
       </button>
     </div>
-  </form>
+  </div>
 </div>
 <app-spinner [isLoading]="isLoading"></app-spinner>

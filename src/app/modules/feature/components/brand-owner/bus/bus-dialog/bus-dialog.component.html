@@ -3,42 +3,32 @@
     <div class="mb-4 text-xl font-semibold">Thông tin xe</div>
     <mat-form-field appearance="outline">
       <mat-label>Tên xe</mat-label>
-      <input matInput placeholder="Placeholder" formControlName="name" />
-      <!-- <div>
-                <p *ngIf="nameDuplicated" style="color: red;">Tên nhà xe đã tồn tại</p>
-            </div> -->
+      <input matInput placeholder="Tên xe" formControlName="name" />
+      <mat-error *ngIf="busForm.get('name')?.hasError('required')">
+        Tên xe không được để trống
+      </mat-error>
+      <mat-error *ngIf="duplicateNameBus">
+        Tên xe đã tồn tại
+      </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Biển số</mat-label>
-      <input matInput placeholder="Placeholder" formControlName="identityCode" />
+      <input matInput placeholder="Biển số xe" formControlName="identityCode" />
+      <mat-error *ngIf="busForm.get('identityCode')?.hasError('required')">
+        Biển số xe không được để trống
+      </mat-error>
+      <mat-error *ngIf="duplicateIdentityCode">
+        Biển số xe đã tồn tại
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Số chỗ</mat-label>
-      <input matInput type="number" min="0" placeholder="Placeholder" formControlName="seats" id="phone" />
+      <input matInput type="number" min="0" placeholder="Số chỗ" formControlName="seats" id="seats" />
+      <mat-error *ngIf="busForm.get('seats')?.hasError('required')">
+        Số chỗ không được để trống
+      </mat-error>
     </mat-form-field>
-    <!-- <div>
-              <p *ngIf="phoneDuplicated" style="color: red;">Số điện thoại đã tồn tại</p>
-          </div> -->
-    <!-- <div
-              *ngIf="brandForm.controls['phone'].invalid && (brandForm.controls['phone'].dirty || brandForm.controls['phone'].touched)"
-             style="    display: flex;
-             /* justify-items: center; */
-             align-items: center;"
-            >
-              <div *ngIf="brandForm.controls['phone'].errors?.['pattern']">
-                <p style="color: red;">Số điện thoại không hợp lệ</p>
-              </div>
-              <div *ngIf="brandForm.controls['phone'].errors?.['minLength']">
-                Số điện thoại tối thiểu 10 số
-              </div>
-              <div
-                *ngIf="brandForm.controls['phone'].errors?.['maxLength']"
-                class="validation-message"
-              >
-                Số điện thoại tối đa 11 số
-              </div>
-            </div> -->
     <mat-form-field appearance="outline">
       <mat-label>Loại xe</mat-label>
       <mat-select formControlName="busType" name="busType">
@@ -46,6 +36,9 @@
           {{ busType.type }}
         </mat-option>
       </mat-select>
+      <mat-error *ngIf="busForm.get('busType')?.hasError('required')">
+        Chưa chọn loại xe
+      </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Mô tả</mat-label>
@@ -54,11 +47,10 @@
 
   </div>
   <div style="display: flex; justify-content: flex-end;">
-    <button mat-button mat-raised-button [mat-dialog-close]="true" style="margin-right: 20px;"
-      class=" bg-red-800 text-cyan-50">
-      Hủy
-    </button>
-    <button mat-raised-button (click)="onSubmit()" [mat-dialog-close]="true" class="bg-green-600 text-cyan-50">
+    <button mat-button mat-raised-button [mat-dialog-close]="true" style="margin-right: 20px;"class=" bg-red-800 text-cyan-50"> Hủy</button>
+    <button mat-raised-button (click)="onSubmit()" 
+    [disabled]="busForm.invalid"
+    [mat-dialog-close]="true" class="bg-green-600 text-cyan-50">
       Lưu
     </button>
   </div>

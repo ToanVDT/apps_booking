@@ -30,4 +30,14 @@ export class ParkingService {
       retry(1), 
       delay(1000));
   }
+  addPickUp(shuttleId:any,request:any):Observable<any>{
+    return this.http.put<any>(`${environment.apiUrl}/pick_up?shuttleId=${shuttleId}`,request).pipe(
+      retry(1), 
+      delay(1000));
+  }
+  addDropOff(shuttleId:any,request:any):Observable<any>{
+    return this.http.put<any>(`${environment.apiUrl}/drop_off?shuttleId=${shuttleId}`,request).pipe(
+      retry(1), 
+      delay(1000));
+  }
 }
