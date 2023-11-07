@@ -35,7 +35,6 @@ export class AuthenticationService {
   logout() {
     localStorage.removeItem('user');
     this.userSubject.next(null);
-    this.router.navigate(['/auth']);
   }
   refreshToken() {
     console.log(this.userValue?.refreshToken);

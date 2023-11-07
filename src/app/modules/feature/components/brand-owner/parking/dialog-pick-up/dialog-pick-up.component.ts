@@ -39,7 +39,7 @@ export class DialogPickUpComponent implements OnInit {
     
     if (this.pickUpForm.valid) {
       this.Update.emit({
-        id: this.data.pickUp?.id,
+        pickUpId: this.data.pickUp?.id,
         pickUpPoint: this.pickUpPoint,
         pickUpTime: this.pickUpTime,
       });

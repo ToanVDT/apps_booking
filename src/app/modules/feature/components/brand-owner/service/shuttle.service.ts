@@ -29,4 +29,9 @@ export class ShuttleService {
       retry(1), 
       delay(1000));
     }
+    deleteShuttle(shuttleId:any):Observable<any>{
+      return this.http.delete<any>(`${environment.apiUrl}/shuttle?shuttleId=${shuttleId}`).pipe(
+        retry(1), 
+        delay(1000));
+    }
 }

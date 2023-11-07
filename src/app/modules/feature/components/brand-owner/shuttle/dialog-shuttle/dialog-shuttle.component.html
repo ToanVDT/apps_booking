@@ -1,107 +1,108 @@
-<div class="flex col-span-1" style="width: 650px;">
-  <form [formGroup]="shuttleForm">
-    <div class="mb-4 text-lg font-semibold text-center">Thông tin khung giờ và địa điểm xe chạy</div>
-      <div class="flex flex-col" style="width: 640px;">
-        <span style="margin-bottom: 10px; font-weight: 600;">Chọn tuyến đường</span>
-        <mat-form-field appearance="outline">
-          <mat-label>Tuyến đường</mat-label>
-          <mat-select formControlName="startPoint" name="startPoint">
-            <mat-option *ngFor="let route of routes" [value]="route">
-              Từ {{route.startPoint}} đi {{route.endPoint}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="shuttleForm.get('startPoint')?.hasError('required')">
-            Chưa chọn tuyến đường 
-          </mat-error>
-        </mat-form-field>
-      </div>
+<div class="mb-4 text-lg font-semibold text-center">Thông tin khung giờ và địa điểm xe chạy</div>
+  <form [formGroup]="shuttleForm" class="flex flex-col w-[650px] max-h-[550px]">
       <div>
-        <div style="margin-bottom: 10px;">
-          <span style="font-weight: 600;">
-            Khung giờ xe chạy
-          </span>
-        </div>
-        <div
-          style="border: 1px solid #b9abab; border-radius: 5px; padding: 10px;"
-          class="flex flex-col"
-        >
+        <div class="flex flex-col w-[640px]">
+          <span style="margin-bottom: 10px; font-weight: 600;">Chọn tuyến đường</span>
           <mat-form-field appearance="outline">
-            <mat-label>Thời gian xuất phát</mat-label>
-            <input matInput type="time" formControlName="startTime" />
-            <mat-error *ngIf="shuttleForm.get('startTime')?.hasError('required')">
-              Thời gian xuất phát không được để trống
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Thời gian đến theo dự kiến</mat-label>
-            <input matInput type="time" formControlName="endTime" />
-            <mat-error *ngIf="shuttleForm.get('endTime')?.hasError('required')">
-              Thời gian dự kiến đến không được để trống
+            <mat-label>Tuyến đường</mat-label>
+            <mat-select formControlName="startPoint" name="startPoint">
+              <mat-option *ngFor="let route of routes" [value]="route">
+                Từ {{route.startPoint}} đi {{route.endPoint}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="shuttleForm.get('startPoint')?.hasError('required')">
+              Chưa chọn tuyến đường 
             </mat-error>
           </mat-form-field>
         </div>
+        <div>
+          <div style="margin-bottom: 10px;">
+            <span style="font-weight: 600;">
+              Khung giờ xe chạy
+            </span>
+          </div>
+          <div
+            style="border: 1px solid #b9abab; border-radius: 5px; padding: 10px;"
+            class="flex flex-col"
+          >
+            <mat-form-field appearance="outline">
+              <mat-label>Thời gian xuất phát</mat-label>
+              <input matInput type="time" formControlName="startTime" />
+              <mat-error *ngIf="shuttleForm.get('startTime')?.hasError('required')">
+                Thời gian xuất phát không được để trống
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Thời gian đến theo dự kiến</mat-label>
+              <input matInput type="time" formControlName="endTime" />
+              <mat-error *ngIf="shuttleForm.get('endTime')?.hasError('required')">
+                Thời gian dự kiến đến không được để trống
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+          <div class="my-3">
+            <span style="font-weight: 600;">Thêm điểm đón/thời gian đón</span>
+          </div>
+          <div formArrayName="pickUps" class="border-0 p-2">
+            <div *ngFor="let pickUpForm of pickUps?.controls; let i = index">
+              <div [formGroupName]="i" class="flex flex-row justify-between">
+                <mat-form-field>
+                  <mat-label>Điểm đón</mat-label>
+                  <input matInput type="text" formControlName="pickUpPoint" />
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Thời gian đón</mat-label>
+                  <input matInput type="time" formControlName="pickUpTime" />
+                </mat-form-field>
+                <button
+                  type="button"
+                  title="Remove Request"
+                  (click)="onRemovePickUp(i)">
+                  <mat-icon style="color: red;">remove_circle</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <button type="button" (click)="addNewPickUp()">
+              <mat-icon style="color: green;">library_add</mat-icon>
+            </button>
+          </div>
+  
+          <div class="my-3">
+            <span style="font-weight: 600;">Thêm điểm trả/thời gian trả</span>
+          </div>
+          <div formArrayName="dropOffs" class="border-0 p-2">
+            <div *ngFor="let dropOffForm of dropOffs?.controls; let i = index">
+              <div [formGroupName]="i" class="flex flex-row justify-between">
+                <mat-form-field>
+                  <mat-label>Điểm trả</mat-label>
+                  <input matInput type="text" formControlName="dropOffPoint" />
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Thời gian trả</mat-label>
+                  <input matInput type="time" formControlName="dropOffTime" />
+                </mat-form-field>
+                <button
+                  type="button"
+                  title="Remove Request"
+                  (click)="onRemoveDropOff(i)">
+                  <mat-icon style="color: red;">remove_circle</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <button type="button" (click)="addNewDropOff()">
+              <mat-icon style="color: green;">library_add</mat-icon>
+            </button>
+          </div>
+          <div   class="flex justify-end space-x-4 mb-5">
+            <button mat-button mat-raised-button [mat-dialog-close]="true" class=" bg-red-800 text-cyan-50"> Hủy</button>
+            <button mat-raised-button (click)="onSubmit()" [mat-dialog-close]="true" 
+             [disabled]="shuttleForm.invalid" class="bg-green-600 text-cyan-50">Lưu</button>
+          </div>
       </div>
-        <div class="my-3">
-          <span style="font-weight: 600;">Thêm điểm đón/thời gian đón</span>
-        </div>
-        <div formArrayName="pickUps" class="border-0 p-2">
-          <div *ngFor="let pickUpForm of pickUps?.controls; let i = index">
-            <div [formGroupName]="i" class="flex flex-row justify-between">
-              <mat-form-field>
-                <mat-label>Điểm đón</mat-label>
-                <input matInput type="text" formControlName="pickUpPoint" />
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>Thời gian đón</mat-label>
-                <input matInput type="time" formControlName="pickUpTime" />
-              </mat-form-field>
-              <button
-                type="button"
-                title="Remove Request"
-                (click)="onRemovePickUp(i)">
-                <mat-icon style="color: red;">remove_circle</mat-icon>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div>
-          <button type="button" (click)="addNewPickUp()">
-            <mat-icon style="color: green;">library_add</mat-icon>
-          </button>
-        </div>
-
-        <div class="my-3">
-          <span style="font-weight: 600;">Thêm điểm trả/thời gian trả</span>
-        </div>
-        <div formArrayName="dropOffs" class="border-0 p-2">
-          <div *ngFor="let dropOffForm of dropOffs?.controls; let i = index">
-            <div [formGroupName]="i" class="flex flex-row justify-between">
-              <mat-form-field>
-                <mat-label>Điểm trả</mat-label>
-                <input matInput type="text" formControlName="dropOffPoint" />
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>Thời gian trả</mat-label>
-                <input matInput type="time" formControlName="dropOffTime" />
-              </mat-form-field>
-              <button
-                type="button"
-                title="Remove Request"
-                (click)="onRemoveDropOff(i)">
-                <mat-icon style="color: red;">remove_circle</mat-icon>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div>
-          <button type="button" (click)="addNewDropOff()">
-            <mat-icon style="color: green;">library_add</mat-icon>
-          </button>
-        </div>
-        <div   class="flex justify-end space-x-4">
-          <button mat-button mat-raised-button [mat-dialog-close]="true" class=" bg-red-800 text-cyan-50"> Hủy</button>
-          <button mat-raised-button (click)="onSubmit()" [mat-dialog-close]="true" 
-           [disabled]="shuttleForm.invalid" class="bg-green-600 text-cyan-50">Lưu</button>
-        </div>
   </form>
-</div>
+

@@ -149,6 +149,8 @@ export class ParkingComponent implements OnInit {
         finalize(() => {
           this.dataSource1 = new MatTableDataSource(this.pickUps);
           this.dataSource = new MatTableDataSource(this.dropOffs);
+          this.dataSource1.paginator = this.paginator1;
+          this.dataSource.paginator = this.paginator;
           this.isLoading = false;
         })
       )
@@ -188,7 +190,6 @@ export class ParkingComponent implements OnInit {
         .pipe(
           finalize(() => {
             this.getPickUpAndDropOff(this.shuttle?.id)
-            
           })
         )
         .subscribe((data) => {
@@ -200,40 +201,87 @@ export class ParkingComponent implements OnInit {
           }
         });
     }
-    let value: any;
-    this.isLoading = true;
-  }
-  deleteParking(parking: any) {
-    // this.shuttle = { ...shuttle };
-    let parkingName =
-      "Bạn chắc chắn xóa khung giờ:" +
-      this.shuttle?.startTime +
-      " - trong tuyến: " +
-      this.shuttle.routeName;
-    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { name: parkingName },
-    });
-    dialogRef.componentInstance.onConfirm.subscribe(() => {
-      // this.confirmDelete();
-    });
   }
   openDialogAddParking(){
     const dialogRef = this.dialog.open(DialogParkingComponent,{width:'500px'})
+    dialogRef.componentInstance.addParking.subscribe(
+      data=>{
+        this.handleAddParking(data.dropOffs, data.pickUps)
+      }
+    )
   }
   openDialogConfirmDeletePickUp(pickUp:any){
-    let pickUpPoint = "Điểm đón"
+    let pickUpPoint = "Điểm đón "+ pickUp.pickUpPoint
     const dialogRef = this.dialog.open(ConfirmDialogComponent,{
       data:{
         name:pickUpPoint
       },width:'300px'
     })
+    dialogRef.componentInstance.onConfirm.subscribe(
+      ()=>{
+        this.handleDeletePickUp(pickUp?.id)
+      }
+    )
   }
   openDialogConfirmDeleteDropOff(dropOff:any){
-    let dropOffPoint = "Điểm trả"
+    let dropOffPoint = "Điểm trả "+ dropOff.dropOffPoint
     const dialogRef = this.dialog.open(ConfirmDialogComponent,{
       data:{
         name:dropOffPoint
       },width:'300px'
     })
+    dialogRef.componentInstance.onConfirm.subscribe(()=>{
+      this.handleDeleteDropOff(dropOff?.id)
+    })
+  }
+  handleDeletePickUp(id:any){
+    this.isLoading = true
+    this.parkingService.deletePickUp(id).pipe(
+      finalize(()=>{
+        this.getPickUpAndDropOff(this.shuttle?.id)
+      })
+    ).subscribe(
+      data=>{
+        if(data.success){
+          this.message.success("Xóa điểm đón","Thành công",{timeOut:2000, progressBar:true})
+        }
+      }
+    )
+  }
+  handleDeleteDropOff(id:any){
+    this.parkingService.deleteDropOff(id).pipe(
+      finalize(()=>{
+        this.getPickUpAndDropOff(this.shuttle?.id)
+      })
+    ).subscribe(
+      data=>{
+        if(data.success){
+          this.message.success("Xóa điểm trả","Thành công",{timeOut:2000, progressBar:true})
+        }
+      }
+    )
+  }
+  handleAddParking(dropOffs:any, pickUps:any){
+    this.isLoading = true;
+    forkJoin({
+      dropOff:this.addDropOff(dropOffs),
+      pickUps:this.addPickUp(pickUps)
+    }).pipe(
+      finalize(()=>{
+        this.getPickUpAndDropOff(this.shuttle?.id)
+      })
+    ).subscribe(
+      data=>{
+        if(data.dropOff.success && data.pickUps.success){
+          this.message.success("Thêm điểm đón/trả","Thành công",{timeOut:2000,progressAnimation:"increasing"})
+        }
+      }
+    )
+  }
+  addDropOff(request:any){
+    return this.parkingService.addDropOff(this.shuttle?.id,request).pipe()
+  }
+  addPickUp(request:any){
+    return this.parkingService.addPickUp(this.shuttle?.id,request).pipe()
   }
 }

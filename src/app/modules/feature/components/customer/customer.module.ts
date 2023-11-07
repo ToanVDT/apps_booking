@@ -11,6 +11,7 @@ import { CustomerCategorySliderComponent } from './components/customer-category-
 import { CustomerTicketCardComponent } from './components/customer-ticket-card/customer-ticket-card.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { ListResultShuttleComponent } from './list-result-shuttle/list-result-shuttle.component';
+import { DialogShowOrderComponent } from './components/dialog-show-order/dialog-show-order.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { ListResultShuttleComponent } from './list-result-shuttle/list-result-sh
     CustomerCategorySliderComponent,
     CustomerTicketCardComponent,
     HomepageComponent,
-    ListResultShuttleComponent
+    ListResultShuttleComponent,
+    DialogShowOrderComponent
   ],
   imports: [
     CommonModule,

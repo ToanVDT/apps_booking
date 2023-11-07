@@ -35,12 +35,8 @@ export class AuthComponent implements OnInit {
       password: new FormControl(this.password, [Validators.required]),
     });
 
-    this.form
-      .get("username")
-      ?.valueChanges.subscribe((value) => (this.username = value));
-    this.form
-      .get("password")
-      ?.valueChanges.subscribe((value) => (this.password = value));
+    this.form.get("username")?.valueChanges.subscribe((value) => (this.username = value));
+    this.form.get("password")?.valueChanges.subscribe((value) => (this.password = value));
   }
   login() {
     // console.log(this.username, "-", this.password);

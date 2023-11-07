@@ -19,6 +19,13 @@ export class ProfileComponent implements OnInit {
   password:ChangePassDTO = {}
   credentials:Profile = {};
   fullName:any;
+  existFullName:any;
+  existPhone:any
+  existEmail:any
+  existIdentityCode:any;
+  duplicatePhone:any
+  duplicateEmail:any
+  duplicateIdentityCode:any;
   reNewPassValid:boolean = true;
   oldPasswordValid:boolean = true;
   isLoading:boolean = false;
@@ -56,10 +63,13 @@ export class ProfileComponent implements OnInit {
         }
       }
     )
-    this.profileForm.get('email')?.valueChanges.subscribe(
+    this.profileForm.get('email')?.valueChanges.pipe(debounceTime(1000), distinctUntilChanged()).subscribe(
       value=>{
-        if(value){
-          this.credentials.email = value
+        this.credentials.email = value
+        if(value !== this.existEmail){
+          if(value){
+            this.checkDuplicateEmail(value)
+          }
         }
       }
     )
@@ -70,17 +80,23 @@ export class ProfileComponent implements OnInit {
         }
       }
     )
-    this.profileForm.get('phone')?.valueChanges.subscribe(
+    this.profileForm.get('phone')?.valueChanges.pipe(debounceTime(700), distinctUntilChanged()).subscribe(
       value=>{
-        if(value){
-          this.credentials.phone = value
+        this.credentials.phone = value
+        if(value !== this.existPhone){
+          if(value){
+            this.checkDuplicatePhone(value)
+          }
         }
       }
     )
-    this.profileForm.get('identityCode')?.valueChanges.subscribe(
+    this.profileForm.get('identityCode')?.valueChanges.pipe(debounceTime(900), distinctUntilChanged()).subscribe(
       value=>{
-        if(value){
-          this.credentials.identityCode = value
+        this.credentials.identityCode = value
+        if(value !== this.existIdentityCode){
+          if(value){
+            this.checkDuplicateIdentityCode(value)
+          }
         }
       }
     )
@@ -119,6 +135,10 @@ export class ProfileComponent implements OnInit {
       finalize(()=>{
         this.isLoading = false;
         if(this.credentials?.username){
+          this.existEmail = this.credentials.email;
+          this.existFullName = this.credentials.fullName;
+          this.existIdentityCode = this.credentials.identityCode;
+          this.existPhone = this.credentials.phone;
           this.profileForm.get('username')?.setValue(this.credentials.username)
           this.profileForm.get('address')?.setValue(this.credentials.address)
           this.profileForm.get('email')?.setValue(this.credentials.email)
@@ -166,7 +186,54 @@ export class ProfileComponent implements OnInit {
       }
     )
   }
-  onSubmit() {
-
+  changePassword() {
+    let request = {
+      userId:this.user.data?.id,
+      newPassword:this.password.newPass
+    }
+    this.profileService.changePassword(request).pipe().subscribe(
+      data=>{
+        if(data.success){
+          this.messageService.success("Đổi mật khẩu", "Thành công",{timeOut:2000, progressBar:true})
+        }
+      }
+    )
+  }
+  checkDuplicateEmail(email:any){
+    this.profileService.checkExistEmail(email).pipe().subscribe(
+      data=>{
+       this.duplicateEmail = data;
+       if(data){
+        if(data){
+          this.profileForm.get('email')?.setErrors({duplicateEmail:true})
+        }
+       }
+      }
+    )
+  }
+  checkDuplicatePhone(phone:any){
+    this.profileService.checkExistPhone(phone).pipe().subscribe(
+      data=>{
+       this.duplicatePhone = data;
+       console.log("data", data)
+       if(data){
+        if(data){
+          this.profileForm.get('phone')?.setErrors({duplicatePhone:true})
+        }
+       }
+      }
+    )
+  }
+  checkDuplicateIdentityCode(identityCode:any){
+    this.profileService.checkExistIdentityCode(identityCode).pipe().subscribe(
+      data=>{
+       this.duplicateIdentityCode = data;
+       if(data){
+        if(data){
+          this.profileForm.get('identityCode')?.setErrors({duplicateIdentityCode:true})
+        }
+       }
+      }
+    )
   }
 }

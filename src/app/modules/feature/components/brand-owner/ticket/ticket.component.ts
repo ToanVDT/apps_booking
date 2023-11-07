@@ -149,7 +149,6 @@ export class TicketComponent implements OnInit {
           this.noData = true;
           this.isLoading = false;
         }
-        // this.dataSource  =new MatTableDataSource(this.schedules)
       })
     ).subscribe(
       data=>{

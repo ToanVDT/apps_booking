@@ -150,7 +150,24 @@ export class ShuttleComponent implements OnInit {
       data: { name: shuttleName },
     });
     dialogRef.componentInstance.onConfirm.subscribe(() => {
-      // this.confirmDelete();
+      this.handleDeleteShuttle(shuttle?.id)
     });
+  }
+  handleDeleteShuttle(shuttleId:any){
+    this.isLoading = true;
+  this.shuttleService.deleteShuttle(shuttleId).pipe(
+    finalize(()=>{
+      this.getShuttleAndRoute()
+    })
+  ).subscribe(
+    data=>{
+      if(data.success){
+        this.message.success("Xóa khung giờ chạy","Thành công",{timeOut:2000, progressBar:true})
+      }
+      else{
+        this.message.error("Xóa khung giờ chạy","Thất bại",{timeOut:2000, progressBar:true})
+      }
+    }
+  )
   }
 }

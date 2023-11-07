@@ -9,24 +9,18 @@
       </div>
     </div>
     <div class="flex items-center">
-      <button mat-button>Quản lý đơn hàng</button>
+      <button mat-button style="color: white;" (click)="openDialogShowOrder()">Tra cứu đơn đặt</button>
       <button mat-icon-button [matMenuTriggerFor]="contact">
         <mat-icon class="white-color">local_phone</mat-icon>
       </button>
       <mat-menu #contact="matMenu">
         <label mat-menu-item>Liên hệ : 09765456789</label>
       </mat-menu>
-      <button
-        *ngIf="!isLogin"
-        mat-raised-button
-        color="accent"
-        (click)="openDialogLogin()"
-      >
+      <button *ngIf="!isLogin" mat-raised-button color="accent" (click)="openDialogLogin()">
         Đăng nhập
       </button>
       <div *ngIf="isLogin" class="relative ml-3 flex items-center">
         <div class="flex items-center space-x-5">
-          <span class="text-lg font-bold">Admin</span>
           <button mat-button [matMenuTriggerFor]="profileMenu">
             <img class="h-10 w-10"
               src="https://www.shareicon.net/data/128x128/2016/05/24/770117_people_512x512.png"
@@ -35,6 +29,9 @@
           </button>
           <mat-menu #profileMenu="matMenu">
             <button mat-menu-item>Thông tin tài khoản</button>
+            <div mat-menu-item>Thành viên</div>
+            <button mat-menu-item>Lịch sử đặt vé</button>
+            <button mat-menu-item>Ưu đãi</button>
             <button mat-menu-item (click)="logout()">Đăng xuất</button>
           </mat-menu>
         </div>

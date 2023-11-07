@@ -42,7 +42,9 @@
       <mat-list-item style="margin-top: -25px;" routerLink="{{routes.PROFILE}}" routerLinkActive="active-list-item">
         <mat-icon>account_circle</mat-icon> Thông tin tài khoản
       </mat-list-item>
-      <mat-list-item style="margin-top: -15px;" routerLink="{{routes.BRAND}}" routerLinkActive="active">
-        <mat-icon>exit_to_app</mat-icon> Đăng xuất
+      <mat-list-item style="margin-top: -15px;">
+        <button (click)="logOut()">
+          <mat-icon>exit_to_app</mat-icon> Đăng xuất
+        </button>
       </mat-list-item>
   </mat-list>

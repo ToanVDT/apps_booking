@@ -30,7 +30,6 @@ export class DialogShuttleComponent implements OnInit {
   // pickUps: any;
 
   constructor(
-    private routeService: RouteService,
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {

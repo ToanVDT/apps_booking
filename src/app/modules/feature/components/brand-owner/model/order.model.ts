@@ -34,3 +34,23 @@ export class DateAndTime{
     date?:any;
     time?:any;
 }
+export class OrderDTO{
+    listSeat?:string[];
+    orderDate?:any;
+    orderCode?:string;
+    orderStatus?:string;
+    totalPrice?:number;
+    deposit?:number;
+    routeName?:string;
+    brandName?:string;
+    travelDate?:any;
+    startTime?:any;
+    paymentStatus?:string;
+    brandPhone?:string;
+    price?:number;
+    eatingFee?:number;
+    quantityEating?:number;
+    quantityTicket?:number;
+    giftMoney?:number;
+    restMoney?:number;
+}

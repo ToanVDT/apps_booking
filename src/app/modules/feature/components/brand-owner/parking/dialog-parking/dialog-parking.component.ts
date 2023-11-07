@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -8,11 +8,9 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 })
 export class DialogParkingComponent implements OnInit {
 
- 
+  @Output() addParking = new EventEmitter<any>();
   constructor(private formBuilder: FormBuilder,) { 
-   
   }
-
   ngOnInit(): void {
   }
   pakringForm = this.formBuilder.group({
@@ -58,7 +56,10 @@ export class DialogParkingComponent implements OnInit {
   }
   onSubmit(){
     if(this.pickUpForm.valid && this.dropOffForm.valid){
-      console.log()
+      this.addParking.emit({
+        dropOffs:this.pakringForm.value.dropOffs,
+        pickUps:this.pakringForm.value.pickUps
+      })
     }
   }
 }

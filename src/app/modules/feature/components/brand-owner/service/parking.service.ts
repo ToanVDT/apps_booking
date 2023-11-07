@@ -40,4 +40,14 @@ export class ParkingService {
       retry(1), 
       delay(1000));
   }
+  deletePickUp(id:any):Observable<any>{
+    return this.http.delete<any>(`${environment.apiUrl}/pick_up?id=${id}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
+  deleteDropOff(id:any):Observable<any>{
+    return this.http.delete<any>(`${environment.apiUrl}/drop_off?id= ${id}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
 }
