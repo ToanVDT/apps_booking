@@ -15,4 +15,9 @@ export class CustomerService {
       retry(1), 
       delay(1000));
   }
+  checkPhoneRegisterCustomer(phone:any):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/user/existPhoneRegisterCustomer?phone=${phone}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
 }

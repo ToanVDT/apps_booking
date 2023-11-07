@@ -3,8 +3,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { User } from '../../models/user.model';
 import { CustomerService } from 'src/app/modules/feature/components/customer/service/customer.service';
 import { ToastrService } from 'ngx-toastr';
-import { finalize } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize } from 'rxjs';
 import { AuthenticationService } from 'src/app/modules/feature/components/auth/service/authentication.service';
+import { ProfileService } from 'src/app/modules/feature/components/brand-owner/service/profile.service';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +16,9 @@ export class LoginComponent implements OnInit {
   showPassword = false;
   credentialValid!:boolean
   isLoading:boolean = false;
+  phoneExist:boolean = false;
+  emailExist:boolean = false;
+  usernameExist:boolean = false;
   ForGotPassword: boolean = false;
   sentEmail = false;
   username!: string;
@@ -28,12 +32,13 @@ export class LoginComponent implements OnInit {
   forgotPasswordForm: FormGroup;
   rePassvalid: boolean = true;
   registerForm: FormGroup;
-  user!: User;
+  user:any
   hidePassword = true;
   hideRequirePassword = true;
 
   @Output() logInResponse = new EventEmitter<any>();
-  constructor(private customerService:CustomerService,private auth:AuthenticationService, private message:ToastrService) {
+  constructor(private customerService:CustomerService,private auth:AuthenticationService,
+     private message:ToastrService, private profileService:ProfileService) {
     this.registerForm = new FormGroup({
       phone: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]+$/)]),
       fullName: new FormControl('', [Validators.required]),
@@ -55,8 +60,18 @@ export class LoginComponent implements OnInit {
     this.formLogin.get('password')?.valueChanges.subscribe((value) => this.password = value);
 
     this.registerForm.get('fullName')?.valueChanges.subscribe((value) => this.fullName = value)
-    this.registerForm.get('phone')?.valueChanges.subscribe((value) => this.phone = value)
-    this.registerForm.get('email')?.valueChanges.subscribe((value) => this.email = value)
+    this.registerForm.get('phone')?.valueChanges.pipe(debounceTime(800),distinctUntilChanged()).subscribe((value) => {
+      if(value){
+        this.phone = value
+        this.checkPhoneExist(value)
+      }
+    })
+    this.registerForm.get('email')?.valueChanges.pipe(debounceTime(800),distinctUntilChanged()).subscribe((value) => {
+      if(value){
+        this.email = value
+        this.checkEmailExist(value)
+      }
+    })
     this.registerForm.get('password')?.valueChanges.subscribe((value) => this.passwordRegister = value)
     this.registerForm.get('rePassword')?.valueChanges.subscribe(value => {
       if (value) {
@@ -114,7 +129,7 @@ export class LoginComponent implements OnInit {
       email: this.email,
       password: this.passwordRegister
     }
-    // console.log("requestData", request)
+
     this.customerService.registerCustomer(request).pipe(
       finalize(()=>{
         this.isLoading = false;
@@ -154,5 +169,25 @@ export class LoginComponent implements OnInit {
     this.sentEmail = true;
     this.forgotPasswordForm.get('email')?.disable();
     this.forgotPasswordForm.get('codeConfirm')?.enable();
+  }
+  checkPhoneExist(phone:any){
+    this.customerService.checkPhoneRegisterCustomer(phone).pipe().subscribe(
+      data=>{
+        this.phoneExist = data;
+        if(this.phoneExist){
+          this.registerForm.get('phone')?.setErrors({phoneInvalid:true})
+        }
+      }
+    )
+  }
+  checkEmailExist(email:any){
+    this.profileService.checkExistEmail(email).pipe().subscribe(
+      data=>{
+        this.emailExist = data;
+        if(this.emailExist){
+          this.registerForm.get('email')?.setErrors({emailInvalid:true})
+        }
+      }
+    )
   }
 }

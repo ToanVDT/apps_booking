@@ -36,6 +36,9 @@
           </mat-error>
           <mat-error  *ngIf="registerForm.get('phone')?.hasError('required')">Số điện thoại không được trống</mat-error>
       </mat-form-field>
+      <mat-error  *ngIf="phoneExist">
+        Số điện thoại đã tồn tại
+      </mat-error>
       <mat-form-field appearance="outline">
           <mat-icon class="text-[#9B9B9B] mr-1" matPrefix>person_pin</mat-icon>
           <input matInput placeholder="Nhập họ tên" formControlName="fullName">
@@ -51,6 +54,9 @@
           </mat-error>
           <mat-error  *ngIf="registerForm.get('email')?.hasError('required')">
             Email không được trống
+          </mat-error>
+          <mat-error  *ngIf="emailExist">
+            Email đã tồn tại
           </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
