@@ -20,4 +20,14 @@ export class CustomerService {
       retry(1), 
       delay(1000));
   }
+ getProfile(userId:any):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/user/profile-customer?userId=${userId}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
+  updateProfile(request:any):Observable<any>{
+    return this.http.put<any>(`${environment.apiUrl}/user/profile-customer`,request).pipe(
+      retry(1), 
+      delay(1000));
+  }
 }

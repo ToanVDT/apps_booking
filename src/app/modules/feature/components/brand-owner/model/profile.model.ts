@@ -6,6 +6,11 @@ export class Profile{
     phone?:string;
     identityCode?:string;
 }
+export class ProfileCustomer{
+    fullName?:string;
+    email?:string;
+    phone?:string;
+}
 export class ChangePassDTO{
     newPass?:string;
     reNewPass?:string;

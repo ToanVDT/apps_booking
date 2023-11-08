@@ -28,9 +28,12 @@
             />
           </button>
           <mat-menu #profileMenu="matMenu">
-            <button mat-menu-item>Thông tin tài khoản</button>
-            <div mat-menu-item>Thành viên</div>
-            <button mat-menu-item>Lịch sử đặt vé</button>
+            <button mat-menu-item (click)="openProfileCustomer()">Thông tin tài khoản</button>
+            <div mat-menu-item>Thành viên 
+              <span class="rank-title" [class.newmember]="rank === 'Mới'" 
+              [class.member]="rank === 'Thường'"> {{rank}}</span>
+             </div>
+            <button mat-menu-item (click)="openHistoryOrder()">Lịch sử đặt vé</button>
             <button mat-menu-item>Ưu đãi</button>
             <button mat-menu-item (click)="logout()">Đăng xuất</button>
           </mat-menu>

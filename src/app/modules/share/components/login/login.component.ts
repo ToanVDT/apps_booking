@@ -90,7 +90,6 @@ export class LoginComponent implements OnInit {
   }
   login() {
     this.isLoading = true;
-    // console.log("username", this.username, "pass", this.password)
     this.auth.login(this.username,this.password).pipe(
       finalize(()=>{
         this.isLoading = false;

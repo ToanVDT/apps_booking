@@ -1,4 +1,4 @@
-  <mat-tab-group fitInkBarToContent class="border rounded-xl bg-white mx-8 my-4 w-[800px] ">
+<mat-tab-group fitInkBarToContent class=" bg-white mx-8 my-4 w-[800px] h-[450px]">
     <mat-tab label="Thông tin cá nhân">
         <div class="text-xl text-center font-semibold my-3"> Thông tin cá nhân</div>
           <form [formGroup]="profileForm" class="container flex flex-col items-center space-y-0">
@@ -6,15 +6,6 @@
               <mat-label>Tên</mat-label>
               <input matInput formControlName="fullName" />
               <mat-error *ngIf="profileForm.get('fullName')?.hasError('required')">Tên không được để trống</mat-error>
-            </mat-form-field>
-            <mat-form-field>
-              <mat-label>Tên đăng nhập</mat-label>
-              <input matInput formControlName="username" />
-            </mat-form-field>
-            <mat-form-field>
-              <mat-label>Địa chỉ</mat-label>
-              <input matInput formControlName="address" />
-              <mat-error *ngIf="profileForm.get('address')?.hasError('required')">Email không được để trống</mat-error>
             </mat-form-field>
             <mat-form-field>
               <mat-label>Email</mat-label>
@@ -28,20 +19,6 @@
             <mat-form-field>
               <mat-label>SĐT</mat-label>
               <input matInput formControlName="phone" />
-              <mat-error *ngIf="duplicatePhone">
-                Số điện thoại đã tồn tại
-              </mat-error>
-              <mat-error *ngIf="profileForm.get('phone')?.hasError('required')">Số điện thoại không được để trống</mat-error>
-              <mat-error *ngIf="profileForm.get('phone')?.hasError('pattern')">Số điện thoại không chứa chữ cái</mat-error>
-            </mat-form-field>
-            <mat-form-field>
-              <mat-label>CMND/CCCD</mat-label>
-              <input matInput formControlName="identityCode"/>
-              <mat-error *ngIf="duplicateIdentityCode">
-                CCCD/CMND đã tồn tại
-              </mat-error>
-              <mat-error *ngIf="profileForm.get('identityCode')?.hasError('required')">CCCD/CMND không được để trống</mat-error>
-              <mat-error *ngIf="profileForm.get('identityCode')?.hasError('pattern')">CCCD/CMND không chứa chữ cái</mat-error>
             </mat-form-field>
           </form>
           <div class="flex justify-end m-3">

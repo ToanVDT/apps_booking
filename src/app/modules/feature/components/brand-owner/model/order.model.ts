@@ -9,6 +9,17 @@ export class Orders{
     listSeat?:string[];
     paymentStatus?:string;
 }
+export class OrderShowInCustomerPage{
+    id?:number;
+    brandName?:string;
+    orderDate?:string;
+    totalPrice?:number;
+    deposit?:number;
+    orderStatus?:string;
+    restPrice?:number;
+    listSeat?:string[];
+    paymentStatus?:string;
+}
 
 export class DetailMoney{
     giftCode?:number;

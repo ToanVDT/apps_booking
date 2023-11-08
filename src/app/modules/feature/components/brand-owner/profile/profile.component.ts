@@ -128,6 +128,7 @@ export class ProfileComponent implements OnInit {
         }
       }
     )
+    this.profileForm.get('username')?.disable()
   }
   getProfile(){
     this.isLoading = true;

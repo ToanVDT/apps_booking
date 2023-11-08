@@ -12,6 +12,11 @@ import { CustomerTicketCardComponent } from './components/customer-ticket-card/c
 import { HomepageComponent } from './homepage/homepage.component';
 import { ListResultShuttleComponent } from './list-result-shuttle/list-result-shuttle.component';
 import { DialogShowOrderComponent } from './components/dialog-show-order/dialog-show-order.component';
+import { ProfileCustomerComponent } from './components/profile-customer/profile-customer.component';
+import { HistoryOrderComponent } from './components/history-order/history-order.component';
+import { CurrentOrderComponent } from './components/history-order/current-order/current-order.component';
+import { PastOrderComponent } from './components/history-order/past-order/past-order.component';
+import { CancelOrderComponent } from './components/history-order/cancel-order/cancel-order.component';
 
 
 @NgModule({
@@ -23,7 +28,12 @@ import { DialogShowOrderComponent } from './components/dialog-show-order/dialog-
     CustomerTicketCardComponent,
     HomepageComponent,
     ListResultShuttleComponent,
-    DialogShowOrderComponent
+    DialogShowOrderComponent,
+    ProfileCustomerComponent,
+    HistoryOrderComponent,
+    CurrentOrderComponent,
+    PastOrderComponent,
+    CancelOrderComponent
   ],
   imports: [
     CommonModule,
