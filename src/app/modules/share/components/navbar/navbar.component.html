@@ -34,7 +34,7 @@
               [class.member]="rank === 'Thường'"> {{rank}}</span>
              </div>
             <button mat-menu-item (click)="openHistoryOrder()">Lịch sử đặt vé</button>
-            <button mat-menu-item>Ưu đãi</button>
+            <button mat-menu-item (click)="openPromotion()">Ưu đãi</button>
             <button mat-menu-item (click)="logout()">Đăng xuất</button>
           </mat-menu>
         </div>

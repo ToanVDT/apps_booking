@@ -60,4 +60,7 @@ export class NavbarComponent implements OnInit {
   openHistoryOrder(){
     this.router.navigate(['/customer/history-order'])
   }
+  openPromotion(){
+    this.router.navigate(['/customer/promotion'])
+  }
 }

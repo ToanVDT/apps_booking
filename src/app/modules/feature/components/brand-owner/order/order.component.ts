@@ -43,7 +43,7 @@ export class OrderComponent implements OnInit {
     'action'
   ];
   today = new Date();
-  status = ["Đã đặt", "Đã hủy", "Chờ duyệt"]
+  status = ["Đã đặt", "Đã hủy", "Chờ duyệt","Hoàn thành"]
   routes:Routes[]=[];
   route: Routes = {};
   shuttle : Shuttle = {}
@@ -114,8 +114,11 @@ export class OrderComponent implements OnInit {
         else if (item.orderStatus === "CANCELED"){
           item.orderStatus = this.status[1]
         }
-        else{
+        else if(item.orderStatus ==='PENDING'){
           item.orderStatus = this.status[2]
+        }
+        else{
+          item.orderStatus = this.status[3]
         }
       })
 

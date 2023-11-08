@@ -51,8 +51,11 @@ openShowOrder(){
         else if(this.orderDTO.orderStatus === 'CANCELED'){
           this.orderStatus = 'Đã hủy'
         }
-        else{
+        else if(this.orderDTO.orderStatus === 'PENDING'){
           this.orderStatus = 'Chờ duyệt'
+        }
+        else{
+          this.orderStatus = 'Hoàn thành'
         }
 
       }

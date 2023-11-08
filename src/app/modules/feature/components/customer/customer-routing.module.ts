@@ -5,6 +5,7 @@ import { HomepageComponent } from "./homepage/homepage.component";
 import { ListResultShuttleComponent } from "./list-result-shuttle/list-result-shuttle.component";
 import { ProfileCustomerComponent } from "./components/profile-customer/profile-customer.component";
 import { HistoryOrderComponent } from "./components/history-order/history-order.component";
+import { PromotionComponent } from "./components/promotion/promotion.component";
 
 const routes: Routes = [
   {
@@ -15,6 +16,7 @@ const routes: Routes = [
       { path: "list-result-shuttle", component: ListResultShuttleComponent },
       { path: "profile-customer", component: ProfileCustomerComponent },
       { path: "history-order", component: HistoryOrderComponent },
+      { path: "promotion", component: PromotionComponent }
     ],
   },
 ];
@@ -23,4 +25,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class CustomerRoutingModule {}
+export class CustomerRoutingModule { }

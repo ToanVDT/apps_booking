@@ -17,6 +17,8 @@ import { HistoryOrderComponent } from './components/history-order/history-order.
 import { CurrentOrderComponent } from './components/history-order/current-order/current-order.component';
 import { PastOrderComponent } from './components/history-order/past-order/past-order.component';
 import { CancelOrderComponent } from './components/history-order/cancel-order/cancel-order.component';
+import { PromotionComponent } from './components/promotion/promotion.component';
+import { ShowDetailOrderCustomerComponent } from './components/history-order/current-order/show-detail-order-customer/show-detail-order-customer.component';
 
 
 @NgModule({
@@ -33,7 +35,9 @@ import { CancelOrderComponent } from './components/history-order/cancel-order/ca
     HistoryOrderComponent,
     CurrentOrderComponent,
     PastOrderComponent,
-    CancelOrderComponent
+    CancelOrderComponent,
+    PromotionComponent,
+    ShowDetailOrderCustomerComponent
   ],
   imports: [
     CommonModule,

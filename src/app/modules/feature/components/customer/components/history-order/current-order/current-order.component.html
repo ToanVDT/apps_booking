@@ -12,7 +12,13 @@
       <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Vé</th>
       <td style="width: 15%;text-align: center;" mat-cell *matCellDef="let order">{{order.listSeat}}
     </ng-container>
-
+    
+    <ng-container matColumnDef="travelDate">
+      <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Ngày đi</th>
+      <td style="width: 10%; text-align: center;padding:0 60px" mat-cell *matCellDef="let order">
+          {{order.travelTime}} {{order.travelDate |date: 'dd/MM/yyyy'}}
+      </td>
+    </ng-container>
     <ng-container matColumnDef="orderDate">
       <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Ngày đặt</th>
       <td style="width: 10%; text-align: center;padding:0 60px" mat-cell *matCellDef="let order">
@@ -34,18 +40,22 @@
     <ng-container matColumnDef="orderStatus">
       <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Trạng thái đơn đặt</th>
       <td style="width: 15%; text-align: center;" mat-cell *matCellDef="let order">
-        <div class="rounded-lg border-4 h-[34px] py-1 w-[130px] px-7 text-cyan-50"
-          [ngStyle]="{'background': (order.orderStatus === 'Đã hủy') ? 'red' : (order.orderStatus === 'Đã đặt') ? 'green' : (order.orderStatus === 'Chờ duyệt') ? '#F59E08' : ''}">
+        <div class="w-full h-full flex justify-center">
+          <div class="rounded-lg border-4 h-[34px] py-1 w-[130px] px-7 text-cyan-50 "
+          [ngStyle]="{'background': (order.orderStatus === 'Đã hủy') ? 'red' : (order.orderStatus === 'Đã đặt') ? 'green' : (order.orderStatus === 'Chờ duyệt') ? '#F59E08' : 'green'}">
           {{order.orderStatus}}
+        </div>
         </div>
       </td>
     </ng-container>
     <ng-container matColumnDef="paymentStatus">
       <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Thanh toán</th>
       <td style="width: 15%; text-align: center;" mat-cell *matCellDef="let order">
-        <div class="rounded-lg border-4 h-[34px] py-1 w-[168px] px-7 text-cyan-50"
-          [ngStyle]="{'background': (order.paymentStatus === 'Chưa thanh toán') ? 'red' : (order.paymentStatus === 'Đã thanh toán') ? 'green' : (order.paymentStatus === 'Đã cọc') ? '#F59E08' : ''}">
-          {{order.paymentStatus}}
+        <div class="w-full h-full flex justify-center">
+          <div class="rounded-lg border-4 h-[34px] py-1 w-[168px] px-7 text-cyan-50 flex justify-center"
+            [ngStyle]="{'background': (order.paymentStatus === 'Chưa thanh toán') ? 'red' : (order.paymentStatus === 'Đã thanh toán') ? 'green' : (order.paymentStatus === 'Đã cọc') ? '#F59E08' : ''}">
+            {{order.paymentStatus}}
+          </div>
         </div>
       </td>
     </ng-container>

@@ -30,4 +30,24 @@ export class CustomerService {
       retry(1), 
       delay(1000));
   }
+  getCurrentOrder(userId:any):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/order/current?userId=${userId}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
+  getPastOrder(userId:any):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/order/past?userId=${userId}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
+  getCanceledOrder(userId:any):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/order/canceled?userId=${userId}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
+  getGiftCode(userId:any):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/giftcode?userId=${userId}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
 }

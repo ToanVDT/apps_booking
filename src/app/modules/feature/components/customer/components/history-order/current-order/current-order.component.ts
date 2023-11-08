@@ -7,7 +7,7 @@ import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { finalize, forkJoin } from 'rxjs';
 import { AuthenticationService } from '../../../../auth/service/authentication.service';
-import { DetailMoney, DateAndTime, DetailInfoCustomer, Orders, OrderShowInCustomerPage } from '../../../../brand-owner/model/order.model';
+import { DetailMoney, DateAndTime, DetailInfoCustomer, Orders, OrderShowInCustomerPage, OrderDTO } from '../../../../brand-owner/model/order.model';
 import { ScheduleDTO } from '../../../../brand-owner/model/schedule.model';
 import { Shuttle } from '../../../../brand-owner/model/shuttle.model';
 import { DialogConfirmOrderComponent } from '../../../../brand-owner/order/dialog-confirm-order/dialog-confirm-order.component';
@@ -16,6 +16,8 @@ import { DialogDetailComponent } from '../../../../brand-owner/order/dialog-deta
 import { DialogInformComponent } from '../../../../brand-owner/order/dialog-inform/dialog-inform.component';
 import { OrderService } from '../../../../brand-owner/service/order.service';
 import { ScheduleService } from '../../../../brand-owner/service/schedule.service';
+import { CustomerService } from '../../../service/customer.service';
+import { ShowDetailOrderCustomerComponent } from './show-detail-order-customer/show-detail-order-customer.component';
 
 @Component({
   selector: 'app-current-order',
@@ -28,6 +30,7 @@ export class CurrentOrderComponent implements OnInit {
   displayedColumns: string[] = [
     'brandName',
     'tickets',
+    'travelDate',
     'orderDate',
     'totalPrice',
     'deposit',
@@ -37,69 +40,61 @@ export class CurrentOrderComponent implements OnInit {
   ];
   today = new Date();
   status = ["Đã đặt", "Đã hủy", "Chờ duyệt"]
-  shuttle : Shuttle = {}
-  detailMoney:DetailMoney= {};
   openingMenu:boolean = false;
   dateTime:DateAndTime = {}
-  detailInfoCustomer:DetailInfoCustomer ={}
   customerInfo:boolean = true;
   user:any;
+  detaiCurrentOrder:OrderDTO = {}
   timeValidToCancelBooking:boolean = true;
   noData:boolean = true;
   order:OrderShowInCustomerPage = {};
   orders:OrderShowInCustomerPage[]=[]
   isLoading : boolean = false;
   isApproval : boolean = true;
-  schedules:ScheduleDTO[]=[];
-  schedule:ScheduleDTO ={}
-  orderForm:FormGroup
 
   dataSource = new MatTableDataSource(this.orders);
   dataSourceWithPageSize = new MatTableDataSource(this.orders);
 
   constructor(private dialog:MatDialog, private auth:AuthenticationService,
-    private scheduleService:ScheduleService,private orderService:OrderService,
+    private customerService:CustomerService,private orderService:OrderService,
     private message:ToastrService) {
-      this.orderForm = new FormGroup({
-        schedule:new FormControl(""),
-        dateStart:new FormControl("")
-      })
+    
     }
   ngOnInit(): void {
     this.user = this.auth.userValue;
+    this.getCustomerOrder(this.user?.data?.id)
   }
- getOrders(userId:any){
-  // let response:any;
-  // this.orderService.getOrderInSchedule(scheduleId).pipe(
-  //   finalize(()=>{
-  //     if(response[0]?.id){
-  //       this.noData = false;
-  //       this.dataSource = new MatTableDataSource(this.orders)
-  //       this.dataSource.paginator = this.paginator;
-  //     }
-  //     else{
-  //       this.noData = true;
-  //     }
-  //     this.isLoading = false
-  //   })
-  // ).subscribe(
-  //   data=>{
-  //     this.orders = data.data
-  //     response = data.data
-  //     this.orders.map((item)=>{
-  //       if(item.orderStatus === "ORDERED"){
-  //         item.orderStatus = this.status[0]
-  //       }
-  //       else if (item.orderStatus === "CANCELED"){
-  //         item.orderStatus = this.status[1]
-  //       }
-  //       else{
-  //         item.orderStatus = this.status[2]
-  //       }
-  //     })
+ getCustomerOrder(userId:any){
+  this.isLoading = true;
+  let response:any;
+  this.customerService.getCurrentOrder(userId).pipe(
+    finalize(()=>{
+      if(response[0]?.id){
+        this.noData = false;
+        this.dataSource = new MatTableDataSource(this.orders)
+        this.dataSource.paginator = this.paginator;
+      }
+      else{
+        this.noData = true;
+      }
+      this.isLoading = false
+    })
+  ).subscribe(
+    data=>{
+      this.orders = data.data
+      response = data.data
+      this.orders.map((item)=>{
 
-  //   }
-  // )
+        if(item.orderStatus === "ORDERED"){
+          item.orderStatus = this.status[0]
+        }
+        else{
+          item.orderStatus = this.status[2]
+        }
+      })
+
+    }
+  )
  }
   getOrder(order:any){
     this.openingMenu = true;
@@ -125,12 +120,11 @@ export class CurrentOrderComponent implements OnInit {
     }
   }
   openOrderDetail(order:any){
-    // const dialogRef = this.dialog.open(DialogDetailComponent,{
-    //   data:{
-    //     detailMoney:this.detailMoney,
-    //     detailInfoCustomer:this.detailInfoCustomer
-    //   }
-    // })
+    const dialogRef = this.dialog.open(ShowDetailOrderCustomerComponent,{
+      data:{
+        detailCurrentOrder:this.detaiCurrentOrder
+      }
+    })
   }
 
   getDetailOrderAndDateTime(order:any){
@@ -158,7 +152,7 @@ export class CurrentOrderComponent implements OnInit {
       })
     ).subscribe(
       data=>{
-
+        this.detaiCurrentOrder = data.detailOrder.data
         this.dateTime = data.dateAndTime.data
       }
     )
@@ -174,7 +168,7 @@ export class CurrentOrderComponent implements OnInit {
     this.orderService.cancelTicket(orderId).pipe(
       finalize(()=>{
         this.message.success("Hủy đơn đặt vé","Thành công",{timeOut:2000, progressBar:true})
-        this.getOrders(this.schedule?.id)
+        this.getCustomerOrder(this.user?.data?.id)
       })
     ).subscribe()
   }

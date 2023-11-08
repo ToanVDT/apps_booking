@@ -1,0 +1,38 @@
+<div *ngIf="noData" class="flex py-7 px-5 justify-center text-xl">Không có dữ liệu</div>
+<div *ngIf="!noData" class="mx-10">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full mt-[2%] rounded-xl border bg-white">
+        <!-- Position Column -->
+        <ng-container matColumnDef="code">
+            <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Mã giảm giá </th>
+            <td style="width: 25%;text-align: center;" mat-cell *matCellDef="let giftCode">{{giftCode.giftCode}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="promotion">
+            <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Khuyến mãi</th>
+            <td style="width: 25%;text-align: center;" mat-cell *matCellDef="let giftCode">{{giftCode.promotion | currency:'VND':'symbol':'1.0':'fr' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="expireDate">
+            <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Hạn sử dụng</th>
+            <td style="width: 25%;text-align: center;" mat-cell *matCellDef="let giftCode">{{giftCode.expireDate| date:'dd-MM-yyyy'}}</td>
+        </ng-container>
+        <ng-container matColumnDef="isUsed">
+            <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Trạng thái mã</th>
+            <td style="width: 25%; text-align: center;" mat-cell *matCellDef="let giftCode">
+                <div class="w-full h-full flex justify-center">
+                    <div class="rounded-lg border-4  text-cyan-50 w-[40%]"
+                        [ngStyle]="{'background': (giftCode.isUsedString === 'Đã sử dụng') ? 'red' : 'green' }">
+                        {{giftCode.isUsedString}}
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+    </table>
+    <div>
+        <mat-paginator #paginator [pageSizeOptions]="[8,16,24, 100]">
+        </mat-paginator>
+    </div>
+</div>
+<app-spinner [isLoading]="isLoading"></app-spinner>

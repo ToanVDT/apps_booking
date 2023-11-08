@@ -19,6 +19,8 @@ export class OrderShowInCustomerPage{
     restPrice?:number;
     listSeat?:string[];
     paymentStatus?:string;
+    travelDate?:any;
+    travelTime?:any;
 }
 
 export class DetailMoney{
