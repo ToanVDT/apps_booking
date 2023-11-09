@@ -1,7 +1,7 @@
 <div class="flex justify-center bg-[#f2f2f2] py-5">
     <main class="lg:w-[71%] md:w-[90%]">
         <div class="search-bar bg-white mb-5 border rounded-md shadow-md">
-            <app-search-widget></app-search-widget>
+            <app-search-widget (dataSearch)="getDataSearch($event)"></app-search-widget>
         </div>
         <section>
             <div class="grid grid-cols-1 gap-6 gap-y-10 lg:grid-cols-4">
@@ -57,8 +57,7 @@
                 <div class="lg:col-span-3 flex flex-col items-center">
                     <app-customer-ticket-card
                         class="w-full bg-white border rounded-md shadow-md mb-6 hover:shadow-2xl"></app-customer-ticket-card>
-                    <app-customer-ticket-card
-                        class="w-full bg-white border rounded-md shadow-md mb-6 hover:shadow-2xl"></app-customer-ticket-card>
+                
                 </div>
             </div>
         </section>

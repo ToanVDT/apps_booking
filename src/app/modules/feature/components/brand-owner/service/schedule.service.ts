@@ -15,8 +15,8 @@ export class ScheduleService {
       retry(1), 
       delay(1000));
   }
-  getScheduleByTravelDate(dateStart:any):Observable<any>{
-    return this.http.get<any>(`${environment.apiUrl}/schedulebytraveldate?dateStart=${dateStart}`).pipe(
+  getScheduleByTravelDate(dateStart:any, userId:any):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/schedulebytraveldate?dateStart=${dateStart}&userId=${userId}`).pipe(
       retry(1), 
       delay(1000));
   }

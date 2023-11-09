@@ -128,7 +128,7 @@ export class OrderComponent implements OnInit {
   getScheduleByTravelDate(dateStart:any){
     let value:any;
     this.isLoading = true;
-    this.scheduleService.getScheduleByTravelDate(dateStart).pipe(
+    this.scheduleService.getScheduleByTravelDate(dateStart, this.user?.data?.id).pipe(
       finalize(()=>{
         
         if(value[0]?.id){

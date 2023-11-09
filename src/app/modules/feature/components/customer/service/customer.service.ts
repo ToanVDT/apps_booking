@@ -50,4 +50,9 @@ export class CustomerService {
       retry(1), 
       delay(1000));
   }
+  getScheduleAvailable(startPoint:any,endPoint:any,travelDate:any):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/shuttles/search?startPoint=${startPoint}&endPoint=${endPoint}&travelDate=${travelDate}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
 }

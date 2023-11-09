@@ -115,6 +115,7 @@ export class BusComponent implements OnInit {
         if(data.success && data.message == "Chỉnh sửa"){
           this.message.success("Chỉnh sửa xe","Thành công",{timeOut:2000,progressBar:true})
         }
+        this.getTypeAndBus()
       }
     )
   }

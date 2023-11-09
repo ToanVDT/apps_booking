@@ -49,6 +49,7 @@ export class DialogCreateUpdateRouteComponent implements OnInit {
       if(item.name?.startsWith("Tỉnh")){
        item.name = item.name.substring(5)
       }
+      console.log("name",this.provincesCustoms)
     })
     if (this.data.route?.id) {
       let selectedStartPoint = this.provincesCustoms.find((item: any) => item.name === this.data.route.startPoint);

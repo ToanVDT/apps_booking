@@ -36,6 +36,7 @@ import { UnauthorizedComponent } from './components/unauthorized/unauthorized.co
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatRadioModule,
     MatStepperModule,
     MatSlideToggleModule,
-    MatTooltipModule
+    MatTooltipModule,
+    RouterModule
   ],
   exports:[
     MatIconModule,
@@ -115,7 +117,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     UnauthorizedComponent,
     MatStepperModule,
     MatSlideToggleModule,
-    MatTooltipModule
+    MatTooltipModule,
+    RouterModule
   ]
 })
 export class ShareModule { }
