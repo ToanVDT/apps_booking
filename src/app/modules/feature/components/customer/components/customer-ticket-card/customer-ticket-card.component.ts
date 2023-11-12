@@ -1,35 +1,39 @@
 import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
+    animate,
+    state,
+    style,
+    transition,
+    trigger,
 } from "@angular/animations";
 import { AfterViewInit, Component, ElementRef, Inject, Input, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
-import { dropoffPoints, pickupPoints } from "src/assets/data/popularRoute";
-import { listSeats } from "src/assets/data/seats";
+import { ScheduleAvailable } from "../../../brand-owner/model/schedule.model";
+import { ParkingService } from "../../../brand-owner/service/parking.service";
+import { finalize, forkJoin } from "rxjs";
+import { PickUp } from "../../../brand-owner/model/pick_up.model";
+import { DropOff } from "../../../brand-owner/model/drop_off.model";
+import { CustomerService } from "../../service/customer.service";
+import { OrderService } from "../../../brand-owner/service/order.service";
+import { ToastrService } from "ngx-toastr";
+import { InfoCustomerReview } from "../model/infocustomerreview.model";
+import { Router } from "@angular/router";
+import { VnpayService } from "../../service/vnpay.service";
 
 interface Seat {
-  id: number;
-  name: string;
-  price: number;
-  isBooked: boolean;
-}
-
-interface Location {
-  time: string;
-  name: string;
+    id: number;
+    name: string;
+    price: number;
+    isBooked: boolean;
 }
 
 interface DialogData {
-  message: string;
+    message: string;
 }
 
 @Component({
-  selector: 'dialog-elements-example-dialog',
-  template: `<div class="flex justify-center items-center bg-gray-100">
+    selector: 'dialog-elements-example-dialog',
+    template: `<div class="flex justify-center items-center bg-gray-100">
       <div class="bg-white p-8 rounded shadow-md relative">
           <button
               mat-button
@@ -61,224 +65,412 @@ interface DialogData {
           </button>
       </div>
   </div>`,
-  standalone: true,
+    standalone: true,
 })
 export class DialogElementsExampleDialog {
-  constructor(
-      public dialogRef: MatDialogRef<DialogElementsExampleDialog>,
-      @Inject(MAT_DIALOG_DATA) public data: DialogData,
-  ) {}
+    constructor(
+        public dialogRef: MatDialogRef<DialogElementsExampleDialog>,
+        @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    ) { }
 
-  closeDialog(): void {
-      this.dialogRef.close();
-  }
+    closeDialog(): void {
+        this.dialogRef.close();
+    }
 }
 
 @Component({
-  selector: 'app-customer-ticket-card',
-  templateUrl: './customer-ticket-card.component.html',
-  styleUrls: ['./customer-ticket-card.component.scss'],
-  animations: [
-      trigger('imageAnimation', [
-          state('*', style({ transform: 'translateX(0)' })),
-          transition(':increment', [
-              style({ transform: 'translateX(100%)' }),
-              animate('0.3s ease-out', style({ transform: 'translateX(0)' })),
-          ]),
-          transition(':decrement', [
-              style({ transform: 'translateX(-100%)' }),
-              animate('0.3s ease-out', style({ transform: 'translateX(0)' })),
-          ]),
-      ]),
-  ],
+    selector: 'app-customer-ticket-card',
+    templateUrl: './customer-ticket-card.component.html',
+    styleUrls: ['./customer-ticket-card.component.scss'],
+    animations: [
+        trigger('imageAnimation', [
+            state('*', style({ transform: 'translateX(0)' })),
+            transition(':increment', [
+                style({ transform: 'translateX(100%)' }),
+                animate('0.3s ease-out', style({ transform: 'translateX(0)' })),
+            ]),
+            transition(':decrement', [
+                style({ transform: 'translateX(-100%)' }),
+                animate('0.3s ease-out', style({ transform: 'translateX(0)' })),
+            ]),
+        ]),
+    ],
 })
 export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
-  panelOpenState: boolean = false;
-  selectedContent: number | null = null;
-  isChecked: boolean = false;
+    @Input() scheduleAvailable: ScheduleAvailable = {}
+    @Input() images: string[] = [
+        'https://static.vexere.com/production/images/1688797618225.jpeg',
+        'https://static.vexere.com/production/images/1688797618903.jpeg',
+        'https://static.vexere.com/production/images/1689065858222.jpeg',
+        'https://static.vexere.com/production/images/1688797528210.jpeg',
+        'https://static.vexere.com/production/images/1675916351798.jpeg',
+        'https://static.vexere.com/production/images/1689065858222.jpeg',
+        'https://static.vexere.com/production/images/1688797611253.jpeg',
+    ];
+    panelOpenState: boolean = false;
+    selectedContent: number | null = null;
+    isChecked: boolean = false;
+    typeSeats = ["phòng", "chỗ"];
+    typeSeat: any
+    selectedImageIndex = 0;
+    orderId:any
+    startIndex = 0;
+    paymentId!: number;
+    brandName: any;
+    pickupLocations: PickUp[] = []
+    dropOffLocations: DropOff[] = []
+    pickup: any;
+    dropOff: any;
+    giftCode:any;
+    listpickup: any;
+    listdropoff: any;
+    eatingFee: any;
+    fullName: any;
+    phone: any;
+    email: any;
+    scheduleId:any
+    selectedPickup!: Location;
+    selectedDropOff!: Location;
+    quantityEating: number = 0;
+    seatPairs: Seat[][] = [];
+    selectedSeats: Seat[] = [];
+    listSeats: any;
+    infoCustomerForm: FormGroup;
+    isLoading: boolean = false;
+    totalPrice:any;
+    isLoadingPage: any;
+    giftForm: FormGroup
+    InfoReView: InfoCustomerReview = {}
+    listSeatIDSelected: number[] = [];
+    listSeatName: string[] = [];
+    optionForm: FormGroup
+    paymentType: any;
+    called: boolean = false;
+    closeFormInputGift: boolean = false
 
-  selectedImageIndex = 0;
-  startIndex = 0;
-  listpickup: any;
-  listdropoff: any;
-  selectedPickup!: Location;
-  selectedDropOff!: Location;
-  seatPairs: Seat[][] = [];
-  selectedSeats: Seat[] = [];
-  listSeats: any;
-  formCheck: FormGroup;
+    constructor(
+        public dialog: MatDialog, private parkingService: ParkingService,private paymentService:VnpayService,
+        private customerService: CustomerService, private orderService: OrderService,
+        private elementRef: ElementRef, private message: ToastrService,private router:Router,
+    ) {
+        this.infoCustomerForm = new FormGroup({
+            check: new FormControl(this.isChecked),
+            quantity: new FormControl(0),
+            fullName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z ]+$/)]),
+            phoneNumber: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]+$/)]),
+            email: new FormControl('', [Validators.email]),
+            termsAndConditions: new FormControl(''),
+        });
+        this.giftForm = new FormGroup({
+            giftCode: new FormControl('')
+        })
+        this.optionForm = new FormGroup({
+            options: new FormControl('')
+        })
+    }
 
-  constructor(
-      public dialog: MatDialog,
-      private elementRef: ElementRef,
-  ) {
-      for (const seatRow of listSeats) {
-          const row: Seat[] = seatRow.map((seat: any) => {
-              return {
-                  id: seat.id,
-                  name: seat.seatName,
-                  price: seat.price,
-                  isBooked: seat.status === '1',
-              };
-          });
+    ngOnInit(): void {
+        this.infoCustomerForm.get('check')?.valueChanges.subscribe((value) => {
+            this.isChecked = value;
+        });
+        if (this.scheduleAvailable?.type === 'PHONG') {
+            this.typeSeat = this.typeSeats[0]
+        }
+        else {
+            this.typeSeat = this.typeSeats[1]
+        }
+        this.optionForm.get('options')?.valueChanges.subscribe(
+            value => {
+                if (value) {
+                    this.paymentType = value
+                    this.checkValue(this.paymentType)
+                }
+            }
+        )
+        this.infoCustomerForm.get('quantity')?.valueChanges.subscribe(
+            value => {
+                this.quantityEating = value;
+            }
+        )
+        this.infoCustomerForm.get('fullName')?.valueChanges.subscribe(value => {
+            if (value) {
+                this.fullName = value
+            }
+        })
+        this.infoCustomerForm.get('email')?.valueChanges.subscribe(value => {
+            if (value) {
+                this.email = value
+            }
+        })
+        this.infoCustomerForm.get('phoneNumber')?.valueChanges.subscribe(value => {
+            if (value) {
+                this.phone = value
+            }
+        })
+        this.giftForm.get('giftCode')?.valueChanges.subscribe(
+            value=>{
+                if(value){
+                    this.giftCode = value
+                }
+            }
+        )
+    }
+    checkValue(value: any) {
+        if (value == 1) {
+            this.paymentId = 1
+            this.closeFormInputGift = false;
+        }
+        else if (value == 2) {
+            this.closeFormInputGift = true;
+            this.paymentId = 2
+        }
+    }
+    checkGiftCodeValid() {
+        this.isLoading = true
+    }
+    getValueDropOffAnfPickUp() {
+        this.pickup = this.selectedPickup;
+        this.dropOff = this.selectedDropOff;
+    }
+    getDataReview() {
+        this.InfoReView.fullName = this.fullName;
+        this.InfoReView.email = this.email;
+        this.InfoReView.phone = this.phone;
+        this.InfoReView.quantityEating = this.quantityEating;
+        this.InfoReView.listSeatOrderd = this.listSeatName;
+        this.InfoReView.dropOffPoint = this.dropOff?.dropOffPoint;
+        this.InfoReView.pickUpPoint = this.pickup?.pickUpPoint
+        this.InfoReView.brandName = this.brandName;
 
-          this.seatPairs.push(row);
-      }
-      /** Test */
-      this.seatPairs[1][0].isBooked = true;
-      this.seatPairs[3][1].isBooked = true;
-      this.seatPairs[2][3].isBooked = true;
+    }
+    getDropOffPickUpAndSeat(shuttleId: any, scheduleId: any) {
+        this.isLoadingPage = true;
+        forkJoin({
+            dropOffs: this.getAllFropOff(shuttleId),
+            pickUps: this.getAllPickUp(shuttleId),
+            seats: this.getSeatInCustomerPage(scheduleId)
+        }).pipe(
+            finalize(() => {
+                this.isLoadingPage = false;
+            })
+        ).subscribe(
+            data => {
+                this.listSeats = data.seats.data,
+                    this.pickupLocations = data.pickUps.data,
+                    this.dropOffLocations = data.dropOffs.data
+                for (const seatRow of this.listSeats) {
+                    const row: Seat[] = seatRow.map((seat: any) => {
+                        return {
+                            id: seat.id,
+                            name: seat.seatName,
+                            price: seat.price,
+                            isBooked: seat.status === '1',
+                        };
+                    });
 
-      /* ================================== */
-      this.formCheck = new FormGroup({
-          check: new FormControl(this.isChecked),
-          quantity: new FormControl(0),
-          fullName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z ]+$/)]),
-          phoneNumber: new FormControl('', [Validators.pattern(/^[0-9]+$/)]),
-          email: new FormControl('', [Validators.required, Validators.email]),
-          termsAndConditions: new FormControl(''),
-      });
-  }
+                    this.seatPairs.push(row);
+                }
+            }
+        )
+    }
+    getAllFropOff(shuttleId: any) {
+        return this.parkingService.getAllDropOff(shuttleId).pipe()
+    }
+    getAllPickUp(shuttleId: any) {
+        return this.parkingService.getAllPickUp(shuttleId).pipe()
+    }
+    getSeatInCustomerPage(scheduleId: any) {
+        return this.customerService.getSeatForCustomerPage(scheduleId).pipe()
+    }
 
-  ngOnInit(): void {
-      this.listdropoff = dropoffPoints;
-      this.listpickup = pickupPoints;
-      this.listSeats = listSeats;
-      this.formCheck.get('check')?.valueChanges.subscribe((value) => {
-          this.isChecked = value;
-      });
-  }
+    ngAfterViewInit() {
+        this.checkOverflow();
+    }
 
-  pickupLocations: Location[] = [
-      { time: '08:00', name: 'Pickup Location 1' },
-      { time: '10:30', name: 'Pickup Location 2' },
-      { time: '11:30', name: 'Pickup Location 3' },
-      { time: '11:45', name: 'Pickup Location 4' },
-      { time: '12:00', name: 'Pickup Location 5' },
-      { time: '12:30', name: 'Pickup Location 6' },
-      { time: '13:00', name: 'Pickup Location 7' },
-      { time: '13:30', name: 'Pickup Location 8' },
-      { time: '14:00', name: 'Pickup Location 9' },
-      { time: '14:15', name: 'Pickup Location 10' },
-  ];
+    showContent(contentNumber: number, scheduleAvailable: any): void {
+        if (this.panelOpenState == false && this.called == false) {
+            this.getDropOffPickUpAndSeat(scheduleAvailable?.shuttleId, scheduleAvailable?.scheduleId)
+            this.scheduleId = scheduleAvailable?.scheduleId;
+            this.eatingFee = scheduleAvailable?.eatingFee;
+            this.brandName = scheduleAvailable?.brandName;
+            this.called = true
+        }
+        this.selectedContent = this.selectedContent === contentNumber ? null : contentNumber;
+        this.panelOpenState = this.selectedContent !== null;
+    }
 
-  dropOffLocations: Location[] = [
-      { time: '12:00', name: 'Drop-off Location 1' },
-      { time: '03:45', name: 'Drop-off Location 2' },
-      { time: '12:00', name: 'Drop-off Location 3' },
-      { time: '03:45', name: 'Drop-off Location 4' },
-      { time: '12:00', name: 'Drop-off Location 5' },
-      { time: '03:45', name: 'Drop-off Location 6' },
-      { time: '12:00', name: 'Drop-off Location 7' },
-      { time: '03:45', name: 'Drop-off Location 8' },
-      { time: '12:00', name: 'Drop-off Location 9' },
-      { time: '03:45', name: 'Drop-off Location 10' },
-  ];
 
-  ngAfterViewInit() {
-      this.checkOverflow();
-  }
 
-  showContent(contentNumber: number): void {
-      this.selectedContent = this.selectedContent === contentNumber ? null : contentNumber;
-      this.panelOpenState = this.selectedContent !== null;
-  }
+    selectImage(index: number): void {
+        this.selectedImageIndex = index;
+    }
 
-  @Input() images: string[] = [
-      'https://static.vexere.com/production/images/1688797618225.jpeg',
-      'https://static.vexere.com/production/images/1688797618903.jpeg',
-      'https://static.vexere.com/production/images/1689065858222.jpeg',
-      'https://static.vexere.com/production/images/1688797528210.jpeg',
-      'https://static.vexere.com/production/images/1675916351798.jpeg',
-      'https://static.vexere.com/production/images/1689065858222.jpeg',
-      'https://static.vexere.com/production/images/1688797611253.jpeg',
-  ];
+    prevImage(): void {
+        this.selectedImageIndex = (this.selectedImageIndex - 1 + this.images.length) % this.images.length;
+        this.updateStartIndex();
+    }
 
-  selectImage(index: number): void {
-      this.selectedImageIndex = index;
-  }
+    nextImage(): void {
+        this.selectedImageIndex = (this.selectedImageIndex + 1) % this.images.length;
+        this.updateStartIndex();
+    }
 
-  prevImage(): void {
-      this.selectedImageIndex = (this.selectedImageIndex - 1 + this.images.length) % this.images.length;
-      this.updateStartIndex();
-  }
+    updateStartIndex(): void {
+        const maxThumbnails = 5;
+        if (this.selectedImageIndex < this.startIndex) {
+            this.startIndex = this.selectedImageIndex;
+        } else if (this.selectedImageIndex >= this.startIndex + maxThumbnails) {
+            this.startIndex = Math.max(0, this.selectedImageIndex - maxThumbnails + 1);
+        }
+    }
 
-  nextImage(): void {
-      this.selectedImageIndex = (this.selectedImageIndex + 1) % this.images.length;
-      this.updateStartIndex();
-  }
+    getVisibleThumbnails(): string[] {
+        const maxThumbnails = 5;
+        const endIndex = Math.min(this.startIndex + maxThumbnails, this.images.length);
+        return this.images.slice(this.startIndex, endIndex);
+    }
 
-  updateStartIndex(): void {
-      const maxThumbnails = 5;
-      if (this.selectedImageIndex < this.startIndex) {
-          this.startIndex = this.selectedImageIndex;
-      } else if (this.selectedImageIndex >= this.startIndex + maxThumbnails) {
-          this.startIndex = Math.max(0, this.selectedImageIndex - maxThumbnails + 1);
-      }
-  }
+    increaseQuantity() {
+        const currentQuantity = this.infoCustomerForm.get('quantity')?.value || 0;
+        if (currentQuantity < this.selectedSeats.length) {
+            this.infoCustomerForm.get('quantity')?.setValue(currentQuantity + 1);
+        } else {
+            this.dialog.open(DialogElementsExampleDialog, {
+                data: {
+                    message: 'Bạn được chọn tối đa ' + this.selectedSeats.length + ' suất cơm',
+                },
+            });
+        }
+    }
 
-  getVisibleThumbnails(): string[] {
-      const maxThumbnails = 5;
-      const endIndex = Math.min(this.startIndex + maxThumbnails, this.images.length);
-      return this.images.slice(this.startIndex, endIndex);
-  }
+    decreaseQuantity() {
+        const currentQuantity = this.infoCustomerForm.get('quantity')?.value || 0;
+        if (currentQuantity > 0) {
+            this.infoCustomerForm.get('quantity')?.setValue(currentQuantity - 1);
+        }
+    }
 
-  increaseQuantity() {
-      const currentQuantity = this.formCheck.get('quantity')?.value || 0;
-      if (currentQuantity < this.selectedSeats.length) {
-          this.formCheck.get('quantity')?.setValue(currentQuantity + 1);
-      } else {
-          this.dialog.open(DialogElementsExampleDialog, {
-              data: {
-                  message: 'Bạn được chọn tối đa ' + this.selectedSeats.length + ' suất cơm',
-              },
-          });
-      }
-  }
+    selectSeat(seat: Seat): void {
+        if (!seat.isBooked) {
+            const seatIndex = this.selectedSeats.findIndex((selectedSeat) => selectedSeat.id === seat.id);
 
-  decreaseQuantity() {
-      const currentQuantity = this.formCheck.get('quantity')?.value || 0;
-      if (currentQuantity > 0) {
-          this.formCheck.get('quantity')?.setValue(currentQuantity - 1);
-      }
-  }
+            if (seatIndex === -1) {
+                if (this.selectedSeats.length < 5) {
+                    this.selectedSeats.push(seat);
+                    this.listSeatIDSelected.push(seat?.id)
+                    this.listSeatName.push(seat?.name)
+                    console.log("consolog", seat?.name)
+                } else {
 
-  selectSeat(seat: Seat): void {
-      if (!seat.isBooked) {
-          const seatIndex = this.selectedSeats.findIndex((selectedSeat) => selectedSeat.id === seat.id);
+                    this.dialog.open(DialogElementsExampleDialog, {
+                        data: {
+                            message: 'Bạn được chọn tối đa 5 chỗ cho mỗi lần đặt',
+                        },
+                    });
+                }
+            } else {
+                this.listSeatName.splice(seatIndex, 1)
+                this.selectedSeats.splice(seatIndex, 1);
+                this.listSeatIDSelected.splice(seatIndex, 1);
+            }
+        }
+    }
 
-          if (seatIndex === -1) {
-              if (this.selectedSeats.length < 5) {
-                  this.selectedSeats.push(seat);
-              } else {
-                  this.dialog.open(DialogElementsExampleDialog, {
-                      data: {
-                          message: 'Bạn được chọn tối đa 5 chỗ cho mỗi lần đặt',
-                      },
-                  });
-              }
-          } else {
-              this.selectedSeats.splice(seatIndex, 1);
-          }
-      }
-  }
+    isSelected(seat: Seat): boolean {
+        return this.selectedSeats.some((selectedSeat) => selectedSeat.id === seat.id);
+    }
 
-  isSelected(seat: Seat): boolean {
-      return this.selectedSeats.some((selectedSeat) => selectedSeat.id === seat.id);
-  }
+    getTotalPrice(): number {
+        this.totalPrice =  this.selectedSeats.reduce((total, seat) => total + seat.price, 0) + this.quantityEating * this.eatingFee;
+        return this.totalPrice;
+    }
+    getPromotion() {
 
-  getTotalPrice(): number {
-      return this.selectedSeats.reduce((total, seat) => total + seat.price, 0);
-  }
+    }
 
-  private checkOverflow() {
-      const locationLists = this.elementRef.nativeElement.querySelectorAll('.location-list');
-      locationLists.forEach((list: HTMLElement) => {
-          if (list.scrollHeight > list.clientHeight) {
-              list.classList.remove('no-overflow');
-          } else {
-              list.classList.add('no-overflow');
-          }
-      });
-  }
+
+    private checkOverflow() {
+        const locationLists = this.elementRef.nativeElement.querySelectorAll('.location-list');
+        locationLists.forEach((list: HTMLElement) => {
+            if (list.scrollHeight > list.clientHeight) {
+                list.classList.remove('no-overflow');
+            } else {
+                list.classList.add('no-overflow');
+            }
+        });
+    }
+    bookingTicket() {
+        let gift:any;
+        let payAmount:any;
+        console.log(this.giftCode,this.totalPrice)
+        if(this.paymentId === 2){
+            gift = "";
+            payAmount = 0;
+        }
+        else{
+            gift = this.giftCode;
+            payAmount = this.totalPrice;
+        }
+        let request = {
+            seatId: this.listSeatIDSelected,
+            pickUp: this.pickup?.pickUpPoint,
+            dropOff: this.dropOff?.dropOffPoint,
+            quantityEating: this.quantityEating,
+            scheduleId:this.scheduleId,
+            paymentId: this.paymentId,
+            giftCode: gift,
+            paidAmount:payAmount,
+            customer: {
+                firstName: this.fullName.split(" ").slice(0, -1).join(" "),
+                lastName: this.fullName.split(" ").slice(-1).join(" "),
+                email: this.email,
+                phoneNumber: this.phone,
+            }
+        }
+        this.orderService.orderTicket(request).pipe().subscribe(
+            data=>{
+                if(data.success){
+                    this.message.success("Đặt vé","Thành công",{timeOut:2000, progressBar:true})
+                }
+                // this.router.navigate(['/customer'])
+            }
+        )
+    }
+    paymentOrder() {
+        let gift:any;
+        let payAmount:any;
+        console.log("tprice",this.totalPrice)
+        if(this.paymentId === 2){
+            gift = "";
+            payAmount = 0;
+        }
+        else{
+            gift = this.giftCode
+            payAmount = this.totalPrice;
+        }
+        let request = {
+            seatId: this.listSeatIDSelected,
+            pickUp: this.pickup?.pickUpPoint,
+            dropOff: this.dropOff?.dropOffPoint,
+            quantityEating: this.quantityEating,
+            scheduleId:this.scheduleId,
+            paymentId: this.paymentId,
+            giftCode: gift,
+            paidAmount:payAmount,
+            customer: {
+                firstName: this.fullName.split(" ").slice(0, -1).join(" "),
+                lastName: this.fullName.split(" ").slice(-1).join(" "),
+                email: this.email,
+                phoneNumber: this.phone,
+            }
+        }
+        localStorage.setItem("dataBooking",JSON.stringify(request))
+        console.log("request", request)
+        let requestPayment = {amount:payAmount,bankCode:"NCB"}
+        this.paymentService.getURLPayment(requestPayment).pipe().subscribe(
+            data=>{
+                window.location.href = data.data;
+            }
+        )
+    }
 }

@@ -23,10 +23,14 @@
                 <div>{{detailMoney.price| currency:'VND':'symbol':'1.0':'fr'}}</div>
                 <div>{{detailMoney.quantityTicket}}</div>
             </div>
-            <div class="flex items-center border-b-2 row-detail">
+            <div class="flex items-center  row-detail">
                 <div>Cơm</div>
                 <div>{{detailMoney.eatingFee| currency:'VND':'symbol':'1.0':'fr'}}</div>
                 <div>{{detailMoney.quantityEating}}</div>
+            </div>
+            <div class="flex items-center border-b-2 row-detail">
+                <div>Tiền giảm giá</div>
+                <div>{{detailMoney.giftCode| currency:'VND':'symbol':'1.0':'fr'}}</div>
             </div>
             <div class="flex items-center  row-detail">
                 <div>Tổng tiền</div>
@@ -35,10 +39,6 @@
             <div class="flex items-center  row-detail">
                 <div>Tiền cọc</div>
                 <div>{{detailMoney.deposit| currency:'VND':'symbol':'1.0':'fr'}}</div>
-            </div>
-            <div class="flex items-center  row-detail">
-                <div>Tiền giảm giá</div>
-                <div>{{detailMoney.giftCode| currency:'VND':'symbol':'1.0':'fr'}}</div>
             </div>
             <div class="flex items-center  row-detail">
                 <div>Tiền cần trả</div>

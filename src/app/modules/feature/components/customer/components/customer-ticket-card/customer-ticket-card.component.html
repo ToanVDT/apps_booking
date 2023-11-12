@@ -37,17 +37,10 @@
                         <div class="ticket-rightbody relative min-h-[150px]">
                             <div class="trip-info text-[#484848] text-sm">
                                 <div class="bus-info flex items-center">
-                                    <div class="bus-name text-base text-[#484848] font-bold mr-2">Dũng Lệ</div>
-                                    <button class="p-0 m-0 border-0">
-                                        <div
-                                            class="bus-rating rounded-sm bg-[#2474e5] text-white text-sm py-0 px-1 flex items-center">
-                                            <mat-icon class="mr-[2px] text-base">star</mat-icon>
-                                            <span>4.3 (43)</span>
-                                        </div>
-                                    </button>
+                                    <div class="bus-name text-base text-[#484848] font-bold mr-2">{{scheduleAvailable.brandName}}</div>
                                 </div>
                                 <div class="seat-type mb-5 mt-[10px] flex items-center">
-                                    <div class="mr-2">Limousine 34 Phòng Đơn</div>
+                                    <div class="mr-2">Xe {{scheduleAvailable.seats}} {{typeSeat}}</div>
                                     <div class="sponsored flex items-center m-0">
                                         <div class="icon text-[#858585] mr-1">
                                             <img src="https://storage.googleapis.com/fe-production/svgIcon/badge-sponsor.svg
@@ -74,13 +67,13 @@
 
                                     <div class="from-to-content relative ml-[9px] h-[74px]">
                                         <div class="content from top-0 absolute">
-                                            <div class="hour text-[#484848] text-xl font-bold">16:40</div>
-                                            <div class="place w-40 text-[#484848] truncate">• Big C Quy Nhơn</div>
+                                            <div class="hour text-[#484848] text-xl font-bold">{{scheduleAvailable.startTime}}</div>
+                                            <div class="place w-40 text-[#484848] truncate">• {{scheduleAvailable.startPoint}}</div>
                                         </div>
-                                        <div class="duration absolute top-[26px] text-sm">12h15m</div>
+                                        <!-- <div class="duration absolute top-[26px] text-sm">12h15m</div> -->
                                         <div class="content to absolute bottom-[2px]">
-                                            <div class="hour text-[#484848] text-xl font-bold">06:00</div>
-                                            <div class="place w-40 text-[#484848] truncate">• Bến xe An Sương</div>
+                                            <div class="hour text-[#484848] text-xl font-bold">{{scheduleAvailable.endTime}}</div>
+                                            <div class="place w-40 text-[#484848] truncate">• {{scheduleAvailable.endPoint}}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -89,7 +82,7 @@
                                 <div>
                                     <div
                                         class="fare flex text-xl text-[#2474e5] items-baseline font-bold justify-end mb-1">
-                                        <div>400.000đ</div>
+                                        <div>{{scheduleAvailable.price | currency:'VND':'symbol':'1.0':'fr'}}</div>
                                     </div>
                                     <div class="fareSmall flex items-baseline justify-end mb-1">
                                         <div class="small text-sm text-[#707070] line-through font-normal"></div>
@@ -99,12 +92,12 @@
                             <div class="detail-action absolute bottom-0 right-0">
                                 <div class="info mb-2">
                                     <div class="seat-available text-right text-base text-[#484848]">
-                                        Còn 24 chỗ trống
+                                        Còn {{scheduleAvailable.emptySeats}} chỗ trống
                                     </div>
                                 </div>
                                 <div class="action flex items-end float-right">
                                     <button class="btn-detail text-[#2474e5] text-base h-[25px] flex items-center"
-                                        mat-raised-button (click)="showContent(1)">
+                                        (click)="showContent(1,scheduleAvailable)">
                                         <span class="underline">Thông tin chi tiết</span>
                                         <mat-icon *ngIf="!panelOpenState || selectedContent === 2"
                                             class="ml-[6px]">arrow_drop_down </mat-icon>
@@ -114,7 +107,7 @@
                                     <div *ngIf="selectedContent !== 2; then thenBlock; else elseBlock"></div>
                                     <ng-template #thenBlock><button mat-raised-button
                                             class="btn-booking p-2 bg-[#ffc700] hover:bg-[#e6be2e]"
-                                            (click)="showContent(2)">
+                                            (click)="showContent(2,scheduleAvailable)">
                                             <span
                                                 class="text-[#484848] font-medium rounded-sm border-none py-4 px-2 h-[35px]">Chọn
                                                 chuyến</span>
@@ -122,7 +115,7 @@
                                     <ng-template #elseBlock>
                                         <button mat-raised-button
                                             class="btn-booking p-2 bg-[#c0c0c0] hover:bg-[#adadad]"
-                                            (click)="showContent(2)">
+                                            (click)="showContent(2,scheduleAvailable)">
                                             <span
                                                 class="text-[#484848] font-medium rounded-sm border-none py-4 px-2 h-[35px]">Đóng</span>
                                         </button>
@@ -131,18 +124,13 @@
                             </div>
                         </div>
                     </div>
-                    <div class="notify-trip flex justify-end items-center mt-3">
-                        <div class="content-has-cop text-black font-bold text-sm uppercase text-right w-[40%]">
-                            <div>Không cần thanh toán trước</div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </mat-expansion-panel-header>
         <!-- details -->
         <div class="detail-info-container relative border-t-2 py-2" *ngIf="selectedContent === 1">
             <div class="flex justify-end">
-                <button mat-button (click)="showContent(1)">
+                <button mat-button (click)="showContent(1,scheduleAvailable)">
                     <mat-icon class="text-[#F10000]">cancel</mat-icon>
                 </button>
             </div>
@@ -273,23 +261,23 @@
                     <div class="px-16 mt-7">
                         <div class="text-lg font-bold leading-6 mb-3">Chính sách nhà xe</div>
                         <div>
-                            <div class="text-base font-bold text-[#484848] leading-6 mt-4">Yêu cầu khi lên xe</div>
+                            <div class="text-base font-bold text-[#484848] leading-6 mt-4">Yêu cầu </div>
                             <ul class="list-disc ml-10">
                                 <li>Có mặt tại văn phòng/quầy vé/bến xe trước 30 phút để làm thủ tục lên xe</li>
-                                <li>Xuất trình SMS/Email đặt vé trước khi lên xe</li>
+                                <li>Xuất trình Email/thông tin đặt vé trước khi lên xe</li>
                                 <li>Không mang đồ ăn, thức ăn có mùi lên xe</li>
                                 <li>Không hút thuốc, uống rượu, sử dụng chất kích thích trên xe</li>
                                 <li>Không mang các vật dễ cháy nổ lên xe</li>
                                 <li>Không vứt rác trên xe</li>
                                 <li>Không làm ồn, gây mất trật tự trên xe</li>
                                 <li>Không mang giày, dép trên xe</li>
+                                <li>Chỉ được hủy vé trước 2 tiếng trước giờ xe chạy</li>
                             </ul>
                         </div>
                         <div>
                             <div class="text-base font-bold text-[#484848] leading-6 mt-4">Hành lý xách tay</div>
                             <ul class="list-disc ml-10">
                                 <li>Tổng trọng lượng hành lý không vượt quá 15 kg</li>
-                                <li>Phụ phí hành lý vượt quá quy định: 30000 VND/kg</li>
                                 <li>Không vận chuyển hàng hóa cồng kềnh</li>
                                 <li>Không hoàn tiền trong trường hợp hủy vé do vi phạm các quy định về hành lý</li>
                             </ul>
@@ -320,7 +308,7 @@
         
         <div class="detail-info-container relative border-t-2 py-2" *ngIf="selectedContent === 2">
             <div class="flex justify-end">
-                <button mat-button (click)="showContent(2)">
+                <button mat-button (click)="showContent(2,scheduleAvailable)">
                     <mat-icon class="text-[#F10000]">cancel</mat-icon>
                 </button>
             </div>
@@ -336,50 +324,115 @@
                                 <p><span class="available-legend"></span> Ghế Còn Trống</p>
                             </div>
                         </div>
-                        <div class="seat-grid">
-                            <div class="">
-                                <div class="text-center">Tầng dưới</div>
-                                <div class="column-group mx-4">
-                                    <div class="seat-col">
-                                        <div *ngFor="let seat of seatPairs[0]" class="seat"
-                                            [class.selected-seat]="isSelected(seat)" [class.booked]="seat.isBooked"
-                                            [attr.disabled]="seat.isBooked ? true : null" (click)="selectSeat(seat)"
-                                            [attr.title]="'Số ghế: ' + seat.name + ' - Giá: ' + seat.price.toFixed(2)">
-                                            {{ seat.name }}
+                        <div *ngIf="seatPairs.length <= 4; then thenBlock; else elseBlock"></div>
+                        <ng-template #thenBlock>
+                            <div class="seat-grid">
+                                <div>
+                                    <div class="text-center">Tầng dưới</div>
+                                    <div class="column-group col-a mx-4">
+                                        <div class="seat-col">
+                                            <div *ngFor="let seat of seatPairs[0]" class="seat"
+                                                [class.selected-seat]="isSelected(seat)" [class.booked]="seat.isBooked"
+                                                [attr.disabled]="seat.isBooked ? true : null" (click)="selectSeat(seat)"
+                                                [attr.title]="'Số ghế: ' + seat.name + ' - Giá: ' + seat.price.toFixed(2)">
+                                                {{ seat.name }}
+                                            </div>
+                                        </div>
+                                        <div class="seat-col">
+                                            <div *ngFor="let seat of seatPairs[2]" class="seat"
+                                                [class.selected-seat]="isSelected(seat)" [class.booked]="seat.isBooked"
+                                                [attr.disabled]="seat.isBooked ? true : null" (click)="selectSeat(seat)"
+                                                [attr.title]="'Số ghế: ' + seat.name + ' - Giá: ' + seat.price.toFixed(2)">
+                                                {{ seat.name }}
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="seat-col">
-                                        <div *ngFor="let seat of seatPairs[2]" class="seat"
-                                            [class.selected-seat]="isSelected(seat)" [class.booked]="seat.isBooked"
-                                            [attr.disabled]="seat.isBooked ? true : null" (click)="selectSeat(seat)"
-                                            [attr.title]="'Số ghế: ' + seat.name + ' - Giá: ' + seat.price.toFixed(2)">
-                                            {{ seat.name }}
+                                </div>
+                                <div>
+                                    <div class="text-center">Tầng trên</div>
+                                    <div class="column-group col-a mx-4">
+                                        <div class="seat-col">
+                                            <div *ngFor="let seat of seatPairs[1]" class="seat"
+                                                [class.selected-seat]="isSelected(seat)" [class.booked]="seat.isBooked"
+                                                [attr.disabled]="seat.isBooked ? true : null" (click)="selectSeat(seat)"
+                                                [attr.title]="'Số ghế: ' + seat.name + ' - Giá: ' + seat.price.toFixed(2)">
+                                                {{ seat.name }}
+                                            </div>
+                                        </div>
+                                        <div class="seat-col">
+                                            <div *ngFor="let seat of seatPairs[3]" class="seat"
+                                                [class.selected-seat]="isSelected(seat)" [class.booked]="seat.isBooked"
+                                                [attr.disabled]="seat.isBooked ? true : null" (click)="selectSeat(seat)"
+                                                [attr.title]="'Số ghế: ' + seat.name + ' - Giá: ' + seat.price.toFixed(2)">
+                                                {{ seat.name }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div>
-                                <div class="text-center">Tầng trên</div>
-                                <div class="column-group mx-4">
-                                    <div class="seat-col">
-                                        <div *ngFor="let seat of seatPairs[1]" class="seat"
-                                            [class.selected-seat]="isSelected(seat)" [class.booked]="seat.isBooked"
-                                            [attr.disabled]="seat.isBooked ? true : null" (click)="selectSeat(seat)"
-                                            [attr.title]="'Số ghế: ' + seat.name + ' - Giá: ' + seat.price.toFixed(2)">
-                                            {{ seat.name }}
+                        </ng-template>
+                        <ng-template #elseBlock>
+                            <div class="seat-grid">
+                                <div>
+                                    <div class="text-center">Tầng dưới</div>
+                                    <div class="column-group col-b mx-4">
+                                        <div class="seat-col">
+                                            <div *ngFor="let seat of seatPairs[0]" class="seat"
+                                                [class.selected-seat]="isSelected(seat)" [class.booked]="seat.isBooked"
+                                                [attr.disabled]="seat.isBooked ? true : null" (click)="selectSeat(seat)"
+                                                [attr.title]="'Số ghế: ' + seat.name + ' - Giá: ' + seat.price.toFixed(2)">
+                                                {{ seat.name }}
+                                            </div>
+                                        </div>
+                                        <div class="seat-col">
+                                            <div *ngFor="let seat of seatPairs[2]" class="seat"
+                                                [class.selected-seat]="isSelected(seat)" [class.booked]="seat.isBooked"
+                                                [attr.disabled]="seat.isBooked ? true : null" (click)="selectSeat(seat)"
+                                                [attr.title]="'Số ghế: ' + seat.name + ' - Giá: ' + seat.price.toFixed(2)">
+                                                {{ seat.name }}
+                                            </div>
+                                        </div>
+                                        <div class="seat-col">
+                                            <div *ngFor="let seat of seatPairs[4]" class="seat"
+                                                [class.selected-seat]="isSelected(seat)" [class.booked]="seat.isBooked"
+                                                [attr.disabled]="seat.isBooked ? true : null" (click)="selectSeat(seat)"
+                                                [attr.title]="'Số ghế: ' + seat.name + ' - Giá: ' + seat.price.toFixed(2)">
+                                                {{ seat.name }}
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="seat-col">
-                                        <div *ngFor="let seat of seatPairs[3]" class="seat"
-                                            [class.selected-seat]="isSelected(seat)" [class.booked]="seat.isBooked"
-                                            [attr.disabled]="seat.isBooked ? true : null" (click)="selectSeat(seat)"
-                                            [attr.title]="'Số ghế: ' + seat.name + ' - Giá: ' + seat.price.toFixed(2)">
-                                            {{ seat.name }}
+                                </div>
+                                <div>
+                                    <div class="text-center">Tầng trên</div>
+                                    <div class="column-group col-b mx-4">
+                                        <div class="seat-col">
+                                            <div *ngFor="let seat of seatPairs[1]" class="seat"
+                                                [class.selected-seat]="isSelected(seat)" [class.booked]="seat.isBooked"
+                                                [attr.disabled]="seat.isBooked ? true : null" (click)="selectSeat(seat)"
+                                                [attr.title]="'Số ghế: ' + seat.name + ' - Giá: ' + seat.price.toFixed(2)">
+                                                {{ seat.name }}
+                                            </div>
+                                        </div>
+                                        <div class="seat-col">
+                                            <div *ngFor="let seat of seatPairs[3]" class="seat"
+                                                [class.selected-seat]="isSelected(seat)" [class.booked]="seat.isBooked"
+                                                [attr.disabled]="seat.isBooked ? true : null" (click)="selectSeat(seat)"
+                                                [attr.title]="'Số ghế: ' + seat.name + ' - Giá: ' + seat.price.toFixed(2)">
+                                                {{ seat.name }}
+                                            </div>
+                                        </div>
+                                        <div class="seat-col">
+                                            <div *ngFor="let seat of seatPairs[5]" class="seat"
+                                                [class.selected-seat]="isSelected(seat)" [class.booked]="seat.isBooked"
+                                                [attr.disabled]="seat.isBooked ? true : null" (click)="selectSeat(seat)"
+                                                [attr.title]="'Số ghế: ' + seat.name + ' - Giá: ' + seat.price.toFixed(2)">
+                                                {{ seat.name }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </ng-template>
                     </div>
                     <div class="info-panel">
                         <div class="selected-seats" [class.no-selection]="selectedSeats.length === 0">
@@ -390,7 +443,7 @@
                         </div>
                         <div class="total-price">
                             <p>Tổng cộng:</p>
-                            <div>{{ getTotalPrice().toFixed(2) }} đ</div>
+                            <div>{{ getTotalPrice() | currency:'VND':'symbol':'1.0':'fr'}} </div>
                         </div>
                         <button class="button-next" mat-button matStepperNext [disabled]="selectedSeats.length === 0">
                             Tiếp tục
@@ -406,8 +459,8 @@
                                 <mat-radio-group [(ngModel)]="selectedPickup" name="pickupLocations"
                                     class="location-list">
                                     <mat-radio-button *ngFor="let location of pickupLocations" [value]="location" class="p-2">
-                                        <span class="font-bold">{{ location.time }}</span> <span class="mx-2">•</span>
-                                        {{ location.name }}
+                                        <span class="font-bold">{{ location.pickUpTime }}</span> <span class="mx-2">•</span>
+                                        {{ location.pickUpPoint }}
                                     </mat-radio-button>
                                 </mat-radio-group>
                             </div>
@@ -417,8 +470,8 @@
                                 <mat-radio-group [(ngModel)]="selectedDropOff" name="dropOffLocations"
                                     class="location-list">
                                     <mat-radio-button *ngFor="let location of dropOffLocations" [value]="location" class="p-2">
-                                        <span class="font-bold">{{ location.time }}</span> <span class="mx-2">•</span>
-                                        {{ location.name }}
+                                        <span class="font-bold">{{ location.dropOffTime }}</span> <span class="mx-2">•</span>
+                                        {{ location.dropOffPoint }}
                                     </mat-radio-button>
                                 </mat-radio-group>
                             </div>
@@ -428,9 +481,9 @@
                             <button class="button-back" mat-button matStepperPrevious>&#60; Quay lại</button>
                             <div class="total-price">
                                 <p>Tổng cộng:</p>
-                                <div>{{ getTotalPrice().toFixed(2) }} đ</div>
+                                <div>{{ getTotalPrice()| currency:'VND':'symbol':'1.0':'fr' }} </div>
                             </div>
-                            <button class="button-next" mat-button matStepperNext
+                            <button class="button-next" mat-button matStepperNext (click)="getValueDropOffAnfPickUp()"
                                 [disabled]="!selectedPickup || !selectedDropOff">
                                 Tiếp tục
                             </button>
@@ -440,14 +493,14 @@
                 <mat-step>
                     <ng-template matStepLabel>Nhập thông tin</ng-template>
                     <div class="mx-[148px] py-4">
-                        <form class="flex flex-col justify-center space-y-3" [formGroup]="formCheck">
+                        <form class="flex flex-col justify-center space-y-3" [formGroup]="infoCustomerForm">
                             <mat-form-field appearance="outline">
                                 <mat-label>Họ tên</mat-label>
                                 <input matInput formControlName="fullName" placeholder="Nguyen Van A" />
-                                <mat-error *ngIf="formCheck.get('fullName')?.hasError('required')">
+                                <mat-error *ngIf="infoCustomerForm.get('fullName')?.hasError('required')">
                                     Họ tên không được để trống
                                 </mat-error>
-                                <mat-error *ngIf="formCheck.get('fullName')?.hasError('pattern')">
+                                <mat-error *ngIf="infoCustomerForm.get('fullName')?.hasError('pattern')">
                                     Họ tên chỉ chấp nhận chữ cái và dấu cách
                                 </mat-error>
                             </mat-form-field>
@@ -455,10 +508,10 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Số điện thoại</mat-label>
                                 <input matInput formControlName="phoneNumber" placeholder="1234567890" />
-                                <mat-error *ngIf="formCheck.get('phoneNumber')?.hasError('required')">
+                                <mat-error *ngIf="infoCustomerForm.get('phoneNumber')?.hasError('required')">
                                     Số điện thoại không được để trống
                                 </mat-error>
-                                <mat-error *ngIf="formCheck.get('phoneNumber')?.hasError('pattern')">
+                                <mat-error *ngIf="infoCustomerForm.get('phoneNumber')?.hasError('pattern')">
                                     Số điện thoại chỉ chấp nhận số
                                 </mat-error>
                             </mat-form-field>
@@ -466,10 +519,7 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Email để nhận thông tin vé</mat-label>
                                 <input matInput formControlName="email" placeholder="john@example.com" />
-                                <mat-error *ngIf="formCheck.get('email')?.hasError('required')">
-                                    Email không được để trống
-                                </mat-error>
-                                <mat-error *ngIf="formCheck.get('email')?.hasError('email')">
+                                <mat-error *ngIf="infoCustomerForm.get('email')?.hasError('email')">
                                     Email không hợp lệ
                                 </mat-error>
                             </mat-form-field>
@@ -481,7 +531,7 @@
                                 <div *ngIf="isChecked">
                                     <div class="quantity-selector">
                                         <button mat-icon-button (click)="decreaseQuantity()"
-                                            [disabled]="formCheck.get('quantity')?.value === 0">
+                                            [disabled]="infoCustomerForm.get('quantity')?.value === 0">
                                             <mat-icon>remove</mat-icon>
                                         </button>
                                         <input matInput formControlName="quantity" placeholder="Quantity" readonly />
@@ -491,22 +541,68 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <mat-checkbox formControlName="termsAndConditions"><span
-                                    class="text-[#2474E5] font-semibold">Tôi đồng ý với
-                                    Chính
-                                    sách bảo mật thông
-                                    tin</span>
-                                và <span class="text-[#2474E5] font-semibold">Quy chế</span></mat-checkbox>
                         </form>
                     </div>
                     <div class="info-panel">
                         <button class="button-back" mat-button matStepperPrevious>&#60; Quay lại</button>
                         <div class="total-price">
                             <p>Tổng cộng:</p>
-                            <div>{{ getTotalPrice().toFixed(2) }} đ</div>
+                            <div>{{ getTotalPrice()| currency:'VND':'symbol':'1.0':'fr'}} </div>
                         </div>
-                        <button class="button-next" mat-button matStepperNext>Tiếp tục</button>
+                        <button class="button-next" mat-button matStepperNext (click)="getDataReview()">Tiếp tục</button>
+                    </div>
+                </mat-step>
+                <mat-step>
+                    <ng-template matStepLabel>Kiểm tra thông tin, thanh toán</ng-template>
+                    <div class="flex">
+                        <div class="flex flex-col border rounded-sm p-8 w-[450px]" [formGroup]="optionForm">
+                            <div class="text-xl text-center font-semibold mb-4">Phương thức thanh toán</div>
+                            <mat-radio-group aria-label="Select an option" class="flex flex-col space-y-4" formControlName="options">
+                                <mat-radio-button value="2">Thanh toán tại nhà xe</mat-radio-button>
+                                <mat-radio-button value="1">Thanh Toán online</mat-radio-button>
+                            </mat-radio-group>
+                            <div class="flex flex-col mt-10">
+                                Bạn có mã giảm giá?
+                                <div *ngIf="!closeFormInputGift" class="flex justify-center items-center relative">
+                                    <mat-form-field appearance="outline" [formGroup]="giftForm" >
+                                        <mat-label>Mã quà tặng</mat-label>
+                                        <input matInput formControlName="giftCode" placeholder="Mã quà tặng" />
+                                    </mat-form-field>
+                                    <button *ngIf="!isLoading" matTooltip="Dùng mã" class=" ml-4 w-1/5 absolute right-7 top-[17px]"
+                                        matTooltipPosition="right" (click)="checkGiftCodeValid()"><mat-icon>check</mat-icon></button>
+                                        <app-loading-item [isLoading]="isLoading" class="ml-4 w-1/5 absolute right-7 top-[6px]"></app-loading-item>
+                                </div>
+                    
+                                <div *ngIf="closeFormInputGift">Mã giảm giá không áp dụng cho thanh toán tại nhà xe</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col border rounded-sm p-8 w-[430px]">
+                            <div class="text-xl text-center font-semibold mb-4">Thông tin chuyến đi</div>
+                            <div class="space-y-4 p-2 border-b-2 mb-6">
+                                <div>Hành khách: {{InfoReView.fullName}}</div>
+                                <div>Số điện thoại: {{InfoReView.phone}}</div>
+                                <div>Email: {{InfoReView.email}}</div>
+                            </div>
+                    
+                            <div class="space-y-4">
+                                <div>Nhà xe: {{InfoReView.brandName}}</div>
+                                <div>Điểm đón (dự kiến): {{InfoReView.pickUpPoint}}</div>
+                                <div>Điểm trả (dự kiến): {{InfoReView.dropOffPoint}}</div>
+                                <div>Vé đã đặt: {{InfoReView.listSeatOrderd}}</div>
+                                <div>Số phần ăn: {{InfoReView.quantityEating}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-panel">
+                        <button class="button-back" mat-button matStepperPrevious>&#60; Quay lại</button>
+                        <div class="total-price">
+                            <p>Tổng cộng:</p>
+                            <div>{{ getTotalPrice() | currency:'VND':'symbol':'1.0':'fr' }} </div>
+                        </div>
+                        <button class="button-consider" [ngStyle]="{'background': closeFormInputGift ? '#7bc47f' : '#F59E08'}"
+                         mat-button (click)="closeFormInputGift ? bookingTicket() : paymentOrder()">
+                            {{closeFormInputGift ? 'Đặt vé': 'Thanh toán'}}
+                        </button>
                     </div>
                 </mat-step>
             </mat-stepper>

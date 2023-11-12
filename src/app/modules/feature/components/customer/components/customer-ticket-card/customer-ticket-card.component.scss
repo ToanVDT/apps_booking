@@ -8,7 +8,6 @@
     height: 0px;
     border-top: 14px solid transparent;
     border-bottom: 13px solid transparent;
-    border-left: 15px solid currentcolor;
     position: absolute;
     top: 0px;
     right: -15px;
@@ -287,6 +286,14 @@
     border: 1px solid white;
     border-radius: 5px;
 }
+.button-consider{
+    padding: 10px;
+    cursor: pointer;
+    width: 100px;
+    color: white;
+    border: 1px solid white;
+    border-radius: 5px;
+}
 
 .button-back {
     padding: 10px;
@@ -313,7 +320,13 @@ button:disabled {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 25px 25px 5px 5px;
+    
+}
+.col-a{
     width: 120px;
+}
+.col-b{
+    width: 170px;
 }
 
 .column-group:hover {

@@ -12,6 +12,8 @@ export class SearchWidgetComponent implements OnInit {
   @Output() dataSearch = new EventEmitter<any>()
   diemDiOptions: string []=[]
   diemDenOptions:string []=[]
+  isLoadingPage:boolean = false;
+  today = new Date();
   diemDi: string = '';
   diemDen: string = '';
   ngayDi!: Date;
@@ -28,9 +30,8 @@ export class SearchWidgetComponent implements OnInit {
       this.diemDen = temp;
   }
   searchShuttleAvailable(){
-    console.log(this.diemDen, this.diemDi, this.ngayDi)
+    this.isLoadingPage = true;
     this.request = {startPoint:this.diemDi, endPoint:this.diemDen, travelDate:this.ngayDi};
-    console.log("request", this.request)
     this.dataSearch.emit(this.request)
     this.router.navigateByUrl("/customer/list-result-shuttle",{state:this.request})
   }

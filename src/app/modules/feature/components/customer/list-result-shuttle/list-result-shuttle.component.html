@@ -55,9 +55,9 @@
                 </div>
 
                 <div class="lg:col-span-3 flex flex-col items-center">
-                    <app-customer-ticket-card
-                        class="w-full bg-white border rounded-md shadow-md mb-6 hover:shadow-2xl"></app-customer-ticket-card>
-                
+                    <div  *ngFor="let scheduleAvailable of scheduleAvailables" class="w-full">
+                        <app-customer-ticket-card [scheduleAvailable]="scheduleAvailable" class=" bg-white border rounded-md shadow-md mb-6 hover:shadow-2xl"></app-customer-ticket-card>
+                    </div>
                 </div>
             </div>
         </section>

@@ -37,6 +37,9 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
+import { LoadingItemComponent } from './components/loading-item/loading-item.component';
+import { PaymentSuccessComponent } from './components/payment-success/payment-success.component';
+import { PaymentFailedComponent } from './components/payment-failed/payment-failed.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +50,11 @@ import { RouterModule } from '@angular/router';
     SpinnerComponent,
     ConfirmDialogComponent,
     SearchWidgetComponent,
-    UnauthorizedComponent
+    UnauthorizedComponent,
+    LoadingItemComponent,
+    PaymentSuccessComponent,
+    PaymentFailedComponent,
+   
   ],
   imports: [
     CommonModule,
@@ -118,7 +125,10 @@ import { RouterModule } from '@angular/router';
     MatStepperModule,
     MatSlideToggleModule,
     MatTooltipModule,
-    RouterModule
+    RouterModule,
+    LoadingItemComponent,
+    PaymentSuccessComponent,
+    PaymentFailedComponent
   ]
 })
 export class ShareModule { }

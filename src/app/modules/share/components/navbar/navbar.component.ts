@@ -4,6 +4,7 @@ import { LoginComponent } from '../login/login.component';
 import { AuthenticationService } from 'src/app/modules/feature/components/auth/service/authentication.service';
 import { DialogShowOrderComponent } from 'src/app/modules/feature/components/customer/components/dialog-show-order/dialog-show-order.component';
 import { Router } from '@angular/router';
+import { VnpayService } from 'src/app/modules/feature/components/customer/service/vnpay.service';
 
 @Component({
   selector: 'app-navbar',
@@ -16,6 +17,7 @@ export class NavbarComponent implements OnInit {
   user:any;
   rank:any
   constructor(private dialog:MatDialog,private auth:AuthenticationService,
+    private paymentService:VnpayService,
     private router:Router) { }
 
   ngOnInit(): void {

@@ -55,4 +55,9 @@ export class CustomerService {
       retry(1), 
       delay(1000));
   }
+  getSeatForCustomerPage(scheduleId:any):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/seats?scheduleId=${scheduleId}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
 }
