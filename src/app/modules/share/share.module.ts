@@ -40,6 +40,7 @@ import { RouterModule } from '@angular/router';
 import { LoadingItemComponent } from './components/loading-item/loading-item.component';
 import { PaymentSuccessComponent } from './components/payment-success/payment-success.component';
 import { PaymentFailedComponent } from './components/payment-failed/payment-failed.component';
+import { LoadingDoubleballComponent } from './components/loading-doubleball/loading-doubleball.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { PaymentFailedComponent } from './components/payment-failed/payment-fail
     LoadingItemComponent,
     PaymentSuccessComponent,
     PaymentFailedComponent,
+    LoadingDoubleballComponent,
    
   ],
   imports: [
@@ -128,7 +130,8 @@ import { PaymentFailedComponent } from './components/payment-failed/payment-fail
     RouterModule,
     LoadingItemComponent,
     PaymentSuccessComponent,
-    PaymentFailedComponent
+    PaymentFailedComponent, 
+    LoadingDoubleballComponent
   ]
 })
 export class ShareModule { }

@@ -1,1 +1,17 @@
-<p>payment-success works!</p>
+<div>
+    <app-navbar></app-navbar>
+  </div>
+  <div *ngIf="isShow" class="flex flex-col justify-center items-center border py-4 w-[300px] spa">
+    <div>
+      <div class="text-xl  font-semibold">Thanh toán thành công</div>
+      <div>
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAACP0lEQVR4nN2Vz2sTURDHcxB/oIgVFFGxu+I/oZecqmvfS2Y87Dm1oKLgVUQP/g1C3oInj4VA3wQthfTiQS9a9WAPqQdBrOix7tuKHsTKbLub/ZHdbOKtDx5skref78x33kxqtT27Lnfc40LjvCDoCo3rUuNWuAk+SY1aEN50lp2jY4PdjntIanwoNfqScLtsC42bUuMjt+PuTzLOe8FJyzNvLS94mYI7i9fOCoJ3o8AyK0Twqv6ivi+GK7Nme8G2pcxqCi41fh0XLjX+lhqvMuPCY3PC8swHhtsq6E+3t07FtkwSuawC5xV6ngPAN0n4ZGfD94nhfFuyBRUEb8SSmIrO8LMgWBkbHr6scT4b3SzBpbBgyhe28hv8XH/aOigIekl4pqBr/Jm/n+nNHB4IEHSzAm7HPcK/WV7g28r8tZW5E4lIjRfL4CwuCRYG/hN8LMzAM7d3BWKRkXDOkOBz0iIzpMCvOdowi7a5EYlYKrhb5PkAHjbgz6RFQUHzrPD15TMcfSzimY1s5ILgiiT4lbgEfqlFw0SsKJNM5Dn4znv9pEU0Ygz0Irum2/6crcxC3vOcxYuDDLrN6xVmTS/KJGHt7HB4WINWutEIflSYnOuS4FZDIwiNShD8KZqwQHAs3WwED8aeQ1SY7b0UPO5Sjav/LwDx9c4t8VyckQQbE0eu8Uuz2zxdK1t8gKOYAP5ePpPnSuFJu6TG+xULv8meO8vOgUrwlGVLYqpBMMd9wo3DHb+7++GfvsZW7rYMWf8AQ7ZUUBofiFAAAAAASUVORK5CYII=">
+      </div>
+    </div>
+    <button mat-raised-button (click)="backToHomePage()">Quay lại</button>
+  </div>
+  
+  <div>
+    <app-footer></app-footer>
+  </div>
+<app-loading-doubleball [isLoading]="isLoading"></app-loading-doubleball>

@@ -56,7 +56,7 @@ export class BookingComponent implements OnInit {
         Validators.pattern(/^[a-zA-Z ]+$/),
       ]),
       phoneNumber: new FormControl("", [
-        Validators.pattern(/^[0-9]+$/),
+        Validators.pattern(/^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/),
         Validators.required,
       ]),
       email: new FormControl("", [Validators.email]),

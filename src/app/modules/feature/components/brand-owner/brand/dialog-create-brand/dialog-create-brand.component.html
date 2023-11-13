@@ -33,13 +33,7 @@
           Số điện thoại đã tồn tại
         </mat-error>
         <mat-error  *ngIf="brandForm.get('phone')?.hasError('pattern')">
-          Số điện thoại chỉ bao gồm số
-        </mat-error>
-        <mat-error  *ngIf="brandForm.get('phone')?.hasError('minLength')">
-          Số điện thoại tối thiểu 10 số
-        </mat-error>
-        <mat-error *ngIf="brandForm.get('phone')?.hasError('maxLength')">
-          Số điện thoại tối đa 10 số
+          Số điện thoại không hợp lệ
         </mat-error>
       </mat-form-field>
 

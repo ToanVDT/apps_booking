@@ -13,4 +13,7 @@ export class VnpayService {
   getURLPayment(request:any):Observable<any>{
     return this.http.post<any>(`${environment.apiUrl}/payment/create-pay`,request).pipe()
   }
+  checkGiftCodeValid(giftCode:string):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/giftcode/valid?giftCode=${giftCode}`).pipe()
+  }
 }

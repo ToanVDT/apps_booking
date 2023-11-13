@@ -32,7 +32,7 @@
                 Số điện thoại đã tồn tại
               </mat-error>
               <mat-error *ngIf="profileForm.get('phone')?.hasError('required')">Số điện thoại không được để trống</mat-error>
-              <mat-error *ngIf="profileForm.get('phone')?.hasError('pattern')">Số điện thoại không chứa chữ cái</mat-error>
+              <mat-error *ngIf="profileForm.get('phone')?.hasError('pattern')">Số điện thoại không hợp lệ</mat-error>
             </mat-form-field>
             <mat-form-field>
               <mat-label>CMND/CCCD</mat-label>

@@ -238,9 +238,9 @@
                                 <div class="text-lg text-[#4d4d4d] font-bold mb-3">Điểm Đón</div>
                                 <div class="flex flex-col" *ngFor="let item of listpickup">
                                     <div class="flex mb-2">
-                                        <div class="font-bold">{{ item.time }}</div>
+                                        <div class="font-bold">{{ item.pickUpTime }}</div>
                                         <span class="mx-2">•</span>
-                                        <div>{{ item.name }}</div>
+                                        <div>{{ item.pickUpPoint }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -248,9 +248,9 @@
                                 <div class="text-lg text-[#4d4d4d] font-bold mb-3">Điểm Trả</div>
                                 <div class="flex flex-col" *ngFor="let item of listdropoff">
                                     <div class="flex mb-2">
-                                        <div class="font-bold">{{ item.time }}</div>
+                                        <div class="font-bold">{{ item.dropOffTime }}</div>
                                         <span class="mx-2">•</span>
-                                        <div>{{ item.name }}</div>
+                                        <div>{{ item.dropOffPoint }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -512,7 +512,7 @@
                                     Số điện thoại không được để trống
                                 </mat-error>
                                 <mat-error *ngIf="infoCustomerForm.get('phoneNumber')?.hasError('pattern')">
-                                    Số điện thoại chỉ chấp nhận số
+                                    Số điện thoại không hợp lệ
                                 </mat-error>
                             </mat-form-field>
 
@@ -558,19 +558,19 @@
                         <div class="flex flex-col border rounded-sm p-8 w-[450px]" [formGroup]="optionForm">
                             <div class="text-xl text-center font-semibold mb-4">Phương thức thanh toán</div>
                             <mat-radio-group aria-label="Select an option" class="flex flex-col space-y-4" formControlName="options">
-                                <mat-radio-button value="2">Thanh toán tại nhà xe</mat-radio-button>
-                                <mat-radio-button value="1">Thanh Toán online</mat-radio-button>
+                                <mat-radio-button value="2" >Thanh toán tại nhà xe</mat-radio-button>
+                                <mat-radio-button value="1" [checked]="true">Thanh Toán online</mat-radio-button>
                             </mat-radio-group>
                             <div class="flex flex-col mt-10">
                                 Bạn có mã giảm giá?
-                                <div *ngIf="!closeFormInputGift" class="flex justify-center items-center relative">
+                                <div *ngIf="!closeFormInputGift" class="flex items-center relative">
                                     <mat-form-field appearance="outline" [formGroup]="giftForm" >
                                         <mat-label>Mã quà tặng</mat-label>
                                         <input matInput formControlName="giftCode" placeholder="Mã quà tặng" />
                                     </mat-form-field>
-                                    <button *ngIf="!isLoading" matTooltip="Dùng mã" class=" ml-4 w-1/5 absolute right-7 top-[17px]"
+                                    <button *ngIf="!isLoading" matTooltip="Dùng mã" class=" ml-4 w-1/5 absolute  right-[105px] top-[17px]"
                                         matTooltipPosition="right" (click)="checkGiftCodeValid()"><mat-icon>check</mat-icon></button>
-                                        <app-loading-item [isLoading]="isLoading" class="ml-4 w-1/5 absolute right-7 top-[6px]"></app-loading-item>
+                                        <app-loading-item [isLoading]="isLoading" class="ml-4 w-1/5 absolute right-[105px] top-[6px]"></app-loading-item>
                                 </div>
                     
                                 <div *ngIf="closeFormInputGift">Mã giảm giá không áp dụng cho thanh toán tại nhà xe</div>
@@ -609,3 +609,4 @@
         </div>
     </mat-expansion-panel>
 </mat-accordion>
+

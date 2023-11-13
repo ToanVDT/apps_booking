@@ -54,12 +54,14 @@
                     </form>
                 </div>
 
-                <div class="lg:col-span-3 flex flex-col items-center">
+                <div *ngIf="!noData" class="lg:col-span-3 flex flex-col items-center">
                     <div  *ngFor="let scheduleAvailable of scheduleAvailables" class="w-full">
                         <app-customer-ticket-card [scheduleAvailable]="scheduleAvailable" class=" bg-white border rounded-md shadow-md mb-6 hover:shadow-2xl"></app-customer-ticket-card>
                     </div>
                 </div>
+                <div *ngIf="noData" class="text-xl font-semibold text-center w-[700px]">Không tìm thấy chuyến xe phù hợp</div>
             </div>
         </section>
     </main>
 </div>
+<app-loading-doubleball [isLoading]="isLoading"></app-loading-doubleball>

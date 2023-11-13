@@ -39,7 +39,7 @@ export class ProfileComponent implements OnInit {
         address:new FormControl(this.credentials.address, [Validators.required]),
         email:new FormControl('', [Validators.required, Validators.email]),
         fullName:new FormControl(this.fullName, [Validators.required]),
-        phone:new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")]),
+        phone:new FormControl('', [Validators.required, Validators.pattern(/^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/)]),
         identityCode:new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")]),
       })
       this.changePasswordForm = new FormGroup({

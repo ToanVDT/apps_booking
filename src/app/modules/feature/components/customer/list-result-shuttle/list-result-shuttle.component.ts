@@ -4,6 +4,7 @@ import { CustomerService } from '../service/customer.service';
 import { Router } from '@angular/router';
 import { ScheduleAvailable } from '../../brand-owner/model/schedule.model';
 import * as moment from 'moment';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-list-result-shuttle',
@@ -12,6 +13,8 @@ import * as moment from 'moment';
 })
 export class ListResultShuttleComponent implements OnInit {
 
+  isLoading:boolean = false;
+  noData:boolean = true;
   singleFilterData: any;
   filterData: any;
   scheduleAvailable: ScheduleAvailable = {}
@@ -19,7 +22,6 @@ export class ListResultShuttleComponent implements OnInit {
 
   constructor(private customerService:CustomerService, private router:Router) {
 
-      console.log("this.router.getCurrentNavigation()?.extras",this.router.getCurrentNavigation()?.extras.state)
       let travelDate = moment(this.router.getCurrentNavigation()?.extras.state?.['travelDate']).format('yyyy-MM-DD')
       let startPoint = this.router.getCurrentNavigation()?.extras.state?.['startPoint'];
       let endPoint = this.router.getCurrentNavigation()?.extras.state?.['endPoint'];
@@ -29,13 +31,25 @@ export class ListResultShuttleComponent implements OnInit {
   ngOnInit(): void {
       this.singleFilterData = singleFilter;
       this.filterData = filters;
-      // this.router.getCurrentNavigation()?.extras
   
   }
   getAvailableSChedule(startPoint:any, endPoint:any, travelDate:any){
-    this.customerService.getScheduleAvailable(startPoint,endPoint,travelDate).pipe().subscribe(
+    this.isLoading = true
+    let response:any
+    this.customerService.getScheduleAvailable(startPoint,endPoint,travelDate).pipe(
+      finalize(()=>{
+        if(response[0]?.scheduleId){
+          this.noData = false
+        }
+        else{
+          this.noData = true
+        }
+        this.isLoading = false
+      })
+    ).subscribe(
       data=>{
         this.scheduleAvailables = data.data
+        response = data.data
       }
     )
   }

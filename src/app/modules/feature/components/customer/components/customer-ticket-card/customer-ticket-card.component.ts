@@ -19,6 +19,7 @@ import { ToastrService } from "ngx-toastr";
 import { InfoCustomerReview } from "../model/infocustomerreview.model";
 import { Router } from "@angular/router";
 import { VnpayService } from "../../service/vnpay.service";
+import { AuthenticationService } from "../../../auth/service/authentication.service";
 
 interface Seat {
     id: number;
@@ -113,31 +114,34 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
     typeSeats = ["phòng", "chỗ"];
     typeSeat: any
     selectedImageIndex = 0;
-    orderId:any
+    orderId: any
     startIndex = 0;
-    paymentId!: number;
+    paymentId: number = 1;
     brandName: any;
     pickupLocations: PickUp[] = []
     dropOffLocations: DropOff[] = []
     pickup: any;
     dropOff: any;
-    giftCode:any;
+    giftCode: any;
     listpickup: any;
     listdropoff: any;
     eatingFee: any;
     fullName: any;
     phone: any;
     email: any;
-    scheduleId:any
+    scheduleId: any
     selectedPickup!: Location;
     selectedDropOff!: Location;
     quantityEating: number = 0;
     seatPairs: Seat[][] = [];
     selectedSeats: Seat[] = [];
     listSeats: any;
+    user:any;
+    isLogged:boolean = false;
     infoCustomerForm: FormGroup;
+    giftMoney: number = 0;
     isLoading: boolean = false;
-    totalPrice:any;
+    totalPrice: any;
     isLoadingPage: any;
     giftForm: FormGroup
     InfoReView: InfoCustomerReview = {}
@@ -149,15 +153,15 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
     closeFormInputGift: boolean = false
 
     constructor(
-        public dialog: MatDialog, private parkingService: ParkingService,private paymentService:VnpayService,
-        private customerService: CustomerService, private orderService: OrderService,
-        private elementRef: ElementRef, private message: ToastrService,private router:Router,
+        public dialog: MatDialog, private parkingService: ParkingService, private paymentService: VnpayService,
+        private customerService: CustomerService, private orderService: OrderService,private auth:AuthenticationService,
+        private elementRef: ElementRef, private message: ToastrService, private router: Router,
     ) {
         this.infoCustomerForm = new FormGroup({
             check: new FormControl(this.isChecked),
             quantity: new FormControl(0),
             fullName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z ]+$/)]),
-            phoneNumber: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]+$/)]),
+            phoneNumber: new FormControl('', [Validators.required, Validators.pattern(/^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/)]),
             email: new FormControl('', [Validators.email]),
             termsAndConditions: new FormControl(''),
         });
@@ -170,6 +174,20 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
+        this.user = this.auth.userValue;
+        if(this.user?.data?.id){
+            this.isLogged = true;
+            this.customerService.getProfile(this.user?.data?.id).pipe().subscribe(
+                data=>{
+                    this.infoCustomerForm.get("email")?.setValue(data.data.email);
+                    this.infoCustomerForm.get("fullName")?.setValue(data.data.fullName);
+                    this.infoCustomerForm.get("phoneNumber")?.setValue(data.data.phone);
+                    this.infoCustomerForm.get("email")?.disable()
+                    this.infoCustomerForm.get("fullName")?.disable()
+                    this.infoCustomerForm.get("phoneNumber")?.disable()
+                }
+            )
+        }
         this.infoCustomerForm.get('check')?.valueChanges.subscribe((value) => {
             this.isChecked = value;
         });
@@ -198,9 +216,7 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
             }
         })
         this.infoCustomerForm.get('email')?.valueChanges.subscribe(value => {
-            if (value) {
-                this.email = value
-            }
+            this.email = value
         })
         this.infoCustomerForm.get('phoneNumber')?.valueChanges.subscribe(value => {
             if (value) {
@@ -208,8 +224,8 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
             }
         })
         this.giftForm.get('giftCode')?.valueChanges.subscribe(
-            value=>{
-                if(value){
+            value => {
+                if (value) {
                     this.giftCode = value
                 }
             }
@@ -227,6 +243,18 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
     }
     checkGiftCodeValid() {
         this.isLoading = true
+        this.paymentService.checkGiftCodeValid(this.giftCode).pipe(finalize(() => this.isLoading = false)).subscribe(
+            data => {
+                if (data.success) {
+                    this.message.success(data.message, "Thành công", { timeOut: 2000, progressBar: true })
+                    this.giftMoney = data.data
+                }
+                else {
+                    this.message.error(data.message, "Thất bại", { timeOut: 2000, progressBar: true })
+                    this.giftForm.get("giftCode")?.setValue("")
+                }
+            }
+        )
     }
     getValueDropOffAnfPickUp() {
         this.pickup = this.selectedPickup;
@@ -258,6 +286,8 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
                 this.listSeats = data.seats.data,
                     this.pickupLocations = data.pickUps.data,
                     this.dropOffLocations = data.dropOffs.data
+                    this.listpickup = data.pickUps.data,
+                    this.listdropoff = data.dropOffs.data
                 for (const seatRow of this.listSeats) {
                     const row: Seat[] = seatRow.map((seat: any) => {
                         return {
@@ -381,7 +411,11 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
     }
 
     getTotalPrice(): number {
-        this.totalPrice =  this.selectedSeats.reduce((total, seat) => total + seat.price, 0) + this.quantityEating * this.eatingFee;
+        let promotion = 0;
+        if (this.paymentId === 1) {
+            promotion = this.giftMoney;
+        }
+        this.totalPrice = this.selectedSeats.reduce((total, seat) => total + seat.price, 0) + this.quantityEating * this.eatingFee - promotion;
         return this.totalPrice;
     }
     getPromotion() {
@@ -400,14 +434,14 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
         });
     }
     bookingTicket() {
-        let gift:any;
-        let payAmount:any;
-        console.log(this.giftCode,this.totalPrice)
-        if(this.paymentId === 2){
+        let gift: any;
+        let payAmount: any;
+        console.log(this.giftCode, this.totalPrice)
+        if (this.paymentId === 2) {
             gift = "";
             payAmount = 0;
         }
-        else{
+        else {
             gift = this.giftCode;
             payAmount = this.totalPrice;
         }
@@ -416,10 +450,10 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
             pickUp: this.pickup?.pickUpPoint,
             dropOff: this.dropOff?.dropOffPoint,
             quantityEating: this.quantityEating,
-            scheduleId:this.scheduleId,
+            scheduleId: this.scheduleId,
             paymentId: this.paymentId,
             giftCode: gift,
-            paidAmount:payAmount,
+            paidAmount: payAmount,
             customer: {
                 firstName: this.fullName.split(" ").slice(0, -1).join(" "),
                 lastName: this.fullName.split(" ").slice(-1).join(" "),
@@ -427,24 +461,25 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
                 phoneNumber: this.phone,
             }
         }
+        // console.log(request)
         this.orderService.orderTicket(request).pipe().subscribe(
-            data=>{
-                if(data.success){
-                    this.message.success("Đặt vé","Thành công",{timeOut:2000, progressBar:true})
+            data => {
+                if (data.success) {
+                    this.message.success("Đặt vé", "Thành công", { timeOut: 2000, progressBar: true })
                 }
                 // this.router.navigate(['/customer'])
             }
         )
     }
     paymentOrder() {
-        let gift:any;
-        let payAmount:any;
-        console.log("tprice",this.totalPrice)
-        if(this.paymentId === 2){
+        let gift: any;
+        let payAmount: any;
+        console.log("tprice", this.totalPrice)
+        if (this.paymentId === 2) {
             gift = "";
             payAmount = 0;
         }
-        else{
+        else {
             gift = this.giftCode
             payAmount = this.totalPrice;
         }
@@ -453,10 +488,10 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
             pickUp: this.pickup?.pickUpPoint,
             dropOff: this.dropOff?.dropOffPoint,
             quantityEating: this.quantityEating,
-            scheduleId:this.scheduleId,
+            scheduleId: this.scheduleId,
             paymentId: this.paymentId,
             giftCode: gift,
-            paidAmount:payAmount,
+            paidAmount: payAmount,
             customer: {
                 firstName: this.fullName.split(" ").slice(0, -1).join(" "),
                 lastName: this.fullName.split(" ").slice(-1).join(" "),
@@ -464,11 +499,11 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
                 phoneNumber: this.phone,
             }
         }
-        localStorage.setItem("dataBooking",JSON.stringify(request))
+        localStorage.setItem("dataBooking", JSON.stringify(request))
         console.log("request", request)
-        let requestPayment = {amount:payAmount,bankCode:"NCB"}
+        let requestPayment = { amount: payAmount, bankCode: "NCB" }
         this.paymentService.getURLPayment(requestPayment).pipe().subscribe(
-            data=>{
+            data => {
                 window.location.href = data.data;
             }
         )

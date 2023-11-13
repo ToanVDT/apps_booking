@@ -30,10 +30,7 @@ export class DialogCreateBrandComponent implements OnInit {
       address: new FormControl(this.brand.address, [Validators.required]),
       phone: new FormControl(this.brand.phone, [
         Validators.required,
-        Validators.pattern("^[0-9]*$"),
-        Validators.minLength(10),
-        Validators.maxLength(10),
-      ]),
+        Validators.pattern(/^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/)]),
       description: new FormControl(this.brand.description),
       // image: new FormControl(this.brand.image,[Validators.required]),
     });
