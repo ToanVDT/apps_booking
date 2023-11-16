@@ -138,7 +138,7 @@
                 <mat-tab label="Hình ảnh">
                     <div class="carousel">
                         <div class="main-image">
-                            <button mat-button (click)="prevImage()" [disabled]="selectedImageIndex === 0"
+                            <button (click)="prevImage()" [disabled]="selectedImageIndex === 0"
                                 class="control-button left-button">
                                 <mat-icon>keyboard_arrow_left</mat-icon>
                             </button>
@@ -558,7 +558,8 @@
                         <div class="flex flex-col border rounded-sm p-8 w-[450px]" [formGroup]="optionForm">
                             <div class="text-xl text-center font-semibold mb-4">Phương thức thanh toán</div>
                             <mat-radio-group aria-label="Select an option" class="flex flex-col space-y-4" formControlName="options">
-                                <mat-radio-button value="2" >Thanh toán tại nhà xe</mat-radio-button>
+                                <mat-radio-button *ngIf="!requireDeposit" value="2" >Thanh toán tại nhà xe</mat-radio-button>
+                                <mat-radio-button *ngIf="requireDeposit" value="3" >Cọc tiền (60% tổng tiền hóa đơn)</mat-radio-button>
                                 <mat-radio-button value="1" [checked]="true">Thanh Toán online</mat-radio-button>
                             </mat-radio-group>
                             <div class="flex flex-col mt-10">
@@ -609,4 +610,5 @@
         </div>
     </mat-expansion-panel>
 </mat-accordion>
+<app-loading-doubleball [isLoading]="isLoadingPage"></app-loading-doubleball>
 

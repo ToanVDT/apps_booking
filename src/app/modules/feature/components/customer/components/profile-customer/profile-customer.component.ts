@@ -171,10 +171,8 @@ export class ProfileCustomerComponent implements OnInit {
       .pipe()
       .subscribe((data) => {
         this.duplicateEmail = data;
-        if (data) {
           if (data) {
             this.profileForm.get("email")?.setErrors({ duplicateEmail: true });
-          }
         }
       });
   }

@@ -20,6 +20,8 @@ export class LoginComponent implements OnInit {
   emailExist:boolean = false;
   usernameExist:boolean = false;
   ForGotPassword: boolean = false;
+  validateCodeResponse:any;
+  validateCodeEnter:any;
   sentEmail = false;
   username!: string;
   password!: string;
@@ -28,6 +30,7 @@ export class LoginComponent implements OnInit {
   fullName: any;
   phone: any;
   email: any;
+  emailForGotPassword:any;
   formLogin: FormGroup;
   forgotPasswordForm: FormGroup;
   rePassvalid: boolean = true;
@@ -87,6 +90,17 @@ export class LoginComponent implements OnInit {
     }
     )
     this.forgotPasswordForm.get('codeConfirm')?.disable();
+    this.forgotPasswordForm.get('email')?.valueChanges.subscribe(value=> {
+      if(value){
+        this.emailForGotPassword = value
+      }
+    })
+    this.forgotPasswordForm.get('codeConfirm')?.valueChanges.subscribe(value=>{
+      if(value){
+        this.validateCodeEnter = value
+        
+      }
+    })
   }
   login() {
     this.isLoading = true;
@@ -96,7 +110,7 @@ export class LoginComponent implements OnInit {
       })
     ).subscribe(
       data=>{
-        if(data.success){
+        if(data.success ){
           this.logInResponse.emit({
             isLoggedIn: true
           })
@@ -156,18 +170,34 @@ export class LoginComponent implements OnInit {
     this.forgotPasswordForm.get('email')?.enable();
   }
   sendCode() {
-    //  this.ForGotPassword = false;
-    //  this.forgotPasswordForm.get('email')?.setValue(null)
-    //  this.forgotPasswordForm.get('codeConfirm')?.setValue(null)
-    //  this.forgotPasswordForm.get('email')?.enable();
+    if(this.validateCodeEnter !== this.validateCodeResponse){
+      this.message.error("Mã xác thực không chính xác","Thất bại",{timeOut:2000, progressBar:true})
+      this.forgotPasswordForm.get('codeConfirm')?.enable();
+      this.forgotPasswordForm.get('codeConfirm')?.setValue(null)
+    }
+    else{
+      this.ForGotPassword = false;
+      this.forgotPasswordForm.get('email')?.setValue(null)
+      this.forgotPasswordForm.get('codeConfirm')?.setValue(null)
+      this.forgotPasswordForm.get('email')?.enable();
+      this.customerService.resetPassword(this.emailForGotPassword).pipe(
+        finalize(()=>{
+          this.message.success("Mật khẩu đã được làm mới","Thành công",{timeOut:2000, progressBar:true})
+        })
+      ).subscribe()
+      
+    }
 
-    this.forgotPasswordForm.get('codeConfirm')?.disable();
-    this.forgotPasswordForm.get('codeConfirm')?.setValue(null)
   }
   sendMail() {
     this.sentEmail = true;
     this.forgotPasswordForm.get('email')?.disable();
     this.forgotPasswordForm.get('codeConfirm')?.enable();
+    this.customerService.sendMailValidateCode(this.emailForGotPassword).pipe().subscribe(
+      data=>{
+        this.validateCodeResponse = data.data
+      }
+    )
   }
   checkPhoneExist(phone:any){
     this.customerService.checkPhoneRegisterCustomer(phone).pipe().subscribe(

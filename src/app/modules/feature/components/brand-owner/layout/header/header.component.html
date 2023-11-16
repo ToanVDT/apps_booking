@@ -12,16 +12,6 @@
         <div  class="relative ml-3 flex items-center">
           <div class="flex items-center space-x-5">
             <span style="color: aliceblue;">Xin chào, {{user.data.name}}</span>
-            <button mat-button [matMenuTriggerFor]="profileMenu">
-              <img class="h-10 w-10"
-                src="https://www.shareicon.net/data/128x128/2016/05/24/770117_people_512x512.png"
-                alt="avatar_profile"
-              />
-            </button>
-            <mat-menu #profileMenu="matMenu">
-              <button mat-menu-item>Thông tin tài khoản</button>
-              <button mat-menu-item (click)="logout()">Đăng xuất</button>
-            </mat-menu>
           </div>
         </div>
       </div>

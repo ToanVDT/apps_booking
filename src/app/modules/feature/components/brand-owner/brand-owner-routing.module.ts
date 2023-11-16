@@ -11,23 +11,25 @@ import { ScheduleComponent } from "./schedule/schedule.component";
 import { TicketComponent } from "./ticket/ticket.component";
 import { OrderComponent } from "./order/order.component";
 import { ProfileComponent } from "./profile/profile.component";
+import { ImageComponent } from "./image/image.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "brand", pathMatch: "full" },
   {
     path: "",
-    canActivate:[AuthGuard],
+    canActivate: [AuthGuard],
     component: BrandOwnerComponent,
     children: [
       { path: "brand", component: BrandComponent },
       { path: "route", component: RouteComponent },
       { path: "bus", component: BusComponent },
-      { path: "shuttle", component:ShuttleComponent},
-      { path: "parking", component:ParkingComponent},
-      { path: "schedule", component:ScheduleComponent},
-      { path: "ticket",component:TicketComponent},
-      { path: "order", component:OrderComponent},
-      { path: "profile", component:ProfileComponent}
+      { path: "shuttle", component: ShuttleComponent },
+      { path: "parking", component: ParkingComponent },
+      { path: "schedule", component: ScheduleComponent },
+      { path: "ticket", component: TicketComponent },
+      { path: "order", component: OrderComponent },
+      { path: "profile", component: ProfileComponent },
+      { path: "image", component: ImageComponent }
     ],
   },
 ];
@@ -36,4 +38,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class BrandOwnerRoutingModule {}
+export class BrandOwnerRoutingModule { }

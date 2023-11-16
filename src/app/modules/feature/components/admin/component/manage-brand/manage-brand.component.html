@@ -1,0 +1,92 @@
+<div class="w-full mt-3">
+    <div class="border-2 rounded-t-lg shadow-lg mx-10 bg-white px-14 py-4">
+        <div class="flex justify-between items-center border-2 h-24 p-6 bg-[#F0F0EE] rounded-lg">
+            <div class="flex justify-center items-center bg-teal-500 w-[100px] h-10 rounded-sm">
+                <button class="text-white" (click)="openDialogCreateUser()">Thêm</button>
+            </div>
+        </div>
+        <div *ngIf="noData" class="flex py-7 px-5 justify-center text-xl">Không có dữ liệu</div>
+        <div *ngIf="!noData">
+            <table mat-table [dataSource]="dataSource"
+                class="mat-elevation-z8 w-full mt-[2%] rounded-xl border bg-white">
+                <!-- Position Column -->
+                <ng-container matColumnDef="fullName">
+                    <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Tên chủ nhà xe </th>
+                    <td style="width: 22.5%;text-align: center;" mat-cell *matCellDef="let brandOwner">
+                        {{brandOwner.fullName}}</td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="info">
+                    <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Thông tin</th>
+                    <td style="width: 12.5%;text-align: center;" mat-cell *matCellDef="let brandOwner">
+                        <div class="space-y-2 p-2">
+                            <div> SĐT: {{brandOwner.phone}}</div>
+                            <div>{{brandOwner.email}}</div>
+                            <div>Tên đăng nhập: {{brandOwner.username}}</div>
+                        </div>
+                </ng-container>
+                <ng-container matColumnDef="identityCode">
+                    <th style="text-align: center;" mat-header-cell *matHeaderCellDef>CCCD/CMND</th>
+                    <td style="width: 5%; text-align: center;" mat-cell *matCellDef="let brandOwner">
+                        {{brandOwner.identityCode}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nameBrand">
+                    <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Tên nhà xe</th>
+                    <td style="width: 15%; text-align: center;" mat-cell *matCellDef="let brandOwner">
+                        {{brandOwner.nameBrand}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="addressBrand">
+                    <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Địa chỉ nhà xe</th>
+                    <td style="width: 15%; text-align: center;" mat-cell *matCellDef="let brandOwner">
+                        {{brandOwner.address}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="phoneBrand">
+                    <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Số điện thoại nhà xe</th>
+                    <td style="width: 12.5%; text-align: center;" mat-cell *matCellDef="let brandOwner">
+                        {{brandOwner.phoneBrand}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="accountStatus">
+                    <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Trạng thái tài khoản</th>
+                    <td style="width: 7.5%; text-align: center;" mat-cell *matCellDef="let brandOwner">
+                        <div class="rounded-lg border-4 h-[34px] py-1 w-[138px] px-7 text-cyan-50"
+                            [ngStyle]="{'background': (brandOwner.accountStatus === 'Vô hiệu hóa') ? 'red' : 'green'}">
+                            {{brandOwner.accountStatus}}
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                    <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Hành động </th>
+                    <td style="width: 10%;text-align: center;" mat-cell *matCellDef="let brandOwner">
+                        <button style="background: #3F51B5;" mat-button [matMenuTriggerFor]="menu">
+
+                            <mat-icon style="color: white;">menu</mat-icon>
+
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item 
+                                (click)="(brandOwner.accountStatus === 'Vô hiệu hóa')?ActiveAccount(brandOwner):InativeAccount(brandOwner)">
+                                {{brandOwner.accountStatus === 'Kích hoạt'?'Vô hiệu hóa tài khoản':'Kích hoạt tài khoản'}}
+                            </button>
+                        </mat-menu>
+                        <!-- <button mat-menu-item>Hủy đơn đặt</button>  -->
+                        <!-- <mat-spinner *ngIf="openingMenu" [diameter]="40" style="color: white;"></mat-spinner> -->
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+            </table>
+            <div>
+                <mat-paginator #paginator [pageSizeOptions]="[8,16,24, 100]">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>
+<app-spinner [isLoading]="isLoading"></app-spinner>

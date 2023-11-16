@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { popularRoute } from 'src/assets/data/popularRoute';
+import { popularRoute, services, vourchers } from 'src/assets/data/popularRoute';
 
 @Component({
   selector: 'app-homepage',
@@ -9,9 +9,14 @@ import { popularRoute } from 'src/assets/data/popularRoute';
 export class HomepageComponent implements OnInit {
 
   popularRoute: any;
+  vourchers: any;
+  services: any;
+
   constructor() {}
 
   ngOnInit(): void {
-      this.popularRoute = popularRoute.slice(0, 5);
+      this.popularRoute = popularRoute;
+      this.vourchers = vourchers;
+      this.services = services;
   }
 }

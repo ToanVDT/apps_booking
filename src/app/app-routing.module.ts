@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CustomerComponent } from './modules/feature/components/customer/customer.component';
-import { UnauthorizedComponent } from './modules/share/components/unauthorized/unauthorized.component';
+import { UnauthorizedComponent } from './modules/share/components/forbidden/unauthorized.component';
 import { PaymentSuccessComponent } from './modules/share/components/payment-success/payment-success.component';
 import { PaymentFailedComponent } from './modules/share/components/payment-failed/payment-failed.component';
 
@@ -9,7 +9,7 @@ const routes: Routes = [
   {path:'', redirectTo:'customer', pathMatch:'full'},
   {path: 'payment-success',component:PaymentSuccessComponent},
   {path: 'payment-failed',component:PaymentFailedComponent},
-  {path:'unauthorized', component:UnauthorizedComponent},
+  {path:'forbidden', component:UnauthorizedComponent},
   {
     path: 'admin',
     loadChildren: () =>

@@ -6,16 +6,10 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { ToastrService } from 'ngx-toastr';
 import { finalize, forkJoin } from 'rxjs';
-import { ConfirmDialogComponent } from 'src/app/modules/share/components/confirm-dialog/confirm-dialog.component';
 import { AuthenticationService } from '../../auth/service/authentication.service';
-import { Bus } from '../model/bus.model';
-import { Schedule, ScheduleDTO } from '../model/schedule.model';
+import {  ScheduleDTO } from '../model/schedule.model';
 import { Shuttle } from '../model/shuttle.model';
-import { DialogScheduleComponent } from '../schedule/dialog-schedule/dialog-schedule.component';
-import { BusService } from '../service/bus.service';
-import { RouteService } from '../service/route.service';
 import { ScheduleService } from '../service/schedule.service';
-import { ShuttleService } from '../service/shuttle.service';
 import { Routes } from '../model/route.model';
 import * as moment from 'moment';
 import { DetailMoney, DateAndTime, DetailInfoCustomer, Orders } from '../model/order.model';
@@ -173,7 +167,6 @@ export class OrderComponent implements OnInit {
       })
       dialogRef.componentInstance.onConfirm.subscribe(()=>
       {
-
         this.handleCancelBooking(order?.id)
       }
       )

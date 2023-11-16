@@ -1,1 +1,51 @@
-<p>image works!</p>
+
+<div class="ml-12 mt-3 w-[1200px] h-[600px] bg-white border rounded-md p-4">
+  <div class="text-center text-xl font-medium mb-3">Media</div>
+  <div class="flex">
+      <div class="mr-9">
+          <mat-form-field>
+              <mat-label>Xe</mat-label>
+              <mat-select>
+                <mat-option *ngFor="let food of foods" [value]="food.value">
+                  {{food.viewValue}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+      </div>
+      <div class="flex">
+          <div class="mr-8">
+              <div class="carousel">
+                  <div class="main-image">
+                      <button (click)="prevImage()" [disabled]="selectedImageIndex === 0"
+                          class="control-button left-button">
+                          <mat-icon>keyboard_arrow_left</mat-icon>
+                      </button>
+                      <div class="w-full flex justify-center">
+                          <img [@imageAnimation]="selectedImageIndex" class="mainimage"
+                              [src]="images[selectedImageIndex]" alt="Main Image" />
+                      </div>
+                      <button (click)="nextImage()" [disabled]="selectedImageIndex === images.length - 1"
+                          class="control-button right-button">
+                          <mat-icon>keyboard_arrow_right</mat-icon>
+                      </button>
+                  </div>
+
+                  <div class="image-info">{{ selectedImageIndex + 1 }}/{{ images.length }}</div>
+
+                  <div class="thumbnails">
+                      <div *ngFor="let image of getVisibleThumbnails(); let i = index" class="thumbnail"
+                          [class.selected]="i + startIndex === selectedImageIndex"
+                          (click)="selectImage(i + startIndex)">
+                          <img [src]="image" alt="Thumbnail {{ i + startIndex + 1 }}" class="thumbnail-image" />
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="h-full grid grid-cols-1 gap-3 content-end">
+              <button class="bg-green-400 px-4 py-2 rounded-sm text-white border">Sửa</button>
+              <button class="bg-green-400 px-4 py-2 rounded-sm text-white border">Thêm</button>
+              <button class="bg-green-400 px-4 py-2 rounded-sm text-white border">Xóa</button>
+          </div>
+      </div>
+  </div>
+</div>

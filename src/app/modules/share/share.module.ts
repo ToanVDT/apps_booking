@@ -32,7 +32,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
-import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+import { UnauthorizedComponent } from './components/forbidden/unauthorized.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -41,6 +41,7 @@ import { LoadingItemComponent } from './components/loading-item/loading-item.com
 import { PaymentSuccessComponent } from './components/payment-success/payment-success.component';
 import { PaymentFailedComponent } from './components/payment-failed/payment-failed.component';
 import { LoadingDoubleballComponent } from './components/loading-doubleball/loading-doubleball.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { LoadingDoubleballComponent } from './components/loading-doubleball/load
     PaymentSuccessComponent,
     PaymentFailedComponent,
     LoadingDoubleballComponent,
+    ForgotPasswordComponent,
    
   ],
   imports: [
@@ -131,7 +133,8 @@ import { LoadingDoubleballComponent } from './components/loading-doubleball/load
     LoadingItemComponent,
     PaymentSuccessComponent,
     PaymentFailedComponent, 
-    LoadingDoubleballComponent
+    LoadingDoubleballComponent,
+    ForgotPasswordComponent
   ]
 })
 export class ShareModule { }

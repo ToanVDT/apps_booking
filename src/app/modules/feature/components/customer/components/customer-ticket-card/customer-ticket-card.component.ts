@@ -128,6 +128,7 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
     eatingFee: any;
     fullName: any;
     phone: any;
+    requireDeposit:boolean = false;
     email: any;
     scheduleId: any
     selectedPickup!: Location;
@@ -175,6 +176,7 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.user = this.auth.userValue;
+        console.log("this", this.scheduleAvailable)
         if(this.user?.data?.id){
             this.isLogged = true;
             this.customerService.getProfile(this.user?.data?.id).pipe().subscribe(
@@ -272,14 +274,12 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
 
     }
     getDropOffPickUpAndSeat(shuttleId: any, scheduleId: any) {
-        this.isLoadingPage = true;
         forkJoin({
             dropOffs: this.getAllFropOff(shuttleId),
             pickUps: this.getAllPickUp(shuttleId),
             seats: this.getSeatInCustomerPage(scheduleId)
         }).pipe(
             finalize(() => {
-                this.isLoadingPage = false;
             })
         ).subscribe(
             data => {
@@ -319,6 +319,7 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
 
     showContent(contentNumber: number, scheduleAvailable: any): void {
         if (this.panelOpenState == false && this.called == false) {
+            console.log("scheduleAvailable?.shuttleId",scheduleAvailable?.scheduleId)
             this.getDropOffPickUpAndSeat(scheduleAvailable?.shuttleId, scheduleAvailable?.scheduleId)
             this.scheduleId = scheduleAvailable?.scheduleId;
             this.eatingFee = scheduleAvailable?.eatingFee;
@@ -385,11 +386,17 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
             const seatIndex = this.selectedSeats.findIndex((selectedSeat) => selectedSeat.id === seat.id);
 
             if (seatIndex === -1) {
+                
                 if (this.selectedSeats.length < 5) {
                     this.selectedSeats.push(seat);
                     this.listSeatIDSelected.push(seat?.id)
                     this.listSeatName.push(seat?.name)
-                    console.log("consolog", seat?.name)
+                    if(this.selectedSeats.length >= 3){
+                        this.requireDeposit = true;
+                    }
+                    else{
+                        this.requireDeposit = false;
+                    }
                 } else {
 
                     this.dialog.open(DialogElementsExampleDialog, {
@@ -399,6 +406,12 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
                     });
                 }
             } else {
+                if(this.selectedSeats.length >= 3){
+                    this.requireDeposit = true;
+                }
+                else{
+                    this.requireDeposit = false;
+                }
                 this.listSeatName.splice(seatIndex, 1)
                 this.selectedSeats.splice(seatIndex, 1);
                 this.listSeatIDSelected.splice(seatIndex, 1);
@@ -415,7 +428,7 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
         if (this.paymentId === 1) {
             promotion = this.giftMoney;
         }
-        this.totalPrice = this.selectedSeats.reduce((total, seat) => total + seat.price, 0) + this.quantityEating * this.eatingFee - promotion;
+            this.totalPrice = this.selectedSeats.reduce((total, seat) => total + seat.price, 0) + this.quantityEating * this.eatingFee - promotion;
         return this.totalPrice;
     }
     getPromotion() {
@@ -434,16 +447,21 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
         });
     }
     bookingTicket() {
+        this.isLoadingPage  = true;
         let gift: any;
         let payAmount: any;
-        console.log(this.giftCode, this.totalPrice)
         if (this.paymentId === 2) {
             gift = "";
             payAmount = 0;
         }
         else {
             gift = this.giftCode;
-            payAmount = this.totalPrice;
+            if(this.requireDeposit){
+                payAmount = this.totalPrice*0.6;
+            }
+            else{
+                payAmount = this.totalPrice;
+            }
         }
         let request = {
             seatId: this.listSeatIDSelected,
@@ -462,7 +480,11 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
             }
         }
         // console.log(request)
-        this.orderService.orderTicket(request).pipe().subscribe(
+        this.orderService.orderTicket(request).pipe(
+            finalize(()=>{
+                this.isLoadingPage = false
+            })
+        ).subscribe(
             data => {
                 if (data.success) {
                     this.message.success("Đặt vé", "Thành công", { timeOut: 2000, progressBar: true })
@@ -481,7 +503,12 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
         }
         else {
             gift = this.giftCode
-            payAmount = this.totalPrice;
+            if(this.requireDeposit){
+                payAmount = this.totalPrice*0.6;
+            }
+            else{
+                payAmount = this.totalPrice;
+            }
         }
         let request = {
             seatId: this.listSeatIDSelected,
@@ -500,7 +527,6 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
             }
         }
         localStorage.setItem("dataBooking", JSON.stringify(request))
-        console.log("request", request)
         let requestPayment = { amount: payAmount, bankCode: "NCB" }
         this.paymentService.getURLPayment(requestPayment).pipe().subscribe(
             data => {

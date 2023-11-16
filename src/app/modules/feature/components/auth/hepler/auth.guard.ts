@@ -17,8 +17,8 @@ export class AuthGuard implements CanActivate {
       if (user && this.currentUser.data?.roles[0] === AppConstant.ROLE_BRANDOWNER) {
           return true;
       } 
-      else if(user && this.currentUser.data?.roles[0] === AppConstant.ROLE_ADMIN){
-        this.router.navigate(['/unauthorized'])
+      else if(user && this.currentUser.data?.roles[0] === AppConstant.ROLE_ADMIN || user && this.currentUser.data?.roles[0] === AppConstant.ROLE_CUSTOMER){
+        this.router.navigate(['/forbidden'])
         return false;
       }
 

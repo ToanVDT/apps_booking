@@ -6,6 +6,7 @@ import { ListResultShuttleComponent } from "./list-result-shuttle/list-result-sh
 import { ProfileCustomerComponent } from "./components/profile-customer/profile-customer.component";
 import { HistoryOrderComponent } from "./components/history-order/history-order.component";
 import { PromotionComponent } from "./components/promotion/promotion.component";
+import { CustomerGuard } from "../auth/hepler/customer.guard";
 
 const routes: Routes = [
   {
@@ -14,9 +15,9 @@ const routes: Routes = [
     children: [
       { path: "", component: HomepageComponent },
       { path: "list-result-shuttle", component: ListResultShuttleComponent },
-      { path: "profile-customer", component: ProfileCustomerComponent },
-      { path: "history-order", component: HistoryOrderComponent },
-      { path: "promotion", component: PromotionComponent }
+      { path: "profile-customer", component: ProfileCustomerComponent,canActivate:[CustomerGuard] },
+      { path: "history-order", component: HistoryOrderComponent,canActivate:[CustomerGuard] },
+      { path: "promotion", component: PromotionComponent,canActivate:[CustomerGuard] }
     ],
   },
 ];

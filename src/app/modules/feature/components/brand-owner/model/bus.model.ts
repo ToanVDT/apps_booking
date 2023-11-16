@@ -7,3 +7,7 @@ export class Bus {
     description?:string;
     seats?:number;
 }
+export class BusDropDown{
+    id?:number;
+    name?:string;
+}

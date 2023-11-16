@@ -1,8 +1,31 @@
-<div class="px-5 lg:px-20 lg:py-5">
-    <p class="py-5 px-32 text-2xl font-semibold opacity-75">{{ title }}</p>
-    <div class="flex flex-wrap justify-center">
-        <ng-container *ngFor="let item of categories">
-            <app-customer-category-card [category]="item"></app-customer-category-card>
-        </ng-container>
+<div *ngIf="type == 1; then thenBlock; else elseBlock"></div>
+<ng-template #thenBlock>
+    <div class="flex flex-col lg:py-5">
+        <p class="py-5 text-2xl font-semibold opacity-75">{{ title }}</p>
+        <div class="main-carousel">
+            <button mat-button (click)="prevCards()" [disabled]="startIndex === 0" class="control-button left-button">
+                <mat-icon>keyboard_arrow_left</mat-icon>
+            </button>
+            <div class="container" [@slideInOut]="startIndex">
+                <div *ngFor="let item of getVisibleCards(); let i = index">
+                    <app-customer-category-card [category]="item"></app-customer-category-card>
+                </div>
+            </div>
+            <button mat-button (click)="nextCards()" [disabled]="startIndex + 4 >= categories.length"
+                class="control-button right-button">
+                <mat-icon>keyboard_arrow_right</mat-icon>
+            </button>
+        </div>
     </div>
-</div>
+</ng-template>
+<ng-template #elseBlock>
+    <div class="flex flex-col lg:py-5">
+        <p class="py-5 text-2xl font-semibold opacity-75">{{ title }}</p>
+        <div class="carousel-container">
+            <div *ngFor="let item of categories" class="carousel-item">
+                <img [src]="item.src" alt="{{ item.title }}">
+                <p class="break-words">{{ item.title }}</p>
+            </div>
+        </div>
+    </div>
+</ng-template>

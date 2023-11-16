@@ -204,11 +204,9 @@ export class ProfileComponent implements OnInit {
     this.profileService.checkExistEmail(email).pipe().subscribe(
       data=>{
        this.duplicateEmail = data;
-       if(data){
         if(data){
           this.profileForm.get('email')?.setErrors({duplicateEmail:true})
         }
-       }
       }
     )
   }
@@ -216,11 +214,10 @@ export class ProfileComponent implements OnInit {
     this.profileService.checkExistPhone(phone).pipe().subscribe(
       data=>{
        this.duplicatePhone = data;
-       console.log("data", data)
-       if(data){
+       
         if(data){
           this.profileForm.get('phone')?.setErrors({duplicatePhone:true})
-        }
+        
        }
       }
     )
@@ -229,10 +226,9 @@ export class ProfileComponent implements OnInit {
     this.profileService.checkExistIdentityCode(identityCode).pipe().subscribe(
       data=>{
        this.duplicateIdentityCode = data;
-       if(data){
         if(data){
           this.profileForm.get('identityCode')?.setErrors({duplicateIdentityCode:true})
-        }
+        
        }
       }
     )

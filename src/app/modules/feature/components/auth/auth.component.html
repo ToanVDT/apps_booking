@@ -1,4 +1,4 @@
-  <div class="flex justify-between px-8 py-6 h-[100%] rounded-lg">
+<div class="flex justify-between px-8 py-6 h-[100%] rounded-lg">
 
     <div class="w-[60%]">
         <img class="h-full w-[76%]"
@@ -8,17 +8,17 @@
     <div class="w-[40%] flex items-center p-10 border-gray-400 rounded-lg shadow-2xl shadow-neutral-800">
         <form class="w-full">
 
-            <p class="text-center font-medium text-4xl"> Login</p>
-            <div class="mb-4">
-                <label>Username</label>
+            <p class="text-center font-medium text-4xl"> Đăng nhập</p>
+            <div class="mb-4 space-y-3">
+                <label>Tên đăng nhập</label>
                 <div class="flex items-center justify-between border-b-2 border-b-gray-600">
-                    <input class="w-full outline-none" type="text" name="username" [(ngModel)]="username" required>
+                    <input class="w-full outline-none" type="text" name="username" placeholder="Nhập tên đăng nhập" [(ngModel)]="username" required>
                 </div>
             </div>
             <div class="mb-2">
-                <label>Password</label>
+                <label>Mật khẩu</label>
                 <div class="flex items-center justify-between border-b-2 border-b-gray-600 ">
-                    <input class="w-[90%] outline-none" matInput [type]="hide ? 'password' : 'text'" placeholder="Password" [(ngModel)]="password" name="password" >
+                    <input class="w-[90%] outline-none" matInput [type]="hide ? 'password' : 'text'" placeholder="Nhập mật khẩu" [(ngModel)]="password" name="password" >
                     <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
                         [attr.aria-pressed]="hide" >
                         <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -28,14 +28,13 @@
             </div>
 
             <div>
-                <a href="">Forgot password</a>
+                <button (click)="openDialogForGotPassword()" >Quên mật khẩu</button>
             </div>
             <button class="mt-[5%] text-[aliceblue] bg-[#1b2b36] w-full h-9 rounded-md cursor-pointer"
                 (click)="login()">
                 Login
             </button>
             <hr>
-
         </form>
     </div>
 </div>

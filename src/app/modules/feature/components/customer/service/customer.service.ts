@@ -60,4 +60,14 @@ export class CustomerService {
       retry(1), 
       delay(1000));
   }
+  sendMailValidateCode(email:string):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/user/sendValidateCode?email=${email}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
+  resetPassword(email:string):Observable<any>{
+    return this.http.put<any>(`${environment.apiUrl}/user/resetPassword?email=${email}`,null).pipe(
+      retry(1), 
+      delay(1000));
+  }
 }

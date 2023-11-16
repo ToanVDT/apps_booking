@@ -1,0 +1,108 @@
+.demo-table {
+    width: 100%;
+  }
+
+::ng-deep {
+    .mat-drawer.mat-drawer-side {
+        padding: 10px;
+        margin-left: 10px;
+        height: 85vh;
+        border-radius: 10px;
+        margin-top: 12px;
+        box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+    }
+}
+
+.carousel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 800px;
+    margin: 20px 0 auto;
+    margin-top: 28px;
+}
+
+.main-image {
+    position: relative;
+    width: 568px;
+    text-align: center;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mainimage {
+    max-width: 100%;
+    height: 340px;
+    border-radius: 6px;
+}
+
+.control-button {
+    position: absolute;
+    top: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    opacity: 1;
+}
+
+.control-button:disabled {
+    opacity: 0.5;
+}
+
+.left-button {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.right-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.thumbnails {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.thumbnail {
+    margin: 0 5px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+    width: 100px;
+    height: 100px;
+}
+
+.thumbnail-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.thumbnail.selected {
+    border: 2px solid #0060c4;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.7);
+}
+
+.image-info {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #888;
+}

@@ -17,8 +17,8 @@ export class AdminGuard implements CanActivate {
       if (user && this.currentUser.data?.roles[0] === AppConstant.ROLE_ADMIN) {
           return true;
       } 
-      else if(user && this.currentUser.data?.roles[0] === AppConstant.ROLE_BRANDOWNER){
-        this.router.navigate(['/unauthorized'])
+      else if(user && this.currentUser.data?.roles[0] === AppConstant.ROLE_BRANDOWNER || user && this.currentUser.data?.roles[0] === AppConstant.ROLE_CUSTOMER){
+        this.router.navigate(['/forbidden'])
         return false;
       }
 

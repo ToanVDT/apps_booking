@@ -50,6 +50,7 @@ export class DateAndTime{
 export class OrderDTO{
     listSeat?:string[];
     orderDate?:any;
+    orderId?:string
     orderCode?:string;
     orderStatus?:string;
     totalPrice?:number;

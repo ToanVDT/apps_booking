@@ -8,6 +8,10 @@ export enum routes {
     SCHEDULE = '/brand-owner/schedule',
     TICKET = '/brand-owner/ticket',
     ORDER = '/brand-owner/order',
-    PROFILE = '/brand-owner/profile'
+    PROFILE = '/brand-owner/profile',
+    IMAGE = '/brand-owner/image',
+    PROFILEADMIN='/admin/profile',
+    MANAGEBRAND = '/admin/manage-brand',
+    MANAGECUSTOMER='/admin/manage-customer'
     // LOGIN = '/auth'
   }
