@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { popularRoute, services, vourchers } from 'src/assets/data/popularRoute';
+import { CustomerService } from '../service/customer.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-homepage',
@@ -12,11 +14,24 @@ export class HomepageComponent implements OnInit {
   vourchers: any;
   services: any;
 
-  constructor() {}
+  constructor(private customerService:CustomerService) {}
 
   ngOnInit(): void {
-      this.popularRoute = popularRoute;
+    this.getRoutePopular();
       this.vourchers = vourchers;
       this.services = services;
+  }
+  getRoutePopular(){
+    let response :any;
+    this.customerService.getRoutePopular().pipe(
+      finalize(()=>{
+        this.popularRoute = response;
+        
+      })
+    ).subscribe(
+      data=>{
+        response = data.data
+      }
+    )
   }
 }

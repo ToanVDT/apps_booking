@@ -43,7 +43,6 @@ export class DialogShowOrderComponent implements OnInit {
       finalize(() => {
         let dateCancelBooking = moment(this.today).format('yyyy-MM-DD');
         let timeCancelBooking = moment(this.today).add(2, 'hours').format('HH:mm')
-        console.log("today", dateCancelBooking, timeCancelBooking)
         // let dateCancelBooking = '2023-11-03'
         // // time 12:30
         // let timeCancelBooking = '15:30'

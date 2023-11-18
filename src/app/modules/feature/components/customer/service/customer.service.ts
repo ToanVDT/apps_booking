@@ -70,4 +70,14 @@ export class CustomerService {
       retry(1), 
       delay(1000));
   }
+  getRouteToSearch():Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/route/search`).pipe(
+      retry(1), 
+      delay(1000));
+  }
+  getRoutePopular():Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/route-popular`).pipe(
+      retry(1), 
+      delay(1000));
+  }
 }

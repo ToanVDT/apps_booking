@@ -176,7 +176,6 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.user = this.auth.userValue;
-        console.log("this", this.scheduleAvailable)
         if(this.user?.data?.id){
             this.isLogged = true;
             this.customerService.getProfile(this.user?.data?.id).pipe().subscribe(
@@ -319,7 +318,6 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
 
     showContent(contentNumber: number, scheduleAvailable: any): void {
         if (this.panelOpenState == false && this.called == false) {
-            console.log("scheduleAvailable?.shuttleId",scheduleAvailable?.scheduleId)
             this.getDropOffPickUpAndSeat(scheduleAvailable?.shuttleId, scheduleAvailable?.scheduleId)
             this.scheduleId = scheduleAvailable?.scheduleId;
             this.eatingFee = scheduleAvailable?.eatingFee;
@@ -479,7 +477,6 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
                 phoneNumber: this.phone,
             }
         }
-        // console.log(request)
         this.orderService.orderTicket(request).pipe(
             finalize(()=>{
                 this.isLoadingPage = false
@@ -489,14 +486,13 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
                 if (data.success) {
                     this.message.success("Đặt vé", "Thành công", { timeOut: 2000, progressBar: true })
                 }
-                // this.router.navigate(['/customer'])
+                this.router.navigate(['/customer'])
             }
         )
     }
     paymentOrder() {
         let gift: any;
         let payAmount: any;
-        console.log("tprice", this.totalPrice)
         if (this.paymentId === 2) {
             gift = "";
             payAmount = 0;

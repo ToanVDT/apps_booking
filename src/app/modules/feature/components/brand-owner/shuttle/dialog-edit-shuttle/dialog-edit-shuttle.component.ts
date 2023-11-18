@@ -22,7 +22,6 @@ export class DialogEditShuttleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("dataRecieve",this.data)
     this.shuttleForm.get('startTime')?.valueChanges.subscribe(
       data=>{
         this.startTime = data

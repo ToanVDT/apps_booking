@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit,Output } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
+import { CustomerService } from 'src/app/modules/feature/components/customer/service/customer.service';
 import { Provinces } from 'src/assets/data/provinces';
 
 @Component({
@@ -12,17 +13,18 @@ export class SearchWidgetComponent implements OnInit {
   @Output() dataSearch = new EventEmitter<any>()
   diemDiOptions: string []=[]
   diemDenOptions:string []=[]
+  routeOptions:string []=[]
   isLoadingPage:boolean = false;
   today = new Date();
   diemDi: string = '';
   diemDen: string = '';
   ngayDi!: Date;
   request:{startPoint?:string, endPoint?:string, travelDate?:any} = {}
-  constructor(private router:Router) { }
+  constructor(private router:Router,private customerService:CustomerService) { }
 
   ngOnInit(): void {
-    this.diemDenOptions = Provinces
-    this.diemDiOptions = Provinces
+    this.getOptionRoutes()
+    // this.diemDiOptions = Provinces
   }
   daoNguocDiem() {
       const temp = this.diemDi;
@@ -34,5 +36,12 @@ export class SearchWidgetComponent implements OnInit {
     this.request = {startPoint:this.diemDi, endPoint:this.diemDen, travelDate:this.ngayDi};
     this.dataSearch.emit(this.request)
     this.router.navigateByUrl("/customer/list-result-shuttle",{state:this.request})
+  }
+  getOptionRoutes(){
+    this.customerService.getRouteToSearch().pipe().subscribe(
+      data=>{
+        this.routeOptions = data.data
+      }
+    )
   }
 }

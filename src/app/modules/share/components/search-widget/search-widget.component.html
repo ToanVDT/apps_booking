@@ -4,7 +4,7 @@
         <mat-icon class="text-[#2474E5] align-middle" matPrefix>my_location</mat-icon>
         <input matInput [(ngModel)]="diemDi" [matAutocomplete]="auto" required/>
         <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let option of diemDiOptions" [value]="option">
+            <mat-option *ngFor="let option of routeOptions" [value]="option">
                 {{ option }}
             </mat-option>
         </mat-autocomplete>
@@ -19,7 +19,7 @@
         <input matInput [(ngModel)]="diemDen" [matAutocomplete]="auto" required/>
         <mat-icon class="text-[#EB5757]" matPrefix>location_on</mat-icon>
         <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let option of diemDenOptions" [value]="option">
+            <mat-option *ngFor="let option of routeOptions" [value]="option">
                 {{ option }}
             </mat-option>
         </mat-autocomplete>

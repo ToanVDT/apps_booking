@@ -32,12 +32,14 @@ export class CustomerCategorySliderComponent implements OnInit {
   @Input() type: any;
   @Input() title: any;
   @Input() categories: any;
+  @Input() popularRoute: any;
 
   startIndex = 0;
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   prevCards(): void {
       this.startIndex = Math.max(0, this.startIndex - 4);
@@ -49,8 +51,8 @@ export class CustomerCategorySliderComponent implements OnInit {
 
   getVisibleCards(): string[] {
       const itemsToDisplay = 4;
-      const endIndex = Math.min(this.startIndex + itemsToDisplay, this.categories.length);
-      return this.categories.slice(this.startIndex, endIndex);
+      const endIndex = Math.min(this.startIndex + itemsToDisplay, this.popularRoute?.length);
+      return this.popularRoute?.slice(this.startIndex, endIndex);
   }
 
 }

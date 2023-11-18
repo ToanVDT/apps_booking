@@ -62,7 +62,6 @@ export class CancelOrderComponent implements OnInit {
     data=>{
       this.orders = data.data
       response = data.data
-      console.log("data", data.data)
     }
   )
   }

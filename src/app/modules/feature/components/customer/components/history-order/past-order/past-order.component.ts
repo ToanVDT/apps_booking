@@ -61,7 +61,6 @@ export class PastOrderComponent implements OnInit {
     data=>{
       this.orders = data.data
       response = data.data
-      console.log("pastOrder", data.data)
     }
   )
   }

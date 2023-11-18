@@ -14,7 +14,6 @@ export class ShowDetailOrderCustomerComponent implements OnInit {
   isLoading: boolean = false;
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) { }
   ngOnInit(): void {
-    console.log("data", this.data)
     this.orderDTO = this.data.detailCurrentOrder
     if (this.orderDTO.orderStatus === 'ORDERED') {
       this.orderStatus = 'Đã đặt'

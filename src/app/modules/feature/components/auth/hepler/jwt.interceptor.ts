@@ -12,7 +12,6 @@ export class JwtInterceptor implements HttpInterceptor {
 
     constructor(private authenticationService: AuthenticationService) {
         this.user = this.authenticationService.userValue
-        console.log("this.user", this.user)
         this.isLoggedIn = this.user?.data?.accessToken;
     }
 
@@ -26,7 +25,6 @@ export class JwtInterceptor implements HttpInterceptor {
                     Authorization: `Bearer ${this.user?.data?.accessToken}`,
                 }
             })
-            //  console.log("request ", request);
         }
         return next.handle(request).pipe(
             catchError((error) => {

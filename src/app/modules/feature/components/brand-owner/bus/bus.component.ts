@@ -96,7 +96,6 @@ export class BusComponent implements OnInit {
    return this.busService.getAllBuses(this.user.data.id).pipe()
   }
   handleCreateOrUpdate(bus:any){
-    console.log("databus", bus)
     let value: any;
     const request = {...bus, userId:this.user.data.id}
     this.isLoading = true;

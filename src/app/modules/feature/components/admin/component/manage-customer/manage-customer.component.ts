@@ -72,7 +72,6 @@ export class ManageCustomerComponent implements OnInit {
       })
     ).subscribe(data => {
       this.customers = data.data
-      console.log(this.customers)
     })
   }
 

@@ -37,7 +37,6 @@ export class AuthenticationService {
     this.userSubject.next(null);
   }
   refreshToken() {
-    console.log(this.userValue);
     return this.http
       .post<any>(`${environment.apiUrl}/auth/refreshtoken`, {
         refreshToken: this.userValue?.refreshToken,

@@ -101,7 +101,6 @@ export class TicketComponent implements OnInit {
       })
     ).subscribe(
       data=>{
-        console.log("this.tickets",this.tickets)
         this.dropOffs = data.dropOffs.data
         this.pickUps = data.pickUps.data
         this.tickets = data.tickets.data

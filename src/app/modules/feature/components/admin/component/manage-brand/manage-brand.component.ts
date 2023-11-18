@@ -78,7 +78,6 @@ export class ManageBrandComponent implements OnInit {
       })
     ).subscribe(data => {
       this.brandOwners = data.data
-      console.log(this.brandOwners)
     })
   }
   ActiveAccount(brandOwner: any) {

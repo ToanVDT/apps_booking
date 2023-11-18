@@ -48,7 +48,6 @@ export class DialogScheduleComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log("schedule", this.data)
   this.user = this.auth.userValue;
   this.routes = this.data.routes
   this.getShuttle(this.data.routeId)
@@ -65,7 +64,7 @@ export class DialogScheduleComponent implements OnInit, OnDestroy {
     });
     this.scheduleForm.get("dateStart")?.valueChanges.subscribe((data)=>{
       this.schedule.dateStart = data
-      this.getBus(this.schedule.dateStart, this.startTime);
+      this.getBus(this.schedule.dateStart, this.startTime?.startTime);
     })
     this.scheduleForm.get("price")?.valueChanges.subscribe((data)=>{
       this.schedule.price = data
@@ -104,7 +103,7 @@ getBusById(busId: any): boolean {
 
 getBus(travelDate:any, startTime:any){
   this.buses = []
- this.busService.getBusForDropDownByTravelDate(this.user.data?.id,travelDate).pipe(
+ this.busService.getBusForDropDownByTravelDate(this.user.data?.id,travelDate,startTime).pipe(
   finalize(() => {
     if (!this.getBusById(this.selectCar.id)) {
       this.buses.push(this.selectCar)

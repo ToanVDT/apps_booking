@@ -45,10 +45,8 @@ export class DialogShuttleComponent implements OnInit {
       this.startTime = data;
     });
     this.pickUpForm.get("pickUpPoint")?.valueChanges.subscribe((data)=>{
-      // console.log("this.pickUpData.push(data)",this.pickUpData.push(data))
     })
     this.pickUpForm.get("pickUpTime")?.valueChanges.subscribe((data)=>{
-      // console.log("pickTime",data)
     })
   }
 
@@ -99,7 +97,6 @@ export class DialogShuttleComponent implements OnInit {
   }
   onSubmit() {
     if (this.shuttleForm.valid) {
-      // console.log("value", this.shuttleForm.value)
       this.createOrUpdate.emit({
         id: this.data.shuttle?.id,
         startTime:this.shuttleForm.value.startTime,

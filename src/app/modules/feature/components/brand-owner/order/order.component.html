@@ -79,15 +79,15 @@
             </button>
               <mat-menu #menu="matMenu">
                 <button mat-menu-item [disabled]="(order.orderStatus === 'Chờ duyệt') ? false : true" (click)="ApprovalOrder(order)">Duyệt đơn đặt</button>
-                <button mat-menu-item [disabled]="(order.orderStatus === 'Đã hủy') ? true : false" (click)="CancelBooking(order)">Hủy đơn đặt</button>
+                <button mat-menu-item [disabled]="(order.orderStatus === 'Đã hủy'||order.orderStatus === 'Hoàn thành') ? true : false" (click)="CancelBooking(order)">Hủy đơn đặt</button>
                 <button mat-menu-item (click)="openOrderDetail(order)" [disabled]="(order.orderStatus === 'Đã hủy') ? true : false">Chi tiết đơn đặt</button>
-                <button mat-menu-item [disabled]="(order.paymentStatus === 'Đã thanh toán' || order.orderStatus === 'Đã hủy') ? true : false" (click)="confirmPaid(order)">Xác nhận thanh toán</button>
+                <button mat-menu-item [disabled]="(order.paymentStatus === 'Đã thanh toán' || order.orderStatus === 'Đã hủy'||order.orderStatus === 'Hoàn thành') ? true : false" (click)="confirmPaid(order)">Xác nhận thanh toán</button>
                 <button mat-menu-item 
-                [disabled]="(order.paymentStatus === 'Đã thanh toán' || order.paymentStatus === 'Đã cọc' || order.orderStatus === 'Đã hủy') ? true : false"
+                [disabled]="(order.paymentStatus === 'Đã thanh toán' || order.paymentStatus === 'Đã cọc' || order.orderStatus === 'Đã hủy' || order.orderStatus === 'Hoàn thành') ? true : false"
                 (click)="openDialogEnterDeposit(order)">Nhập tiền cọc</button>
                 <!-- <button mat-menu-item>Hủy đơn đặt</button>  -->
             </mat-menu>
-            <!-- <mat-spinner *ngIf="openingMenu" [diameter]="40" style="color: white;"></mat-spinner> -->
+             
           </td>
         </ng-container>
 
