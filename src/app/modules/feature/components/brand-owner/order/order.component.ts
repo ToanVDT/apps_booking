@@ -7,7 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ToastrService } from 'ngx-toastr';
 import { finalize, forkJoin } from 'rxjs';
 import { AuthenticationService } from '../../auth/service/authentication.service';
-import {  ScheduleDTO } from '../model/schedule.model';
+import { ScheduleDTO } from '../model/schedule.model';
 import { Shuttle } from '../model/shuttle.model';
 import { ScheduleService } from '../service/schedule.service';
 import { Routes } from '../model/route.model';
@@ -37,240 +37,250 @@ export class OrderComponent implements OnInit {
     'action'
   ];
   today = new Date();
-  status = ["Đã đặt", "Đã hủy", "Chờ duyệt","Hoàn thành"]
-  routes:Routes[]=[];
+  status = ["Đã đặt", "Đã hủy", "Chờ duyệt", "Hoàn thành"]
+  routes: Routes[] = [];
   route: Routes = {};
-  shuttle : Shuttle = {}
-  detailMoney:DetailMoney= {};
-  openingMenu:boolean = false;
-  dateTime:DateAndTime = {}
-  detailInfoCustomer:DetailInfoCustomer ={}
-  customerInfo:boolean = true;
-  user:any;
-  timeValidToCancelBooking:boolean = true;
-  noData:boolean = true;
-  order:Orders = {};
-  orders:Orders[]=[]
-  isLoading : boolean = false;
-  isApproval : boolean = true;
-  schedules:ScheduleDTO[]=[];
-  schedule:ScheduleDTO ={}
-  orderForm:FormGroup
+  shuttle: Shuttle = {}
+  detailMoney: DetailMoney = {};
+  openingMenu: boolean = false;
+  dateTime: DateAndTime = {}
+  detailInfoCustomer: DetailInfoCustomer = {}
+  customerInfo: boolean = true;
+  user: any;
+  totalMoney: number = 0;
+  timeValidToCancelBooking: boolean = true;
+  noData: boolean = true;
+  order: Orders = {};
+  orders: Orders[] = []
+  isLoading: boolean = false;
+  isApproval: boolean = true;
+  schedules: ScheduleDTO[] = [];
+  schedule: ScheduleDTO = {}
+  orderForm: FormGroup
 
   dataSource = new MatTableDataSource(this.orders);
   dataSourceWithPageSize = new MatTableDataSource(this.orders);
 
-  constructor(private dialog:MatDialog, private auth:AuthenticationService,
-    private scheduleService:ScheduleService,private orderService:OrderService,
-    private message:ToastrService) {
-      this.orderForm = new FormGroup({
-        schedule:new FormControl(""),
-        dateStart:new FormControl("")
-      })
-    }
+  constructor(private dialog: MatDialog, private auth: AuthenticationService,
+    private scheduleService: ScheduleService, private orderService: OrderService,
+    private message: ToastrService) {
+    this.orderForm = new FormGroup({
+      schedule: new FormControl(""),
+      dateStart: new FormControl("")
+    })
+  }
   ngOnInit(): void {
     this.user = this.auth.userValue;
     this.orderForm.get("dateStart")?.valueChanges.subscribe((value) => {
       this.getScheduleByTravelDate(value)
     });
     this.orderForm.get("schedule")?.valueChanges.subscribe(
-      (value)=>{
+      (value) => {
         this.schedule = value;
-        this.getOrders(this.schedule?.id)
+        this.getOrdersAndTotalMoney(this.schedule?.id)
       }
     )
     let todayFormat = moment(this.today).format('yyyy-MM-DD');
     this.orderForm.get("dateStart")?.setValue(todayFormat)
-    // this.orderForm.get("dateStart")?.setValue('2023-10-30')
   }
- getOrders(scheduleId:any){
-  let response:any;
-  this.orderService.getOrderInSchedule(scheduleId).pipe(
-    finalize(()=>{
-      if(response[0]?.id){
-        this.noData = false;
-        this.dataSource = new MatTableDataSource(this.orders)
-        this.dataSource.paginator = this.paginator;
-      }
-      else{
-        this.noData = true;
-      }
-      this.isLoading = false
-    })
-  ).subscribe(
-    data=>{
-      this.orders = data.data
-      response = data.data
-      this.orders.map((item)=>{
-        if(item.orderStatus === "ORDERED"){
-          item.orderStatus = this.status[0]
+  getOrdersAndTotalMoney(scheduleId: any) {
+    let response: any;
+    forkJoin({
+      orders: this.getOrders(scheduleId),
+      money: this.getMoney(scheduleId)
+    }).pipe(
+      finalize(() => {
+        if (response[0]?.id) {
+          this.noData = false;
+          this.dataSource = new MatTableDataSource(this.orders)
+          this.dataSource.paginator = this.paginator;
         }
-        else if (item.orderStatus === "CANCELED"){
-          item.orderStatus = this.status[1]
+        else {
+          this.noData = true;
         }
-        else if(item.orderStatus ==='PENDING'){
-          item.orderStatus = this.status[2]
-        }
-        else{
-          item.orderStatus = this.status[3]
-        }
+        this.isLoading = false
       })
+    ).subscribe(
+      data => {
+        this.orders = data.orders.data
+        response = data.orders.data
+        this.totalMoney = data.money.data
+        this.orders.map((item) => {
+          if (item.orderStatus === "ORDERED") {
+            item.orderStatus = this.status[0]
+          }
+          else if (item.orderStatus === "CANCELED") {
+            item.orderStatus = this.status[1]
+          }
+          else if (item.orderStatus === 'PENDING') {
+            item.orderStatus = this.status[2]
+          }
+          else {
+            item.orderStatus = this.status[3]
+          }
+        })
 
-    }
-  )
- }
-  getScheduleByTravelDate(dateStart:any){
-    let value:any;
+      }
+    )
+  }
+  getMoney(scheduleId: any) {
+    return this.orderService.getTotalMoneyOrder(scheduleId).pipe()
+  }
+  getOrders(scheduleId: any) {
+    return this.orderService.getOrderInSchedule(scheduleId).pipe()
+  }
+  getScheduleByTravelDate(dateStart: any) {
+    let value: any;
     this.isLoading = true;
     this.scheduleService.getScheduleByTravelDate(dateStart, this.user?.data?.id).pipe(
-      finalize(()=>{
-        
-        if(value[0]?.id){
+      finalize(() => {
+
+        if (value[0]?.id) {
           this.noData = false;
           this.orderForm.get("schedule")?.setValue(this.schedules[0])
         }
-        else{
+        else {
           this.noData = true;
           this.isLoading = false;
         }
       })
     ).subscribe(
-      data=>{
+      data => {
         this.schedules = data
         value = data;
       }
     )
   }
-  getOrderId(order:any){
+  getOrderId(order: any) {
     this.openingMenu = true;
     this.getDetailMoneyAndInfoCustomerAndDateTimeWithOrderId(order?.id);
   }
-  ApprovalOrder(order:any){
+  ApprovalOrder(order: any) {
     this.isLoading = true;
     this.orderService.approvalOrder(order?.id).pipe(
-      finalize(()=>{
-        this.message.success("Duyệt đơn đặt vé","Thành công",{timeOut:2000, progressBar:true})
+      finalize(() => {
+        this.message.success("Duyệt đơn đặt vé", "Thành công", { timeOut: 2000, progressBar: true })
         this.getOrders(this.schedule?.id)
       })
     ).subscribe()
   }
-  CancelBooking(order:any){
-    if(!this.timeValidToCancelBooking){
-      this.dialog.open(DialogInformComponent,{
-        data:{
-          name:'Chỉ được hủy đơn đặt vé trước 2 tiếng trước giờ xe chạy!'
-        }})
-    }
-    else{
-      const dialogRef = this.dialog.open(DialogConfirmOrderComponent,{
-        data:{name:'Hủy đơn đặt'}
+  CancelBooking(order: any) {
+    if (!this.timeValidToCancelBooking) {
+      this.dialog.open(DialogInformComponent, {
+        data: {
+          name: 'Chỉ được hủy đơn đặt vé trước 2 tiếng trước giờ xe chạy!'
+        }
       })
-      dialogRef.componentInstance.onConfirm.subscribe(()=>
-      {
+    }
+    else {
+      const dialogRef = this.dialog.open(DialogConfirmOrderComponent, {
+        data: { name: 'Hủy đơn đặt' }
+      })
+      dialogRef.componentInstance.onConfirm.subscribe(() => {
         this.handleCancelBooking(order?.id)
       }
       )
     }
   }
-  openOrderDetail(order:any){
-    const dialogRef = this.dialog.open(DialogDetailComponent,{
-      data:{
-        detailMoney:this.detailMoney,
-        detailInfoCustomer:this.detailInfoCustomer
+  openOrderDetail(order: any) {
+    const dialogRef = this.dialog.open(DialogDetailComponent, {
+      data: {
+        detailMoney: this.detailMoney,
+        detailInfoCustomer: this.detailInfoCustomer
       }
     })
   }
 
-  getDetailMoneyAndInfoCustomerAndDateTimeWithOrderId(orderId:any){
+  getDetailMoneyAndInfoCustomerAndDateTimeWithOrderId(orderId: any) {
     forkJoin({
-      detailMoney:this.getDetailMoney(orderId),
-      detailInfoCustomer:this.getDetailInfoCustomer(orderId),
-      dateAndTime:this.getDateAndTime(orderId)
+      detailMoney: this.getDetailMoney(orderId),
+      detailInfoCustomer: this.getDetailInfoCustomer(orderId),
+      dateAndTime: this.getDateAndTime(orderId)
     }).pipe(
-      finalize(()=>{
+      finalize(() => {
         let dateCancelBooking = moment(this.today).format('yyyy-MM-DD');
-        let timeCancelBooking = moment(this.today).add(2,'hours').format('HH:mm')
+        let timeCancelBooking = moment(this.today).add(2, 'hours').format('HH:mm')
         // console.log("today", dateCancelBooking, timeCancelBooking)
         // let dateCancelBooking = '2023-11-03'
         // // time 12:30
         // let timeCancelBooking = '15:30'
-        if(this.dateTime?.date < dateCancelBooking){
+        if (this.dateTime?.date < dateCancelBooking) {
           this.timeValidToCancelBooking = false;
         }
-        else if(this.dateTime?.date == dateCancelBooking && this.dateTime?.time < timeCancelBooking){
+        else if (this.dateTime?.date == dateCancelBooking && this.dateTime?.time < timeCancelBooking) {
           this.timeValidToCancelBooking = false;
         }
-        else{
+        else {
           this.timeValidToCancelBooking = true;
         }
         this.openingMenu = false;
       })
     ).subscribe(
-      data=>{
+      data => {
         this.detailMoney = data.detailMoney.data
         this.detailInfoCustomer = data.detailInfoCustomer.data
         this.dateTime = data.dateAndTime.data
       }
     )
   }
-  getDetailMoney(orderId:any){
+  getDetailMoney(orderId: any) {
     return this.orderService.getDetailMonerByOrder(orderId).pipe()
   }
-  getDetailInfoCustomer(orderId:any){
+  getDetailInfoCustomer(orderId: any) {
     return this.orderService.getInfoCustomerByOrder(orderId).pipe()
-  }  
-  getDateAndTime(orderId:any){
+  }
+  getDateAndTime(orderId: any) {
     return this.orderService.getDateAndTimeByOrder(orderId).pipe()
   }
-  confirmPaid(order:any){
-    const dialogRef = this.dialog.open(DialogConfirmOrderComponent,{
-      data:{name:'Đơn đặt đã thanh toán'}
+  confirmPaid(order: any) {
+    const dialogRef = this.dialog.open(DialogConfirmOrderComponent, {
+      data: { name: 'Đơn đặt đã thanh toán' }
     })
-    dialogRef.componentInstance.onConfirm.subscribe(()=>{
+    dialogRef.componentInstance.onConfirm.subscribe(() => {
       this.handleConfirmPaid(order?.id)
     })
   }
 
-  openDialogEnterDeposit(order:any){
-    const dialogRef = this.dialog.open(DialogDepositOrderComponent,{
-      data:{order:order}
+  openDialogEnterDeposit(order: any) {
+    const dialogRef = this.dialog.open(DialogDepositOrderComponent, {
+      data: { order: order }
     })
     dialogRef.componentInstance.updateDeposit.subscribe(
-      data=>{
+      data => {
         this.handleUpdateEnterDeposit(data.orderId, data.deposit)
       }
     )
   }
-  handleUpdateEnterDeposit(orderId:any, deposit:any){
+  handleUpdateEnterDeposit(orderId: any, deposit: any) {
     this.isLoading = true;
-    this.orderService.updateDeposit(orderId,deposit).pipe(
-      finalize(()=>{
-        this.getOrders(this.schedule?.id)
+    this.orderService.updateDeposit(orderId, deposit).pipe(
+      finalize(() => {
+        this.getOrdersAndTotalMoney(this.schedule?.id)
       })
     ).subscribe(
-      data=>{
-        if(data.success){
-          this.message.success("Cập nhập tiền cọc", "Thành công",{timeOut:2000, progressBar:true})
+      data => {
+        if (data.success) {
+          this.message.success("Cập nhập tiền cọc", "Thành công", { timeOut: 2000, progressBar: true })
         }
       }
     )
   }
 
-  handleCancelBooking(orderId:any){
+  handleCancelBooking(orderId: any) {
     this.isLoading = true;
     this.orderService.cancelTicket(orderId).pipe(
-      finalize(()=>{
-        this.message.success("Hủy đơn đặt vé","Thành công",{timeOut:2000, progressBar:true})
-        this.getOrders(this.schedule?.id)
+      finalize(() => {
+        this.message.success("Hủy đơn đặt vé", "Thành công", { timeOut: 2000, progressBar: true })
+        this.getOrdersAndTotalMoney(this.schedule?.id)
       })
     ).subscribe()
   }
-  handleConfirmPaid(orderId:any){
+  handleConfirmPaid(orderId: any) {
     this.isLoading = true;
     this.orderService.confirmPaid(orderId).pipe(
-      finalize(()=>{
-        this.getOrders(this.schedule?.id)
-        this.message.success("Xác nhận thanh toán","Thành công",{timeOut:2000, progressBar:true})
+      finalize(() => {
+        this.getOrdersAndTotalMoney(this.schedule?.id)
+        this.message.success("Xác nhận thanh toán", "Thành công", { timeOut: 2000, progressBar: true })
       })
     ).subscribe()
   }

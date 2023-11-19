@@ -57,4 +57,9 @@ export class OrderService {
       retry(1), 
       delay(1000));
   }
+  getTotalMoneyOrder(scheduleId:any):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/order/totalMoney?scheduleId=${scheduleId}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
 }

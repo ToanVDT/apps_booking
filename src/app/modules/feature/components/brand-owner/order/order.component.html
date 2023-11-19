@@ -18,6 +18,7 @@
 
     </div>
     <div *ngIf="noData" class="flex py-7 px-5 justify-center text-xl">Không có dữ liệu</div>
+    <div *ngIf="!noData" class="text-left text-lg font-medium mt-3">Tổng tiền {{totalMoney| currency:'VND':'symbol':'1.0':'fr' }}</div>
     <div *ngIf="!noData">
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full mt-[2%] rounded-xl border bg-white">
         <!-- Position Column -->

@@ -30,6 +30,7 @@ import { DialogDepositOrderComponent } from './order/dialog-deposit-order/dialog
 import { DialogInformComponent } from './order/dialog-inform/dialog-inform.component';
 import { DialogDetailComponent } from './order/dialog-detail/dialog-detail.component';
 import { DialogParkingComponent } from './parking/dialog-parking/dialog-parking.component';
+import { ReportComponent } from './report/report.component';
 
 
 @NgModule({
@@ -60,7 +61,8 @@ import { DialogParkingComponent } from './parking/dialog-parking/dialog-parking.
     DialogDepositOrderComponent,
     DialogInformComponent,
     DialogDetailComponent,
-    DialogParkingComponent
+    DialogParkingComponent,
+    ReportComponent
   ],
   imports: [
     CommonModule,
