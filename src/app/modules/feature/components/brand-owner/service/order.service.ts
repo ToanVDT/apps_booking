@@ -62,4 +62,9 @@ export class OrderService {
       retry(1), 
       delay(1000));
   }
+  getReport(scheduleId:any):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/report?scheduleId=${scheduleId}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
 }

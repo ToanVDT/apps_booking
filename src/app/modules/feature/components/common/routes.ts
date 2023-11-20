@@ -12,6 +12,7 @@ export enum routes {
     IMAGE = '/brand-owner/image',
     PROFILEADMIN='/admin/profile',
     MANAGEBRAND = '/admin/manage-brand',
-    MANAGECUSTOMER='/admin/manage-customer'
+    MANAGECUSTOMER='/admin/manage-customer',
+    REPORT = "/brand-owner/report"
     // LOGIN = '/auth'
   }

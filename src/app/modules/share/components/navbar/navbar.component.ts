@@ -5,6 +5,7 @@ import { AuthenticationService } from 'src/app/modules/feature/components/auth/s
 import { DialogShowOrderComponent } from 'src/app/modules/feature/components/customer/components/dialog-show-order/dialog-show-order.component';
 import { Router } from '@angular/router';
 import { AppConstant } from 'src/app/modules/feature/components/common/constant';
+import { DialogConfirmOrderComponent } from 'src/app/modules/feature/components/brand-owner/order/dialog-confirm-order/dialog-confirm-order.component';
 
 @Component({
   selector: 'app-navbar',
@@ -52,6 +53,14 @@ export class NavbarComponent implements OnInit {
     )
   }
   logout(){
+   const dialogRef = this.dialog.open(DialogConfirmOrderComponent,{
+    data:{name:"Đăng xuất"}
+   })
+   dialogRef.componentInstance.onConfirm.subscribe(()=>{
+    this.handleLogOut()
+   })
+  }
+  handleLogOut(){
     this.isLogin = false;
     this.auth.logout()
     this.router.navigate(['/customer'])

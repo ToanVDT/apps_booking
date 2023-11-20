@@ -12,6 +12,7 @@ import { TicketComponent } from "./ticket/ticket.component";
 import { OrderComponent } from "./order/order.component";
 import { ProfileComponent } from "./profile/profile.component";
 import { ImageComponent } from "./image/image.component";
+import { ReportComponent } from "./report/report.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "brand", pathMatch: "full" },
@@ -29,7 +30,8 @@ const routes: Routes = [
       { path: "ticket", component: TicketComponent },
       { path: "order", component: OrderComponent },
       { path: "profile", component: ProfileComponent },
-      { path: "image", component: ImageComponent }
+      { path: "image", component: ImageComponent },
+      { path: "report", component: ReportComponent }
     ],
   },
 ];

@@ -9,6 +9,13 @@ export class Orders{
     listSeat?:string[];
     paymentStatus?:string;
 }
+export class Report{
+    orderCode?:string;
+    orderDate?:string;
+    totalPrice?:number;
+    customerName?:string;
+    customerPhone?:string;
+}
 export class OrderShowInCustomerPage{
     id?:number;
     brandName?:string;
