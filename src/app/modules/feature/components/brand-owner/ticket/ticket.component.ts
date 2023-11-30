@@ -60,6 +60,13 @@ export class TicketComponent implements OnInit {
   schedules:ScheduleDTO[]=[];
   schedule:ScheduleDTO ={}
   ticketForm:FormGroup
+  ticketStatus:any []=[
+    {id:"ALL",name:"Tất cả"},
+    {id:"ORDERED",name:"Đã đặt"},
+    {id:"PENDING",name:"Chờ duyệt"},
+    {id:"INITIALIZED",name:"Chưa đặt"}
+  ]
+  statusChange:any;
 
   dataSource = new MatTableDataSource(this.tickets);
   dataSourceWithPageSize = new MatTableDataSource(this.tickets);
@@ -69,7 +76,8 @@ export class TicketComponent implements OnInit {
     private orderService:OrderService, private message:ToastrService) {
       this.ticketForm = new FormGroup({
         schedule:new FormControl(""),
-        dateStart:new FormControl("")
+        dateStart:new FormControl(""),
+        status: new FormControl("")
       })
     }
   ngOnInit(): void {
@@ -86,6 +94,18 @@ export class TicketComponent implements OnInit {
     )
     let todayFormat = moment(this.today).format('yyyy-MM-DD');
     this.ticketForm.get("dateStart")?.setValue(todayFormat)
+    this.ticketForm.get('status')?.setValue(this.ticketStatus[0])
+    this.ticketForm.get('status')?.valueChanges.subscribe(
+      value=>{
+        if(value?.id ==="ALL"){
+          this.isLoading = true;
+          this.getEmptySeatAndSeatInTicketPage(this.dateStart,this.schedule?.id, this.schedule?.shuttleId)
+        }
+        else{
+          this.getSeatWithStatus(this.schedule?.id,value?.id)
+        }
+      }
+    )
   }
   getEmptySeatAndSeatInTicketPage(dateStart:any,scheduleId:any, shuttleId:any){
     forkJoin({
@@ -135,6 +155,34 @@ export class TicketComponent implements OnInit {
   }
   getPickUpInShuttle(shuttleId:any){
     return this.parkingService.getAllPickUp(shuttleId).pipe()
+  }
+  getSeatWithStatus(scheduleId:any,status:any){
+    this.isLoading = true;
+    this.ticketService.getSeatWithStatus(scheduleId,status).pipe(
+      finalize(()=>{
+        this.isLoading = false;
+        this.dataSource = new MatTableDataSource(this.tickets)
+        this.dataSource.paginator = this.paginator;
+      })
+    ).subscribe(
+      data=>{
+        this.tickets = data
+        this.tickets.map((item)=>{
+          if(item.statusTicket === "ORDERED"){
+            item.statusTicket = this.status[0]
+            item.booked = true;
+          }
+          else if(item.statusTicket === "INITIALIZED"){
+            item.statusTicket = this.status[1]
+            item.booked = false;
+          }
+          else{
+            item.statusTicket = this.status[2]
+            item.booked = true;
+          }
+        })
+      }
+    )
   }
   getScheduleByTravelDate(dateStart:any){
     let value:any;

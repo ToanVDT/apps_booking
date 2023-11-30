@@ -120,9 +120,11 @@ export class ShuttleComponent implements OnInit {
         })
       ).subscribe(
         data=>{
-        
           if(data.success){
             this.message.success("Chỉnh sửa khung giờ chạy","Thành công",{timeOut:2000, progressBar:true})
+          }
+          else {
+            this.message.error("Dữ liệu trùng","Thất bại",{timeOut:2000,progressBar:true})
           }
         }
       )
@@ -134,9 +136,11 @@ export class ShuttleComponent implements OnInit {
         })
       ).subscribe(
         data=>{
-      
           if(data.success){
             this.message.success("Thêm khung giờ chạy","Thành công",{timeOut:2000,progressBar:true})
+          }
+          else {
+            this.message.error("Dữ liệu trùng","Thất bại",{timeOut:2000,progressBar:true})
           }
         }
       )

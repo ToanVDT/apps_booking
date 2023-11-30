@@ -50,4 +50,24 @@ export class BusService {
       retry(1), 
       delay(1000));
   }
+  getImageBus(busId:any):Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/image/${busId}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
+  addImage(files:any,busId:any):Observable<any>{
+    return this.http.post<any>(`${environment.apiUrl}/image/${busId}`,files).pipe(
+      retry(1), 
+      delay(1000));
+  }
+  changeImage(files:any,imgId:any):Observable<any>{
+    return this.http.put<any>(`${environment.apiUrl}/image/${imgId}`,files).pipe(
+      retry(1), 
+      delay(1000));
+  }
+  removeImage(imageId:any):Observable<any>{
+    return this.http.delete<any>(`${environment.apiUrl}/image/${imageId}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
 }

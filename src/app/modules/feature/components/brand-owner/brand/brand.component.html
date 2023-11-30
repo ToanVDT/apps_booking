@@ -34,7 +34,7 @@
         <mat-form-field appearance="outline">
           <mat-label>Số điện thoại</mat-label>
           <input matInput placeholder="Số điện thoại" formControlName="phone" />
-          <mat-error *ngIf="phoneDuplicated">SĐT nhà xe đã tồn tại</mat-error>
+          <mat-error *ngIf="phoneDuplicated">SĐT đã tồn tại</mat-error>
           <mat-error *ngIf="brandForm.get('phone')?.hasError('required')">
             Số điện thoại nhà xe không được để trống
           </mat-error>

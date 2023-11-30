@@ -1,26 +1,37 @@
 <div class="w-full mt-3">
   <div class="border-2 rounded-t-lg shadow-lg mx-10 bg-white px-14 py-4">
     <div class="flex justify-between items-center border-2 h-24 p-6 bg-[#F0F0EE] rounded-lg">
-      <form [formGroup]="ticketForm">
-        <mat-form-field appearance="outline">
-          <mat-label>Thời gian xuất phát</mat-label>
-          <input matInput type="date" formControlName="dateStart" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Lịch trình</mat-label>
-          <mat-select formControlName="schedule" name="schedule">
-            <mat-option *ngFor="let schedule of schedules" [value]="schedule">
-              {{ schedule.routeName }} {{schedule.startTime}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+      <form [formGroup]="ticketForm" class="flex">
+        <div>
+          <mat-form-field appearance="outline">
+            <mat-label>Thời gian xuất phát</mat-label>
+            <input matInput type="date" formControlName="dateStart" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" >
+            <mat-label>Lịch trình</mat-label>
+            <mat-select formControlName="schedule" name="schedule">
+              <mat-option *ngFor="let schedule of schedules" [value]="schedule">
+                {{ schedule.routeName }} {{schedule.startTime}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="ml-20">
+            <mat-label>Trạng thái vé</mat-label>
+            <mat-select formControlName="status" name="schedule">
+              <mat-option *ngFor="let status of ticketStatus" [value]="status">
+                {{ status.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </form>
-
     </div>
     <div *ngIf="noData" class="flex py-7 px-5 justify-center text-xl">Không có dữ liệu</div>
     <!-- <mat-slide-toggle [(ngModel)]="isChecked">Slide Toggle Checked: {{isChecked}}</mat-slide-toggle> -->
     <div *ngIf="!noData">
-      <div class="font-semibold">Số vé trống:{{emptyTicket?.seatEmpty || ''}}</div>
+      <div class="font-semibold mt-3">Số vé trống:{{emptyTicket?.seatEmpty || ''}}</div>
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full mt-[2%] rounded-xl border bg-white">
         <!-- Position Column -->
         <ng-container matColumnDef="seatName">

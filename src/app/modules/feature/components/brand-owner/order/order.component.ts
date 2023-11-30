@@ -57,6 +57,21 @@ export class OrderComponent implements OnInit {
   schedules: ScheduleDTO[] = [];
   schedule: ScheduleDTO = {}
   orderForm: FormGroup
+  orderFilter = null;
+  paymentFilter = null;
+  orderStatus: any[] = [
+    { id: "ALL", name: "Tất cả" },
+    { id: "ORDERED", name: "Đã đặt" },
+    { id: "PENDING", name: "Chờ duyệt" },
+    { id: "CANCELED", name: "Đã hủy" },
+    { id: "COMPLETED", name: "Hoàn thành" },
+  ]
+  paymentStatus: any[] = [
+    { id: 2, name: "Tất cả" },
+    { id: 0, name: "Chưa thanh toán" },
+    { id: 1, name: "Đã thanh toán" },
+    { id: 3, name: "Đã cọc" },
+  ]
 
   dataSource = new MatTableDataSource(this.orders);
   dataSourceWithPageSize = new MatTableDataSource(this.orders);
@@ -66,7 +81,9 @@ export class OrderComponent implements OnInit {
     private message: ToastrService) {
     this.orderForm = new FormGroup({
       schedule: new FormControl(""),
-      dateStart: new FormControl("")
+      dateStart: new FormControl(""),
+      statusPayment: new FormControl(""),
+      statusOrder: new FormControl("")
     })
   }
   ngOnInit(): void {
@@ -82,6 +99,30 @@ export class OrderComponent implements OnInit {
     )
     let todayFormat = moment(this.today).format('yyyy-MM-DD');
     this.orderForm.get("dateStart")?.setValue(todayFormat)
+    this.orderForm.get("statusOrder")?.setValue(this.orderStatus[0])
+    this.orderForm.get("statusPayment")?.setValue(this.paymentStatus[0])
+    this.orderForm.get("statusOrder")?.valueChanges.subscribe(
+      value=>{
+        if(value?.id ==="ALL"){
+          this.orderFilter = null;
+        }
+        else{
+          this.orderFilter = value?.id
+        }
+        this.getOrderFilter(this.schedule?.id,this.paymentFilter, this.orderFilter)
+      }
+    )
+    this.orderForm.get("statusPayment")?.valueChanges.subscribe(
+      value=>{
+        if(value?.id === 2){
+          this.paymentFilter = null;
+        }
+        else{
+          this.paymentFilter = value?.id
+        }
+        this.getOrderFilter(this.schedule?.id,this.paymentFilter, this.orderFilter)
+      }
+    )
   }
   getOrdersAndTotalMoney(scheduleId: any) {
     let response: any;
@@ -190,6 +231,44 @@ export class OrderComponent implements OnInit {
       }
     })
   }
+  getOrderFilter(scheduleId: any, isPaid: any, status: any) {
+    this.isLoading = true
+    let response:any
+    let request = { scheduleId: scheduleId, isPaid: isPaid, status: status }
+    this.orderService.getOrderFilter(request).pipe(
+      finalize(() => {
+        if (response[0]?.id) {
+          this.noData = false;
+          this.dataSource = new MatTableDataSource(this.orders)
+          this.dataSource.paginator = this.paginator;
+        }
+        else {
+          this.noData = true;
+        }
+        this.isLoading = false
+      })
+    ).subscribe(
+      data => {
+        this.orders = data.data
+        response = data.data
+        console.log("order", data.data)
+        this.orders.map((item) => {
+          if (item.orderStatus === "ORDERED") {
+            item.orderStatus = this.status[0]
+          }
+          else if (item.orderStatus === "CANCELED") {
+            item.orderStatus = this.status[1]
+          }
+          else if (item.orderStatus === 'PENDING') {
+            item.orderStatus = this.status[2]
+          }
+          else {
+            item.orderStatus = this.status[3]
+          }
+        })
+      }
+    )
+  }
 
   getDetailMoneyAndInfoCustomerAndDateTimeWithOrderId(orderId: any) {
     forkJoin({
@@ -240,7 +319,6 @@ export class OrderComponent implements OnInit {
       this.handleConfirmPaid(order?.id)
     })
   }
-
   openDialogEnterDeposit(order: any) {
     const dialogRef = this.dialog.open(DialogDepositOrderComponent, {
       data: { order: order }
@@ -265,7 +343,6 @@ export class OrderComponent implements OnInit {
       }
     )
   }
-
   handleCancelBooking(orderId: any) {
     this.isLoading = true;
     this.orderService.cancelTicket(orderId).pipe(

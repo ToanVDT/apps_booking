@@ -78,7 +78,6 @@ export class ReportComponent implements OnInit {
         if (response[0]?.orderCode) {
           this.noData = false;
           this.isLoading = false
-          console.log("ok")
         }
         else {
           this.noData = true;

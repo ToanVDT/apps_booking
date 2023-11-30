@@ -102,7 +102,7 @@ export class RouteComponent implements OnInit {
     this.routeService.createOrUpdate(request).pipe(
       finalize(()=>{
         this.isLoading = false;
-        this.dataSource = new MatTableDataSource(value);
+        this.getRouteAndProvinces()
       })
     ).subscribe(
       data=>{
@@ -112,6 +112,9 @@ export class RouteComponent implements OnInit {
         }
         if(data.success && data.message == "Chỉnh sửa"){
           this.message.success("Chỉnh sửa tuyến xe","Thành công",{timeOut:2000,progressBar:true})
+        }
+        else if(!data.success){
+          this.message.error("Dữ liệu trùng","Thất bại",{timeOut:2000,progressBar:true})
         }
       }
     )

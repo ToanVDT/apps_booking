@@ -42,6 +42,13 @@
               </mat-error>
               <mat-error *ngIf="profileForm.get('identityCode')?.hasError('required')">CCCD/CMND không được để trống</mat-error>
               <mat-error *ngIf="profileForm.get('identityCode')?.hasError('pattern')">CCCD/CMND không chứa chữ cái</mat-error>
+           
+            <mat-error *ngIf="profileForm.get('identityCode')?.hasError('minLength')">
+              CCCD không hợp lệ 
+          </mat-error>
+            <mat-error *ngIf="profileForm.get('identityCode')?.hasError('maxLength')">
+              CCCD không hợp lệ
+          </mat-error>
             </mat-form-field>
           </form>
           <div class="flex justify-end m-3">

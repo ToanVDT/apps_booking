@@ -67,4 +67,9 @@ export class OrderService {
       retry(1), 
       delay(1000));
   }
+  getOrderFilter(request:any):Observable<any>{
+    return this.http.post<any>(`${environment.apiUrl}/order/filter`,request).pipe(
+      retry(1), 
+      delay(1000));
+  }
 }

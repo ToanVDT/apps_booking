@@ -3,7 +3,6 @@ import { Brand } from "../model/brand.model";
 import { MatDialog } from "@angular/material/dialog";
 import { DialogCreateBrandComponent } from "./dialog-create-brand/dialog-create-brand.component";
 import { AuthenticationService } from "../../auth/service/authentication.service";
-import { User } from "../../../model/user.model";
 import { BrandService } from "../service/brand-service";
 import { ToastrService } from "ngx-toastr";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
@@ -20,6 +19,8 @@ export class BrandComponent implements OnInit {
   openFormAdd: boolean = false;
   isSuccess: boolean = false;
   brand: Brand = {};
+  existsPhone:any;
+  existsBrandName:any;
   user: any;
   brandForm: FormGroup;
   img!: string | undefined;
@@ -47,13 +48,17 @@ export class BrandComponent implements OnInit {
     this.brandForm.get("name")?.valueChanges.pipe(debounceTime(700), distinctUntilChanged())
       .subscribe((data) => {
         if (data) {
-          this.checkDuplicateName(data, this.user.data?.id);
+          if(data!==this.existsBrandName){
+            this.checkDuplicateName(data, this.user.data?.id);
+          }
         }
       });
     this.brandForm.get("phone")?.valueChanges.pipe(debounceTime(700), distinctUntilChanged())
       .subscribe((data) => {
         if (data) {
-          this.checkDuplicatePhone(data, this.user.data?.id);
+          if(data!==this.existsPhone){
+            this.checkDuplicatePhone(data, this.user.data?.id);
+          }
         }
       });
     this.brandForm.get("name")?.valueChanges.subscribe((data) => {
@@ -88,6 +93,8 @@ export class BrandComponent implements OnInit {
         this.brand = data.data;
         if (this.brand?.id) {
           this.isSuccess = true;
+          this.existsPhone = data.data?.phone
+          this.existsBrandName = data.data?.name
           this.editBrand();
         }
         else{
@@ -166,6 +173,7 @@ export class BrandComponent implements OnInit {
     this.brandService.checkDuplicatePhoneBrand(phone, userId)
       .subscribe((data) => {
         this.phoneDuplicated = data;
+        console.log("phoneDuplicate", this.phoneDuplicated)
         if(data){
           this.brandForm.get('phone')?.setErrors({phoneDuplicated:true})
         }

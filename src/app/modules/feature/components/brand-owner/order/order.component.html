@@ -1,24 +1,45 @@
 <div class="w-full mt-3">
   <div class="border-2 rounded-t-lg shadow-lg mx-10 bg-white px-14 py-4">
     <div class="flex justify-between items-center border-2 h-24 p-6 bg-[#F0F0EE] rounded-lg">
-      <form [formGroup]="orderForm">
-        <mat-form-field appearance="outline">
-          <mat-label>Thời gian xuất phát</mat-label>
-          <input matInput type="date" formControlName="dateStart" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Lịch trình</mat-label>
-          <mat-select formControlName="schedule" name="schedule">
-            <mat-option *ngFor="let schedule of schedules" [value]="schedule">
-              {{ schedule.routeName }} {{schedule.startTime}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+      <form [formGroup]="orderForm" class="flex">
+        <div>
+          <mat-form-field appearance="outline">
+            <mat-label>Thời gian xuất phát</mat-label>
+            <input matInput type="date" formControlName="dateStart" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Lịch trình</mat-label>
+            <mat-select formControlName="schedule" name="schedule">
+              <mat-option *ngFor="let schedule of schedules" [value]="schedule">
+                {{ schedule.routeName }} {{schedule.startTime}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="ml-24">
+          <mat-form-field appearance="outline">
+            <mat-label>Trạng thái đơn đặt</mat-label>
+            <mat-select formControlName="statusOrder" name="statusOrder">
+              <mat-option *ngFor="let status of orderStatus" [value]="status">
+                {{ status.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Trạng thái thanh toán</mat-label>
+            <mat-select formControlName="statusPayment" name="statusPayment">
+              <mat-option *ngFor="let status of paymentStatus" [value]="status">
+                {{ status.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </form>
 
     </div>
     <div *ngIf="noData" class="flex py-7 px-5 justify-center text-xl">Không có dữ liệu</div>
-    <div *ngIf="!noData" class="text-left text-lg font-medium mt-3">Tổng tiền {{totalMoney| currency:'VND':'symbol':'1.0':'fr' }}</div>
+    <div *ngIf="!noData" class="text-left text-lg font-medium mt-3">Tổng tiền {{totalMoney|
+      currency:'VND':'symbol':'1.0':'fr' }}</div>
     <div *ngIf="!noData">
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full mt-[2%] rounded-xl border bg-white">
         <!-- Position Column -->
@@ -36,7 +57,7 @@
         <ng-container matColumnDef="orderDate">
           <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Ngày đặt</th>
           <td style="width: 10%; text-align: center;padding:0 60px" mat-cell *matCellDef="let order">
-              {{order.orderDate |date: 'HH:mm dd/MM/yyyy'}}
+            {{order.orderDate |date: 'HH:mm dd/MM/yyyy'}}
           </td>
         </ng-container>
         <ng-container matColumnDef="totalPrice">
@@ -48,7 +69,8 @@
 
         <ng-container matColumnDef="deposit">
           <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Tiền cọc</th>
-          <td style="width: 7.5%; text-align: center;" mat-cell *matCellDef="let order">{{order.deposit | currency:'VND':'symbol':'1.0':'fr' }}
+          <td style="width: 7.5%; text-align: center;" mat-cell *matCellDef="let order">{{order.deposit |
+            currency:'VND':'symbol':'1.0':'fr' }}
           </td>
         </ng-container>
         <ng-container matColumnDef="orderStatus">
@@ -70,25 +92,31 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="action"  >
+        <ng-container matColumnDef="action">
           <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Hành động </th>
-          <td style="width: 20%;text-align: center;" mat-cell *matCellDef="let order" >
+          <td style="width: 20%;text-align: center;" mat-cell *matCellDef="let order">
             <button style="background: #3F51B5;" mat-button [matMenuTriggerFor]="menu" (click)="getOrderId(order)">
-              
+
               <mat-icon style="color: white;">menu</mat-icon>
-              
+
             </button>
-              <mat-menu #menu="matMenu">
-                <button mat-menu-item [disabled]="(order.orderStatus === 'Chờ duyệt') ? false : true" (click)="ApprovalOrder(order)">Duyệt đơn đặt</button>
-                <button mat-menu-item [disabled]="(order.orderStatus === 'Đã hủy'||order.orderStatus === 'Hoàn thành') ? true : false" (click)="CancelBooking(order)">Hủy đơn đặt</button>
-                <button mat-menu-item (click)="openOrderDetail(order)" [disabled]="(order.orderStatus === 'Đã hủy') ? true : false">Chi tiết đơn đặt</button>
-                <button mat-menu-item [disabled]="(order.paymentStatus === 'Đã thanh toán' || order.orderStatus === 'Đã hủy'||order.orderStatus === 'Hoàn thành') ? true : false" (click)="confirmPaid(order)">Xác nhận thanh toán</button>
-                <button mat-menu-item 
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item [disabled]="(order.orderStatus === 'Chờ duyệt') ? false : true"
+                (click)="ApprovalOrder(order)">Duyệt đơn đặt</button>
+              <button mat-menu-item
+                [disabled]="(order.orderStatus === 'Đã hủy'||order.orderStatus === 'Hoàn thành') ? true : false"
+                (click)="CancelBooking(order)">Hủy đơn đặt</button>
+              <button mat-menu-item (click)="openOrderDetail(order)"
+                [disabled]="(order.orderStatus === 'Đã hủy') ? true : false">Chi tiết đơn đặt</button>
+              <button mat-menu-item
+                [disabled]="(order.paymentStatus === 'Đã thanh toán' || order.orderStatus === 'Đã hủy'||order.orderStatus === 'Hoàn thành') ? true : false"
+                (click)="confirmPaid(order)">Xác nhận thanh toán</button>
+              <button mat-menu-item
                 [disabled]="(order.paymentStatus === 'Đã thanh toán' || order.paymentStatus === 'Đã cọc' || order.orderStatus === 'Đã hủy' || order.orderStatus === 'Hoàn thành') ? true : false"
                 (click)="openDialogEnterDeposit(order)">Nhập tiền cọc</button>
-                <!-- <button mat-menu-item>Hủy đơn đặt</button>  -->
+              <!-- <button mat-menu-item>Hủy đơn đặt</button>  -->
             </mat-menu>
-             
+
           </td>
         </ng-container>
 
@@ -96,7 +124,7 @@
         <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
       </table>
       <div>
-        <mat-paginator #paginator  [pageSizeOptions]="[8,16,24, 100]">
+        <mat-paginator #paginator [pageSizeOptions]="[8,16,24, 100]">
         </mat-paginator>
       </div>
     </div>
