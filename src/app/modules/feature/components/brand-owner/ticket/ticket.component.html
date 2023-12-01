@@ -1,0 +1,93 @@
+<div class="w-full mt-3">
+  <div class="border-2 rounded-t-lg shadow-lg mx-10 bg-white px-14 py-4">
+    <div class="flex justify-between items-center border-2 h-24 p-6 bg-[#F0F0EE] rounded-lg">
+      <form [formGroup]="ticketForm" class="flex">
+        <div>
+          <mat-form-field appearance="outline">
+            <mat-label>Thời gian xuất phát</mat-label>
+            <input matInput type="date" formControlName="dateStart" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" >
+            <mat-label>Lịch trình</mat-label>
+            <mat-select formControlName="schedule" name="schedule">
+              <mat-option *ngFor="let schedule of schedules" [value]="schedule">
+                {{ schedule.routeName }} {{schedule.startTime}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="ml-20">
+            <mat-label>Trạng thái vé</mat-label>
+            <mat-select formControlName="status" name="schedule">
+              <mat-option *ngFor="let status of ticketStatus" [value]="status">
+                {{ status.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </form>
+    </div>
+    <div *ngIf="noData" class="flex py-7 px-5 justify-center text-xl">Không có dữ liệu</div>
+    <!-- <mat-slide-toggle [(ngModel)]="isChecked">Slide Toggle Checked: {{isChecked}}</mat-slide-toggle> -->
+    <div *ngIf="!noData">
+      <div class="font-semibold mt-3">Số vé trống:{{emptyTicket?.seatEmpty || ''}}</div>
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full mt-[2%] rounded-xl border bg-white">
+        <!-- Position Column -->
+        <ng-container matColumnDef="seatName">
+          <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Vé </th>
+          <td style="width: 10%;text-align: center;" mat-cell *matCellDef="let ticket"> {{ticket.seatName }}</td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="price">
+          <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Giá</th>
+          <td style="width: 20%;text-align: center;" mat-cell *matCellDef="let ticket">Giá vé: {{ticket.price|
+            currency:'VND':'symbol':'3.0-2':'fr' }}<br>
+            <div>Tiền cơm: {{ticket.eatingFee | currency:'VND':'symbol':'3.0-2':'fr' }}</div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="statusTicket">
+          <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Trạng thái vé</th>
+          <td style="width: 20%; text-align: center;padding:0 60px" mat-cell *matCellDef="let ticket">
+            <div class="rounded-lg border-4 h-[34px] py-1 w-[130px] px-7 text-cyan-50"
+              [ngStyle]="{'background': (ticket.statusTicket === 'Đã đặt') ? 'red' : (ticket.statusTicket === 'Chưa đặt') ? 'green' : (ticket.statusTicket === 'Chờ duyệt') ? '#F59E08' : ''}">
+              {{ticket.statusTicket }}
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="inforCustomer">
+          <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Thông tin khách hàng</th>
+          <td style="width: 30%; text-align: center;" mat-cell *matCellDef="let ticket">
+            {{ticket.booked?ticket.customerName :"Chưa có khách đặt vé"}}<br>
+            {{ticket.booked? ticket.customerPhone :""}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Hành động </th>
+          <td style="width: 20%;text-align: center;" mat-cell *matCellDef="let ticket"> 
+            <button mat-button
+            matTooltip="Đặt vé"
+            aria-label="Button that displays a tooltip when focused or hovered over"
+            matTooltipPosition="right"
+            [disabled]="(ticket.statusTicket === 'Chưa đặt') ? false:true"
+            color="primary"
+            (click)="openBookingTicket(ticket)"  >
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+      </table>
+      <div>
+        <mat-paginator #paginator  [pageSizeOptions]="[8, 16, 24, 100]">
+        </mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>
+<app-spinner [isLoading]="isLoading"></app-spinner>

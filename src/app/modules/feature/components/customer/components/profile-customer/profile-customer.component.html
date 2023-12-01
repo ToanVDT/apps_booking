@@ -1,0 +1,68 @@
+<mat-tab-group fitInkBarToContent class=" bg-white mx-8 my-4 w-[800px] h-[450px]">
+    <mat-tab label="Thông tin cá nhân">
+        <div class="text-xl text-center font-semibold my-3"> Thông tin cá nhân</div>
+          <form [formGroup]="profileForm" class="container flex flex-col items-center space-y-0">
+            <mat-form-field>
+              <mat-label>Tên</mat-label>
+              <input matInput formControlName="fullName" />
+              <mat-error *ngIf="profileForm.get('fullName')?.hasError('required')">Tên không được để trống</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email" />
+                <mat-error *ngIf="duplicateEmail">
+                  Email đã tồn tại
+                </mat-error>
+              <mat-error *ngIf="profileForm.get('email')?.hasError('required')">Email không được để trống</mat-error>
+              <mat-error *ngIf="profileForm.get('email')?.hasError('email')">Không đúng định dạng email</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>SĐT</mat-label>
+              <input matInput formControlName="phone" />
+            </mat-form-field>
+          </form>
+          <div class="flex justify-end m-3">
+            <button mat-raised-button (click)="updateProfile()" 
+            [disabled]="profileForm.invalid"
+            class="bg-green-600 text-cyan-50">
+              Lưu
+            </button>
+            </div>
+    </mat-tab>
+    <mat-tab label="Đổi mật khẩu">
+      <div class="text-xl text-center font-semibold my-3"> Đổi mật khẩu</div>
+     <form [formGroup]="changePasswordForm" class="container flex flex-col items-center space-y-3">
+      <mat-form-field>
+        <mat-label>Mật khẩu cũ</mat-label>
+        <input matInput formControlName="oldPass" />
+        <mat-error *ngIf="!oldPasswordValid">Mật khẩu cũ không chính xác</mat-error>
+        <mat-error *ngIf="changePasswordForm.get('oldPass')?.hasError('required')">Mật khẩu cũ không được trống</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Mật khẩu mới</mat-label>
+        <input matInput [type]="hideNew ? 'password' : 'text'" formControlName="newPass">
+        <button mat-icon-button matSuffix (click)="hideNew = !hideNew"[attr.aria-pressed]="hideNew">
+         <mat-icon>{{hideNew ? 'visibility_off' : 'visibility'}}</mat-icon>
+         </button>
+        <mat-error *ngIf="changePasswordForm.get('newPass')?.hasError('required')">Mật khẩu mới không được trống</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Nhập lại mật khẩu mới</mat-label>
+        <input matInput [type]="hideReNew ? 'password' : 'text'" formControlName="reNewPass" >
+        <button mat-icon-button matSuffix (click)="hideReNew = !hideReNew"[attr.aria-pressed]="hideReNew">
+         <mat-icon>{{hideReNew ? 'visibility_off' : 'visibility'}}</mat-icon>
+         </button>
+        <mat-error *ngIf="changePasswordForm.get('reNewPass')?.hasError('required')">Vui lòng nhập lại mật khẩu mới</mat-error>
+        <mat-error *ngIf="!reNewPassValid">Không trùng với mật khẩu mới</mat-error>
+      </mat-form-field>
+    </form>
+    <div class="flex justify-end m-3">
+      <button mat-raised-button (click)="changePassword()" 
+      [disabled]="changePasswordForm.invalid"
+      [mat-dialog-close]="true" class="bg-green-600 text-cyan-50">
+        Đổi mật khẩu
+      </button>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+  <app-spinner [isLoading]="isLoading"></app-spinner>

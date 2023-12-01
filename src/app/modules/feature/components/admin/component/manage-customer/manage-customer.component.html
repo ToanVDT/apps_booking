@@ -1,0 +1,69 @@
+<div class="w-full mt-3">
+    <div class="border-2 rounded-t-lg shadow-lg mx-10 bg-white px-14 py-4">
+        <div class="flex justify-between items-center border-2 h-24 p-6 bg-[#F0F0EE] rounded-lg">
+            <form [formGroup]="rankForm">
+                <mat-form-field appearance="outline">
+                    <mat-label>Hạng thành viên</mat-label>
+                    <mat-select formControlName="rank" name="rank">
+                        <mat-option *ngFor="let rank of accountRank" [value]="rank">
+                            {{ rank.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </form>
+        </div>
+        <div *ngIf="noData" class="flex py-7 px-5 justify-center text-xl">Không có dữ liệu</div>
+        <div *ngIf="!noData">
+            <table mat-table [dataSource]="dataSource"
+                class="mat-elevation-z8 w-full mt-[2%] rounded-xl border bg-white">
+                <!-- Position Column -->
+                <ng-container matColumnDef="fullName">
+                    <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Tên khách hàng </th>
+                    <td style="width: 20%;text-align: center;" mat-cell *matCellDef="let customer">
+                        {{customer.fullName}}
+                    </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="phone">
+                    <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Số điện thoại</th>
+                    <td style="width:20%;text-align: center;" mat-cell *matCellDef="let customer">
+                        <div class="space-y-2 p-2">
+                           {{customer.phone}}
+                        </div>
+                </ng-container>
+                <ng-container matColumnDef="email">
+                    <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Email</th>
+                    <td style="width:20%; text-align: center;" mat-cell *matCellDef="let customer">
+                     {{customer.email}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="rank">
+                    <th style="text-align: center;" mat-header-cell *matHeaderCellDef>Hạng thành viên</th>
+                    <td style="width:20%; text-align: center;" mat-cell *matCellDef="let customer">
+                        <div class="rounded-lg border-4 h-[34px] py-1 w-[200px] px-7 text-cyan-50"
+                            [ngStyle]="{'background': (customer.rank === 'Thành viên vip') ? 'red' : (customer.rank === 'Thành viên thường')?'#F59E08':'green'}">
+                            {{customer.rank}}
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                    <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Hành động </th>
+                    <td style="width:20%;text-align: center;" mat-cell *matCellDef="let customer">
+                        <button mat-button color="accent" (click)="deleteCustomer(customer)">
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+            </table>
+            <div>
+                <mat-paginator #paginator [pageSizeOptions]="[8,16,24, 100]">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>
+<app-spinner [isLoading]="isLoading"></app-spinner>

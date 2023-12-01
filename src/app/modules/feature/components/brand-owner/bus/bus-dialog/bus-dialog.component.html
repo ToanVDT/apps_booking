@@ -1,0 +1,58 @@
+<form [formGroup]="busForm" class="w-full">
+  <div class="form-container flex flex-col items-center w-full">
+    <div class="mb-4 text-xl font-semibold">Thông tin xe</div>
+    <mat-form-field appearance="outline">
+      <mat-label>Tên xe</mat-label>
+      <input matInput placeholder="Tên xe" formControlName="name" />
+      <mat-error *ngIf="busForm.get('name')?.hasError('required')">
+        Tên xe không được để trống
+      </mat-error>
+      <mat-error *ngIf="duplicateNameBus">
+        Tên xe đã tồn tại
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Biển số</mat-label>
+      <input matInput placeholder="Biển số xe" formControlName="identityCode" />
+      <mat-error *ngIf="busForm.get('identityCode')?.hasError('required')">
+        Biển số xe không được để trống
+      </mat-error>
+      <mat-error *ngIf="duplicateIdentityCode">
+        Biển số xe đã tồn tại
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Số chỗ</mat-label>
+      <input matInput type="number" min="0" placeholder="Số chỗ" formControlName="seats" id="seats" />
+      <mat-error *ngIf="busForm.get('seats')?.hasError('required')">
+        Số chỗ không được để trống
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Loại xe</mat-label>
+      <mat-select formControlName="busType" name="busType">
+        <mat-option *ngFor="let busType of typeBuses" [value]="busType">
+          {{ busType.type }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="busForm.get('busType')?.hasError('required')">
+        Chưa chọn loại xe
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Mô tả</mat-label>
+      <input matInput placeholder="Placeholder" formControlName="description" />
+    </mat-form-field>
+
+  </div>
+  <div style="display: flex; justify-content: flex-end;">
+    <button mat-button mat-raised-button [mat-dialog-close]="true" style="margin-right: 20px;"class=" bg-red-800 text-cyan-50"> Hủy</button>
+    <button mat-raised-button (click)="onSubmit()" 
+    [disabled]="busForm.invalid"
+    [mat-dialog-close]="true" class="bg-green-600 text-cyan-50">
+      Lưu
+    </button>
+  </div>
+</form>
+

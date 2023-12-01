@@ -1,0 +1,13 @@
+.white-color{
+    color: white;
+}
+.rank-title{
+    color: aqua;
+    &.newmember{
+        color: rgb(205, 174, 50);
+    }
+    &.member{
+        color: red;
+    }
+    
+}

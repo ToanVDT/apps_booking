@@ -1,0 +1,9 @@
+<div class="w-[500px]">
+    <h2 mat-dialog-title>Xác nhận</h2>
+    <p>{{data.name}} ?</p>
+    <mat-dialog-actions align="end">
+        <button mat-raised-button color="warn" mat-dialog-close>Hủy</button>
+        <button mat-raised-button color="primary" (click)="confirm()" [mat-dialog-close]="true" cdkFocusInitial>Xác nhận</button>
+    </mat-dialog-actions>
+</div>
+

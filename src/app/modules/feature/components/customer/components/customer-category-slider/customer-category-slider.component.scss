@@ -1,0 +1,80 @@
+.main-carousel {
+    position: relative;
+    text-align: center;
+    display: block;
+}
+
+.control-button {
+    position: absolute;
+    top: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+    opacity: 1;
+}
+
+.control-button:disabled {
+    opacity: 0.5;
+}
+
+.left-button {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.right-button {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.container {
+    display: flex;
+    justify-content: space-around;
+    transition: transform 2s ease-in-out;
+}
+
+
+.carousel-container {
+    display: flex;
+    overflow-x: auto;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .carousel-item {
+    flex: 0 0 auto;
+    margin-right: 12px;
+    width: 300px;  
+    scroll-snap-align: start;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .carousel-item > img {
+    width: 100%;
+    height: 157px;
+    border-radius: 4px 4px 0 0;
+  }
+
+  .carousel-item > p {
+    margin: 0 !important;
+    padding: 16px 20px;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 22px;
+    color: #484848;
+    word-wrap: break-word;
+  }

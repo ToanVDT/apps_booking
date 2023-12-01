@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'apps_booking';
+  constructor(private toast:ToastrService){}
+  // test(){
+  //   this.toast.success("OK","success",{timeOut:2000,progressBar:true})
+  // }
 }

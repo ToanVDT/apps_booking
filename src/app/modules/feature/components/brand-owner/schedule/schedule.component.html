@@ -1,0 +1,65 @@
+<div class="w-full mt-3">
+  <div class="border-2 rounded-t-lg shadow-lg mx-10 bg-white px-14 py-4">
+    <div class="flex justify-between items-center border-2 h-20 px-4 bg-[#F0F0EE] rounded-lg">
+      <button mat-raised-button class="w-[100px] h-[40px] bg-[#7DC0CE] text-white" (click)="openFormSchedule(null)"> 
+        Thêm
+      </button>
+      <form [formGroup]="scheduleForm">
+        <mat-form-field appearance="outline">
+          <mat-label>Tuyến đường</mat-label>
+          <mat-select formControlName="route" name="route">
+            <mat-option *ngFor="let route of routes" [value]="route">
+              {{ route.startPoint }} - {{route.endPoint}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+    </div>
+    <div *ngIf="noData" class="flex py-7 px-5 justify-center text-xl">Không có dữ liệu</div>
+    <div *ngIf="!noData">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full mt-[2%] rounded-xl border bg-white">
+        <!-- Position Column -->
+        <ng-container matColumnDef="busName">
+          <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Xe </th>
+          <td style="width: 15%;text-align: center;" mat-cell *matCellDef="let schedule"> {{schedule.busName }} <br><div class="font-bold">Xe {{schedule.seats }} chỗ</div> </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="price">
+          <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Giá</th>
+          <td style="width: 25%;text-align: center;" mat-cell *matCellDef="let schedule">Giá vé: {{schedule.price }}<br> <div >Tiền cơm: {{schedule.eatingFee }}</div></td>
+        </ng-container>
+
+        <ng-container matColumnDef="dateTime">
+          <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Thời gian</th>
+          <td style="width: 35%; text-align: center;" mat-cell *matCellDef="let schedule"> Ngày xuất phát: {{schedule.dateStart | date:'dd-MM-yyyy'}} 
+            <br> Giờ đi: {{schedule.startTime}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Hành động </th>
+          <td style="width: 25%;text-align: center;" mat-cell *matCellDef="let schedule"> 
+            <button mat-button color="primary"
+            matTooltip="Chỉnh sửa lịch trình"
+            matTooltipPosition="right"
+              (click)="openFormSchedule(schedule)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <!-- <button mat-button color="accent" (click)="deleteSchedule(schedule)">
+              <mat-icon>delete</mat-icon>
+            </button> -->
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+      </table>
+      <div>
+        
+        <mat-paginator #paginator [pageSizeOptions]="[5,10,15]" showFirstLastButtons></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>
+<app-spinner [isLoading]="isLoading"></app-spinner>

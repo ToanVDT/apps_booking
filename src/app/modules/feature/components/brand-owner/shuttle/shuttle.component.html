@@ -1,0 +1,106 @@
+<div
+  style="
+    width: 90%;
+    margin-top: 1%;
+    border-radius: 12px;
+    border: 1px solid #d0c9c9;
+    background: white;
+    margin-left: 4%;
+    margin-right: 4%;
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
+      0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+  "
+>
+  <div style="background-color: #ffffff;">
+    <div
+      style="
+        margin: 20px 0 0 0;
+        width: 90%;
+        height: 80px;
+        border-radius: 12px;
+        border: 1px solid #d0c9c9;
+        background: white;
+        margin-left: 4%;
+        margin-right: 4%;
+        background:#f0f0ee;
+      "
+    >
+      <button
+        mat-raised-button
+        style="
+          background-color: #7dc0ce;
+          margin: 16px;
+          /* padding: 11px; */
+          border: 1px solid #7dc0ce;
+          border-radius: 3px;
+          width: 90px;
+          color: white;
+          font-size: initial;
+          font-weight: 400;
+        "
+        (click)="openFormAddRoute(null)"
+      >
+        Thêm
+      </button>
+    </div>
+    <div *ngIf="noData" class="flex py-7 px-5 justify-center text-xl">Không có dữ liệu</div>
+    <div *ngIf="!noData">
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        class="mat-elevation-z8"
+        style="
+          width: 90%;
+          margin-top: 2%;
+          border-radius: 12px;
+          border: 1px solid #d0c9c9;
+          background: white;
+          margin-left: 4%;
+          margin-right: 4%;
+        "
+      >
+        <!-- Position Column -->
+  <ng-container matColumnDef="startTime">
+    <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Thời gian xuất phát </th>
+    <td style="width: 20%;text-align: center;" mat-cell *matCellDef="let shuttle"> {{shuttle.startTime }} </td>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="endTime">
+    <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Thời gian dự kiến đến</th>
+    <td style="width: 20%;text-align: center;" mat-cell *matCellDef="let shuttle"> {{shuttle.endTime }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="routeName">
+    <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Tuyến đường</th>
+    <td style="width: 30%;text-align: center;" mat-cell *matCellDef="let shuttle"> {{shuttle.routeName}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="action">
+    <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Hành động </th>
+    <td style="width: 30%;text-align: center;" mat-cell *matCellDef="let shuttle"> <button
+        mat-button
+        color="primary"
+        (click)="openFormUpdateShuttle(shuttle)" 
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-button color="accent" (click)="deleteShuttle(shuttle)">
+        <mat-icon>delete</mat-icon>
+      </button></td>
+  </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+      </table>
+      <div style="padding: 0 70px 0 48px;">
+        <mat-paginator
+          #paginator
+          [pageSizeOptions]="[5,10,15]"
+          showFirstLastButtons
+        ></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>
+<app-spinner [isLoading]="isLoading"></app-spinner>

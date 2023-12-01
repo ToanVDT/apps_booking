@@ -1,0 +1,29 @@
+<div class="space-y-10">
+    <div class="space-y-5">
+        <p class="font-bold text-base/6" style="margin-top: 10%;">Quản trị viên</p>
+        <mat-list>
+            <mat-list-item style="margin-top: -25px; margin-bottom: -15px   ;" routerLink="{{routes.MANAGEBRAND}}"
+                routerLinkActive="active-list-item">
+                <mat-icon>home</mat-icon> Quản lý chủ nhà xe
+            </mat-list-item>
+            <mat-list-item style="margin-top: -15px;" routerLink="{{routes.MANAGECUSTOMER}}"
+                routerLinkActive="active-list-item">
+                <mat-icon> directions</mat-icon> Quản lý khách hàng
+            </mat-list-item>
+        </mat-list>
+    </div>
+    <div class="space-y-5">
+        <p class="font-bold text-base/6">Tài khoản</p>
+        <mat-list>
+            <mat-list-item style="margin-top: -25px;" routerLink="{{routes.PROFILEADMIN}}"
+                routerLinkActive="active-list-item">
+                <mat-icon>account_circle</mat-icon> Thông tin tài khoản
+            </mat-list-item>
+            <mat-list-item style="margin-top: -15px;">
+                <button (click)="logOut()">
+                    <mat-icon>exit_to_app</mat-icon> Đăng xuất
+                </button>
+            </mat-list-item>
+        </mat-list>
+    </div>
+</div>

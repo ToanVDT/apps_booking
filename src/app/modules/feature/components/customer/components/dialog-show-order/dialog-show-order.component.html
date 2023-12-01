@@ -1,0 +1,101 @@
+<div *ngIf="!clickCancelTicket">
+    <form *ngIf="!orderCodeValid" [formGroup]="orderSearchForm" class="w-[500px] flex flex-col justify-center">
+        <div class="text-xl text-center font-semibold mb-4">Tìm kiếm đơn đặt vé</div>
+        <mat-form-field appearance="outline">
+            <mat-label>Mã đơn đặt</mat-label>
+            <input matInput placeholder="Nhập mã đơn đặt" formControlName="orderCode" />
+        </mat-form-field>
+        <div class="flex justify-end space-x-4">
+            <button mat-button mat-raised-button [mat-dialog-close]="true" class=" bg-red-800 text-cyan-50">
+                Hủy</button>
+            <button mat-raised-button (click)="openShowOrder()" [disabled]="orderSearchForm.invalid"
+                class="bg-green-600 text-cyan-50">Lưu</button>
+        </div>
+    </form>
+    <div *ngIf="orderCodeValid" class="w-[900px] h-auto">
+        <div class="flex items-center justify-between mb-4">
+            <div class="text-center font-semibold text-lg">Thông tin đơn đặt vé</div>
+            <button mat-flat-button mat-dialog-close>
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+        <div class="flex justify-between mx-20">
+            <div class="border rounded-md p-1 shadow-2xl p">
+                <div class="font-medium text-lg mb-4 text-center">Thông tin đơn đặt</div>
+                <div class="space-y-7 flex flex-col p-4 justify-center">
+                    <div>Tên nhà xe: {{orderDTO.brandName}}</div>
+                    <div>Số điện thoại nhà xe: {{orderDTO.brandPhone}}</div>
+                    <div>Tuyến xe: {{orderDTO.routeName}}</div>
+                    <div>Thời gian khởi hành: {{orderDTO.startTime}} ngày {{orderDTO.travelDate}}</div>
+                    <div>Vé đã đặt: {{orderDTO.listSeat}} </div>
+                    <div>Ngày đặt vé: {{orderDTO.orderDate|date:'dd-MM-yyyy'}} </div>
+                    <div>Trạng thái đơn đặt: {{orderStatus}} </div>
+                    <div>Trạng thái thanh toán: {{orderDTO.paymentStatus}} </div>
+                </div>
+            </div>
+            <div class="border rounded-md p-1 shadow-2xl">
+                <div class="font-medium text-lg text-center mb-2">Chi tiết</div>
+                <div class="flex items-center justify-center  row-detail">
+                    <div>Tên</div>
+                    <div>Giá tiền</div>
+                    <div>Số lượng</div>
+                </div>
+                <div class="flex items-center  row-detail">
+                    <div>Vé</div>
+                    <div>{{orderDTO.price| currency:'VND':'symbol':'1.0':'fr'}}</div>
+                    <div>{{orderDTO.quantityTicket}}</div>
+                </div>
+                <div class="flex items-center row-detail">
+                    <div>Cơm</div>
+                    <div>{{orderDTO.eatingFee| currency:'VND':'symbol':'1.0':'fr'}}</div>
+                    <div>{{orderDTO.quantityEating}}</div>
+                </div>
+                <div class="flex items-center border-b-2   row-detail">
+                    <div>Tiền giảm giá</div>
+                    <div>{{orderDTO.giftMoney| currency:'VND':'symbol':'1.0':'fr'}}</div>
+                </div>
+                <div class="flex items-center  row-detail">
+                    <div>Tổng tiền</div>
+                    <div>{{orderDTO.totalPrice| currency:'VND':'symbol':'1.0':'fr'}}</div>
+                </div>
+                <div class="flex items-center  row-detail">
+                    <div>Tiền cọc</div>
+                    <div>{{orderDTO.deposit| currency:'VND':'symbol':'1.0':'fr'}}</div>
+                </div>
+                <div class="flex items-center  row-detail">
+                    <div>Số tiền còn lại</div>
+                    <div>{{orderDTO.restMoney| currency:'VND':'symbol':'1.0':'fr'}}</div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <button [disabled]="this.orderStatus === 'Đã hủy'" mat-raised-button (click)="cancelTicket()" class="bg-green-600 text-cyan-50">Hủy vé</button>
+        </div>
+    </div>
+</div>
+<div *ngIf="!timeValidToCancelBooking && clickCancelTicket">
+    <div class="flex items-center">
+        <div class="text-lg font-bold">
+            Chỉ có thể hủy vé trước 2 tiếng trước giờ xe chạy
+        </div>
+        <button mat-flat-button mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div>
+        <mat-dialog-actions align="center">
+            <button style="width: 500px;" mat-raised-button color="primary" [mat-dialog-close]="true" cdkFocusInitial>Đã
+                hiểu</button>
+        </mat-dialog-actions>
+    </div>
+</div>
+<div class="w-[500px]" *ngIf="timeValidToCancelBooking && clickCancelTicket">
+    <h2 mat-dialog-title>Xác nhận</h2>
+    <p>Hủy vé ?</p>
+    <mat-dialog-actions align="end">
+        <button mat-raised-button color="warn" mat-dialog-close>Hủy</button>
+        <button mat-raised-button color="primary" (click)="handleCancelBooking()" [mat-dialog-close]="true"
+            cdkFocusInitial>Xác nhận</button>
+    </mat-dialog-actions>
+</div>
+<app-loading-doubleball [isLoading]="isLoading"></app-loading-doubleball>

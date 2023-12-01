@@ -1,0 +1,50 @@
+<p class="font-bold text-base/6" style="margin-top: 10%;">Nhà xe</p>
+<mat-list>
+    <mat-list-item style="margin-top: -25px; margin-bottom: -15px   ;" routerLink="{{routes.BRAND}}" routerLinkActive="active-list-item">
+      <mat-icon>home</mat-icon> Thông tin nhà xe
+    </mat-list-item>
+    <mat-list-item style="margin-top: -15px;" routerLink="{{routes.ROUTE}}" routerLinkActive="active-list-item">
+      <mat-icon> directions</mat-icon> Quản lý tuyến xe
+    </mat-list-item>
+    <mat-list-item style="margin-top: -15px;" routerLink="{{routes.SHUTTLE}}" routerLinkActive="active-list-item">
+      <mat-icon> access_time</mat-icon> Khung giờ xe chạy
+    </mat-list-item>
+    <mat-list-item style="margin-top: -15px;" routerLink="{{routes.PARKING}}" routerLinkActive="active-list-item">
+      <mat-icon>local_parking</mat-icon> Quản lý điểm đón/trả
+    </mat-list-item>
+    <mat-list-item style="margin-top: -15px;" routerLink="{{routes.BUS}}" routerLinkActive="active-list-item">
+      <mat-icon>directions_bus</mat-icon> Quản lý xe
+    </mat-list-item>
+    <mat-list-item style="margin-top: -15px;" routerLink="{{routes.IMAGE}}" routerLinkActive="active-list-item">
+      <mat-icon>image</mat-icon> Album ảnh
+    </mat-list-item>
+  </mat-list>
+  <p class="font-bold text-base/6">Chuyến xe</p>
+  <mat-list>
+    <mat-list-item style="margin-top: -25px; margin-bottom: -15px   ;" routerLink="{{routes.SCHEDULE}}" routerLinkActive="active-list-item">
+        <mat-icon>departure_board</mat-icon> Lịch trình
+      </mat-list-item>
+      <mat-list-item style="margin-top: -15px; " routerLink="{{routes.TICKET}}" routerLinkActive="active-list-item">
+        <mat-icon>confirmation_number</mat-icon> Quản lý vé
+      </mat-list-item>
+      <mat-list-item style="margin-top: -15px; " routerLink="{{routes.ORDER}}" routerLinkActive="active-list-item">
+        <mat-icon>receipt</mat-icon> Quản lý đơn đặt
+      </mat-list-item>
+  </mat-list>
+  <p class="font-bold text-base/6">Báo cáo</p>
+  <mat-list>
+      <mat-list-item style="margin-top: -25px;" routerLink="{{routes.REPORT}}" routerLinkActive="active-list-item">
+        <mat-icon>dashboard</mat-icon> Báo cáo
+      </mat-list-item>
+  </mat-list>
+  <p class="font-bold text-base/6">Tài khoản</p>
+  <mat-list>
+      <mat-list-item style="margin-top: -25px;" routerLink="{{routes.PROFILE}}" routerLinkActive="active-list-item">
+        <mat-icon>account_circle</mat-icon> Thông tin tài khoản
+      </mat-list-item>
+      <mat-list-item style="margin-top: -15px;">
+        <button (click)="logOut()">
+          <mat-icon>exit_to_app</mat-icon> Đăng xuất
+        </button>
+      </mat-list-item>
+  </mat-list>
