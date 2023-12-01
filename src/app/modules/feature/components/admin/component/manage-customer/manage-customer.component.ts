@@ -8,6 +8,7 @@ import { DialogConfirmOrderComponent } from '../../../brand-owner/order/dialog-c
 import { BrandOwnerDTO, CustomerDTO } from '../../model/admin.model';
 import { AdminService } from '../../service/admin.service';
 import { DialogCreateUserComponent } from '../manage-brand/dialog-create-user/dialog-create-user.component';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-manage-customer',
@@ -28,16 +29,36 @@ export class ManageCustomerComponent implements OnInit {
   customers: CustomerDTO[] = []
   customer: CustomerDTO = {}
   isLoading: boolean = false;
+  rankForm:FormGroup
+  accountRank:any[]=[
+    {id:0,name:"Tất cả"},
+    {id:1,name:"Thành viên mới"},
+    {id:2,name:"Thành viên thường"},
+    {id:3,name:"Thành viên vip"},
+  ]
 
   dataSource = new MatTableDataSource(this.customers);
   dataSourceWithPageSize = new MatTableDataSource(this.customers);
 
   constructor(private dialog: MatDialog, private adminService: AdminService,
     private message: ToastrService) {
-
+      this.rankForm = new FormGroup({
+        rank: new FormControl("")
+      })
   }
   ngOnInit(): void {
     this.getAllCustomer()
+    this.rankForm.get("rank")?.setValue(this.accountRank[0])
+    this.rankForm.get("rank")?.valueChanges.subscribe(
+      value=>{
+        if(value === this.accountRank[0]){
+          this.getAllCustomer()
+        }
+        else{
+          this.getCustomerByFilterRank(value?.id)
+        }
+      }
+    )
   }
 
   openDialogCreateUser() {
@@ -93,5 +114,25 @@ export class ManageCustomerComponent implements OnInit {
       })
     ).subscribe()
   }
-
+  getCustomerByFilterRank(rankId:any){
+    let response:any
+    this.isLoading = true;
+    this.adminService.getCustomerByFilterRank(rankId).pipe(
+      finalize(() => {
+        if(response[0]?.customerId){
+          this.noData = false
+          this.isLoading = false;
+          this.dataSource = new MatTableDataSource(this.customers)
+          this.dataSource.paginator = this.paginator;
+        }
+        else{
+          this.noData = true;
+          this.isLoading = false;
+        }
+      })
+    ).subscribe(data => {
+      this.customers = data.data
+      response = this.customers
+    })
+  }
 }

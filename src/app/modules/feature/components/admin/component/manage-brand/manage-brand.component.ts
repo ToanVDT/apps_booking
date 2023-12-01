@@ -11,6 +11,7 @@ import { DialogCreateUserComponent } from './dialog-create-user/dialog-create-us
 import { AdminService } from '../../service/admin.service';
 import { finalize } from 'rxjs';
 import { DialogConfirmOrderComponent } from '../../../brand-owner/order/dialog-confirm-order/dialog-confirm-order.component';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-manage-brand',
@@ -34,16 +35,35 @@ export class ManageBrandComponent implements OnInit {
   brandOwners: BrandOwnerDTO[] = []
   brandOwner: BrandOwnerDTO = {}
   isLoading: boolean = false;
+  statusForm:FormGroup;
+  accountStatus:any[]=[
+    {id:-1,name:"Tất cả"},
+    {id:1,name:"Kích hoạt"},
+    {id:0,name:"Vô hiệu hóa"},
+  ]
 
   dataSource = new MatTableDataSource(this.brandOwners);
   dataSourceWithPageSize = new MatTableDataSource(this.brandOwners);
 
   constructor(private dialog: MatDialog, private adminService: AdminService,
     private message: ToastrService) {
-
+      this.statusForm = new FormGroup({
+        status: new FormControl("")
+      })
   }
   ngOnInit(): void {
     this.getAllBrandOwner()
+    this.statusForm.get("status")?.setValue(this.accountStatus[0])
+    this.statusForm.get("status")?.valueChanges.subscribe(
+      value=>{
+        if(value?.id === this.accountStatus[0]?.id){
+          this.getAllBrandOwner()
+        }
+        else{
+          this.getAccountFilter(value?.id)
+        }
+      }
+    )
   }
 
   openDialogCreateUser() {
@@ -115,5 +135,17 @@ export class ManageBrandComponent implements OnInit {
         this.getAllBrandOwner()
       })
     ).subscribe()
+  }
+  getAccountFilter(activeCode:any){
+    this.isLoading = true;
+    this.adminService.getCurrentBrandFilter(activeCode).pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.dataSource = new MatTableDataSource(this.brandOwners)
+        this.dataSource.paginator = this.paginator;
+      })
+    ).subscribe(data => {
+      this.brandOwners = data.data
+    })
   }
 }

@@ -15,6 +15,16 @@ export class AdminService {
       retry(1), 
       delay(1000));
   }
+  getCurrentBrandFilter(activeCode:any): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/user/brand-owner?activeCode=${activeCode}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
+  getCustomerByFilterRank(rankId:any): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/user/customer/filter?rankId=${rankId}`).pipe(
+      retry(1), 
+      delay(1000));
+  }
   ActiveAccount(userId:any): Observable<any> {
     return this.http.put<any>(`${environment.apiUrl}/user/active?userId=${userId}`,null).pipe(
       retry(1), 

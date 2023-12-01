@@ -1,5 +1,17 @@
 <div class="w-full mt-3">
     <div class="border-2 rounded-t-lg shadow-lg mx-10 bg-white px-14 py-4">
+        <div class="flex justify-between items-center border-2 h-24 p-6 bg-[#F0F0EE] rounded-lg">
+            <form [formGroup]="rankForm">
+                <mat-form-field appearance="outline">
+                    <mat-label>Hạng thành viên</mat-label>
+                    <mat-select formControlName="rank" name="rank">
+                        <mat-option *ngFor="let rank of accountRank" [value]="rank">
+                            {{ rank.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </form>
+        </div>
         <div *ngIf="noData" class="flex py-7 px-5 justify-center text-xl">Không có dữ liệu</div>
         <div *ngIf="!noData">
             <table mat-table [dataSource]="dataSource"

@@ -4,6 +4,16 @@
             <div class="flex justify-center items-center bg-teal-500 w-[100px] h-10 rounded-sm">
                 <button class="text-white" (click)="openDialogCreateUser()">Thêm</button>
             </div>
+            <form [formGroup]="statusForm">
+                <mat-form-field appearance="outline">
+                    <mat-label>Trạng thái đơn đặt</mat-label>
+                    <mat-select formControlName="status" name="status">
+                        <mat-option *ngFor="let status of accountStatus" [value]="status">
+                            {{ status.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </form>
         </div>
         <div *ngIf="noData" class="flex py-7 px-5 justify-center text-xl">Không có dữ liệu</div>
         <div *ngIf="!noData">
