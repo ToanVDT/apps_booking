@@ -77,4 +77,7 @@ export class NavbarComponent implements OnInit {
   openPromotion(){
     this.router.navigate(['/customer/promotion'])
   }
+  backToHomePage(){
+    this.router.navigate(['/customer'])
+  }
 }

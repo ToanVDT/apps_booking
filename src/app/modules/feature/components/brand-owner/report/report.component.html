@@ -30,6 +30,7 @@
                 <th>Ngày đặt</th>
                 <th>Tên khách hàng</th>
                 <th>Số điện thoại</th>
+                <th>Phương thức thanh toán</th>
                 <th>Thanh toán</th>
               </tr>
               <tr *ngFor="let report of reports">
@@ -37,6 +38,7 @@
                 <th>{{report.orderDate|date :'HH:mm dd/MM/yyyy'}}</th>
                 <td>{{report.customerName}}</td>
                 <td>{{report.customerPhone}}</td>
+                <td>{{report.paymentMethod}}</td>
                 <td>{{report.totalPrice| currency:'VND':'symbol':'1.0':'fr' }}</td>
               </tr>
             </table>

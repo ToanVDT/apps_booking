@@ -471,8 +471,8 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
             giftCode: gift,
             paidAmount: payAmount,
             customer: {
-                firstName: this.fullName.split(" ").slice(0, -1).join(" "),
-                lastName: this.fullName.split(" ").slice(-1).join(" "),
+                lastName: this.fullName.split(" ").slice(0, -1).join(" "),
+                firstName: this.fullName.split(" ").slice(-1).join(" "),
                 email: this.email,
                 phoneNumber: this.phone,
             }
@@ -516,8 +516,8 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
             giftCode: gift,
             paidAmount: payAmount,
             customer: {
-                firstName: this.fullName.split(" ").slice(0, -1).join(" "),
-                lastName: this.fullName.split(" ").slice(-1).join(" "),
+                lastName: this.fullName.split(" ").slice(0, -1).join(" "),
+                firstName: this.fullName.split(" ").slice(-1).join(" "),
                 email: this.email,
                 phoneNumber: this.phone,
             }

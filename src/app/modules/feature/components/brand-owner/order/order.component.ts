@@ -201,7 +201,7 @@ export class OrderComponent implements OnInit {
     this.orderService.approvalOrder(order?.id).pipe(
       finalize(() => {
         this.message.success("Duyệt đơn đặt vé", "Thành công", { timeOut: 2000, progressBar: true })
-        this.getOrders(this.schedule?.id)
+        this.getOrdersAndTotalMoney(this.schedule?.id)
       })
     ).subscribe()
   }
@@ -285,7 +285,7 @@ export class OrderComponent implements OnInit {
         // let timeCancelBooking = '15:30'
         if (this.dateTime?.date < dateCancelBooking) {
           this.timeValidToCancelBooking = false;
-        }
+        } 
         else if (this.dateTime?.date == dateCancelBooking && this.dateTime?.time < timeCancelBooking) {
           this.timeValidToCancelBooking = false;
         }

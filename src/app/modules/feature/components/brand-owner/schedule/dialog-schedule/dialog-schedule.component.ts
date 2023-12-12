@@ -9,6 +9,7 @@ import { ShuttleService } from '../../service/shuttle.service';
 import { BusService } from '../../service/bus.service';
 import { AuthenticationService } from '../../../auth/service/authentication.service';
 import { finalize } from 'rxjs';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-dialog-schedule',
@@ -17,30 +18,32 @@ import { finalize } from 'rxjs';
 })
 export class DialogScheduleComponent implements OnInit, OnDestroy {
 
-  buses: Bus[]=[];
-  user:any;
-  shuttle:Shuttle = {}
-  shuttles:Shuttle[]=[]
-  scheduleForm:FormGroup;
-  schedule:Schedule = {}
-  routes:any;
-  startTime:any;
+  buses: Bus[] = [];
+  user: any;
+  shuttle: Shuttle = {}
+  shuttles: Shuttle[] = []
+  scheduleForm: FormGroup;
+  schedule: Schedule = {}
+  routes: any;
+  startTime: any;
   selectCar: any
-
+  todayFormat: any;
+  changeDate:boolean =  false;
+  changeTime: boolean = false;
   @Output() createOrUpdate = new EventEmitter<any>();
 
   constructor(
-    private routeService: RouteService,private shuttleService:ShuttleService,
-    private busService: BusService, private auth:AuthenticationService,
+    private routeService: RouteService, private shuttleService: ShuttleService,
+    private busService: BusService, private auth: AuthenticationService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.scheduleForm = new FormGroup({     
-      routeName:new FormControl(this.schedule.routeName,[Validators.required]),
-      busName:new FormControl(this.schedule.busName,[Validators.required]),
-      startTime:new FormControl(this.schedule.startTime,[Validators.required]),
-      dateStart:new FormControl(this.schedule.dateStart,[Validators.required]),
-      price:new FormControl(this.schedule.price,[Validators.required]),
-      eatingFee:new FormControl(this.schedule.eatingFee,[Validators.required]),
+    this.scheduleForm = new FormGroup({
+      routeName: new FormControl(this.schedule.routeName, [Validators.required]),
+      busName: new FormControl(this.schedule.busName, [Validators.required]),
+      startTime: new FormControl(this.schedule.startTime, [Validators.required]),
+      dateStart: new FormControl(this.schedule.dateStart, [Validators.required]),
+      price: new FormControl(this.schedule.price, [Validators.required]),
+      eatingFee: new FormControl(this.schedule.eatingFee, [Validators.required]),
     })
   }
   ngOnDestroy(): void {
@@ -48,83 +51,107 @@ export class DialogScheduleComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-  this.user = this.auth.userValue;
-  this.routes = this.data.routes
-  this.getShuttle(this.data.routeId)
-  this.scheduleForm.get("routeName")?.valueChanges.subscribe((data)=>{
-    this.schedule.routeName = data
-    this.getShuttle(data?.id)
-  })
+    const today = new Date();
+    this.todayFormat = moment(today).format('yyyy-MM-DD')
+    this.user = this.auth.userValue;
+    this.routes = this.data.routes
+    console.log("data",this.data)
+    if(this.data?.schedule){
+      this.getBus(this.data?.schedule?.dateStart,this.data?.schedule?.startTime)
+    }
+    else{
+      this.changeDate = true;
+    }
+    let selectedRouteName = this.routes.find((item: any) => item.id === this.data.routeId);
+    this.scheduleForm.get("routeName")?.setValue(selectedRouteName)
+
+    this.getShuttle(this.data.routeId)
+    this.scheduleForm.get("routeName")?.valueChanges.subscribe((data) => {
+      this.schedule.routeName = data
+      this.getShuttle(data?.id)
+    })
     this.scheduleForm.get("busName")?.valueChanges.subscribe((data) => {
       this.schedule.busName = data
+
     });
     this.scheduleForm.get("startTime")?.valueChanges.subscribe((data) => {
       this.schedule.startTime = data
       this.startTime = data;
     });
-    this.scheduleForm.get("dateStart")?.valueChanges.subscribe((data)=>{
+    this.scheduleForm.get("dateStart")?.valueChanges.subscribe((data) => {
       this.schedule.dateStart = data
-      this.getBus(this.schedule.dateStart, this.startTime?.startTime);
+      if(this.changeDate){
+        this.getBus(this.schedule.dateStart, this.startTime?.startTime);
+      }
     })
-    this.scheduleForm.get("price")?.valueChanges.subscribe((data)=>{
+    this.scheduleForm.get("price")?.valueChanges.subscribe((data) => {
       this.schedule.price = data
     })
-    this.scheduleForm.get("eatingFee")?.valueChanges.subscribe((data)=>{
+    this.scheduleForm.get("eatingFee")?.valueChanges.subscribe((data) => {
       this.schedule.eatingFee = data
     })
-    if(this.data.schedule){
-      this.selectCar = {name: this.data.schedule.busName, id:this.data.schedule.busId}
-     
-      let selectedRouteName = this.routes.find((item: any) => item.id === this.data.routeId);
-      this.scheduleForm.get("routeName")?.setValue(selectedRouteName)
+    if (this.data.schedule) {
+      this.selectCar = { name: this.data.schedule.busName, id: this.data.schedule.busId }
+      // this.scheduleForm.get("routeName")?.setValue(this.routes[0])
       this.scheduleForm.get("busName")?.setValue(this.selectCar)
-      let selectedShuttle = this.shuttles.find((item: any) => item.startTime === this.data.schedule.startTime);
-      this.scheduleForm.get("startTime")?.setValue(selectedShuttle)
       this.scheduleForm.get("dateStart")?.setValue(this.data.schedule.dateStart)
       this.scheduleForm.get("price")?.setValue(this.data.schedule.price)
       this.scheduleForm.get("eatingFee")?.setValue(this.data.schedule.eatingFee)
-  }
-  }
- 
-getShuttle(routeId:any){
-  this.shuttleService.getShuttleByRoute(routeId).pipe().subscribe(
-    data=>{
-      this.shuttles = data.data
-      this.scheduleForm.get("startTime")?.setValue(this.shuttles[0])
+      this.changeDate = true
     }
-  )
-}
-
-getBusById(busId: any): boolean {
-  let result: any
-  result = this.buses.find(item => item.id === busId)
-  return !!result
-}
-
-getBus(travelDate:any, startTime:any){
-  this.buses = []
- this.busService.getBusForDropDownByTravelDate(this.user.data?.id,travelDate,startTime).pipe(
-  finalize(() => {
-    if (!this.getBusById(this.selectCar.id)) {
-      this.buses.push(this.selectCar)
-    }
-  })
- ).subscribe(
-  data=>{
-    this.buses = data
-    
   }
- )
-}
+
+  getShuttle(routeId: any) {
+    this.shuttleService.getShuttleByRoute(routeId).pipe(
+      finalize(()=>{
+        let selectedShuttle = this.shuttles.find((item: any) => item.startTime === this.data.schedule.startTime);
+        this.scheduleForm.get("startTime")?.setValue(selectedShuttle)
+        this.startTime = selectedShuttle;
+        // console.log("dataTime",selectedShuttle)
+       
+      })
+    ).subscribe(
+      data => {
+        this.shuttles = data.data
+        if(!this.data?.schedule){
+          this.scheduleForm.get("startTime")?.setValue(this.shuttles[0])
+        }
+        // this.schedule.startTime = this.shuttles[0];
+      }
+    ) 
+  }
+
+  getBusById(busId: any): boolean {
+    let result: any
+    result = this.buses.find(item => item.id === busId)
+    return !!result
+  }
+
+  getBus(travelDate: any, startTime: any) {
+    console.log(travelDate,'-',startTime)
+    this.buses = []
+    this.busService.getBusForDropDownByTravelDate(this.user.data?.id, travelDate, startTime).pipe(
+      finalize(() => {
+        if (!this.getBusById(this.selectCar.id)) {
+          this.buses.push(this.selectCar)
+        }
+      })
+    ).subscribe(
+      data => {
+        this.buses = data
+
+      }
+    )
+  }
   onSubmit() {
     if (this.scheduleForm.valid) {
       this.createOrUpdate.emit({
         id: this.data.schedule?.id,
-        busId:this.scheduleForm.value.busName?.id,
-        shuttleId:this.scheduleForm.value.startTime?.id,
-        travelDate:this.scheduleForm.value.dateStart,
-        price:this.scheduleForm.value.price,
-        eatingFee:this.scheduleForm.value.eatingFee
+        busId: this.scheduleForm.value.busName?.id,
+        shuttleId: this.scheduleForm.value.startTime?.id,
+        travelDate: this.scheduleForm.value.dateStart,
+        price: this.scheduleForm.value.price,
+        eatingFee: this.scheduleForm.value.eatingFee
       });
     }
   }

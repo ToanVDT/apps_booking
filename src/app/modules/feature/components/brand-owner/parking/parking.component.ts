@@ -60,17 +60,17 @@ export class ParkingComponent implements OnInit {
 
   @ViewChild("paginator") paginator!: MatPaginator;
   @ViewChild("paginator1") paginator1!: MatPaginator;
-  @ViewChild("paginatorPageSize") paginatorPageSize!: MatPaginator;
-  @ViewChild("paginatorPageSize1") paginatorPageSize1!: MatPaginator;
+  // @ViewChild("paginatorPageSize") paginatorPageSize!: MatPaginator;
+  // @ViewChild("paginatorPageSize1") paginatorPageSize1!: MatPaginator;
 
   pageSizes = [3, 5, 7];
 
-  ngAfterViewInit() {
-    this.dataSource1.paginator = this.paginator1;
-    this.dataSourceWithPageSize1.paginator = this.paginatorPageSize1;
-    this.dataSource.paginator = this.paginator;
-    this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
-  }
+  // ngAfterViewInit() {
+  //   this.dataSource1.paginator = this.paginator1;
+  //   this.dataSourceWithPageSize1.paginator = this.paginatorPageSize1;
+  //   this.dataSource.paginator = this.paginator;
+  //   this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
+  // }
 
   ngOnInit(): void {
     this.user = this.auth.userValue;

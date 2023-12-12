@@ -15,6 +15,7 @@ export class Report{
     totalPrice?:number;
     customerName?:string;
     customerPhone?:string;
+    paymentMethod?:string;
 }
 export class OrderShowInCustomerPage{
     id?:number;

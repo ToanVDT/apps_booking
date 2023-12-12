@@ -55,6 +55,8 @@ export class DialogCreateUpdateRouteComponent implements OnInit {
       let selectedEndPoint = this.provincesCustoms.find((item: any) => item.name === this.data.route.endPoint);
       this.routeForm.get("startPoint")?.setValue(selectedStartPoint);
       this.routeForm.get("endPoint")?.setValue(selectedEndPoint);
+      this.startpoint = selectedStartPoint?.name;
+      this.endpoint = selectedEndPoint?.name;
     }
   }
   onSubmit() {

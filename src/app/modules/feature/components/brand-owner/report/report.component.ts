@@ -4,18 +4,13 @@ import { Shuttle } from '../model/shuttle.model';
 import { Orders, Report } from '../model/order.model';
 import { ScheduleDTO } from '../model/schedule.model';
 import { FormGroup, FormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
-import { ToastrService } from 'ngx-toastr';
 import { forkJoin, finalize } from 'rxjs';
 import { AuthenticationService } from '../../auth/service/authentication.service';
 import { OrderService } from '../service/order.service';
 import html2canvas from 'html2canvas';
 import { ScheduleService } from '../service/schedule.service';
 import jsPDF from 'jspdf';
-import { USERS } from 'src/assets/data/popularRoute';
 
 @Component({
   selector: 'app-report',
@@ -87,7 +82,6 @@ export class ReportComponent implements OnInit {
     ).subscribe(
       data => {
         response = data.reports.data;
-        console.log("response", response)
         this.reports = data.reports.data;
         this.totalMoney = data.money.data
       }

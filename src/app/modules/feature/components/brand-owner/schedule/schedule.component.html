@@ -4,10 +4,10 @@
       <button mat-raised-button class="w-[100px] h-[40px] bg-[#7DC0CE] text-white" (click)="openFormSchedule(null)"> 
         Thêm
       </button>
-      <form [formGroup]="scheduleForm">
-        <mat-form-field appearance="outline">
+      <form [formGroup]="scheduleForm" style="padding-bottom: 0;">
+        <mat-form-field appearance="outline" >
           <mat-label>Tuyến đường</mat-label>
-          <mat-select formControlName="route" name="route">
+          <mat-select formControlName="route" name="route" style="padding-bottom: 0;">
             <mat-option *ngFor="let route of routes" [value]="route">
               {{ route.startPoint }} - {{route.endPoint}}
             </mat-option>
@@ -27,7 +27,7 @@
         <!-- Name Column -->
         <ng-container matColumnDef="price">
           <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Giá</th>
-          <td style="width: 25%;text-align: center;" mat-cell *matCellDef="let schedule">Giá vé: {{schedule.price }}<br> <div >Tiền cơm: {{schedule.eatingFee }}</div></td>
+          <td style="width: 25%;text-align: center;" mat-cell *matCellDef="let schedule">Giá vé: {{schedule.price| currency:'VND':'symbol':'3.0-2':'fr'  }}<br> <div >Tiền cơm: {{schedule.eatingFee| currency:'VND':'symbol':'3.0-2':'fr'  }}</div></td>
         </ng-container>
 
         <ng-container matColumnDef="dateTime">

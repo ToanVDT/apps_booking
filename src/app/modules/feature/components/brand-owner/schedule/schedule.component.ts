@@ -5,16 +5,10 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin, finalize } from 'rxjs';
-import { ConfirmDialogComponent } from 'src/app/modules/share/components/confirm-dialog/confirm-dialog.component';
 import { AuthenticationService } from '../../auth/service/authentication.service';
 import { Shuttle } from '../model/shuttle.model';
 import { RouteService } from '../service/route.service';
-import { ShuttleService } from '../service/shuttle.service';
-import { DialogEditShuttleComponent } from '../shuttle/dialog-edit-shuttle/dialog-edit-shuttle.component';
-import { DialogShuttleComponent } from '../shuttle/dialog-shuttle/dialog-shuttle.component';
 import { DialogScheduleComponent } from './dialog-schedule/dialog-schedule.component';
-import { BusService } from '../service/bus.service';
-import { Bus } from '../model/bus.model';
 import { Schedule } from '../model/schedule.model';
 import { ScheduleService } from '../service/schedule.service';
 import { FormControl, FormGroup } from '@angular/forms';

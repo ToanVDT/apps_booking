@@ -1,7 +1,7 @@
 export class Schedule{
     id?:number;
     dateStart?:string;
-    startTime?:string;
+    startTime?:any;
     busName?:string;
     price?:number;
     seats?:number;

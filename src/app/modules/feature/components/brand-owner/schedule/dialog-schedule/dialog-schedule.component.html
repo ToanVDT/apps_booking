@@ -38,7 +38,7 @@
           </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Ngày </mat-label>
-              <input matInput type="date" formControlName="dateStart" />
+              <input matInput type="date" formControlName="dateStart" [min]="todayFormat"/>
               <mat-error *ngIf="scheduleForm.get('dateStart')?.hasError('required')">
                 Chưa chọn ngày xe chạy
               </mat-error>
@@ -55,7 +55,7 @@
               </mat-option>
             </mat-select>
             <mat-error *ngIf="scheduleForm.get('busName')?.hasError('required')">
-              Vui lonhg chọn xe chạy
+              Vui lòng chọn xe chạy
             </mat-error>
           </mat-form-field>
         </div>
