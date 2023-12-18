@@ -47,9 +47,11 @@ export class ListResultShuttleComponent implements OnInit,OnDestroy {
         value=>{
           if(value == 3){
             this.scheduleAvailables.sort((a:any,b:any) => b?.price - a?.price);
+            this.listBrandFilter = this.scheduleAvailables
           }
           else{
             this.scheduleAvailables.sort((a:any,b:any) => a?.price - b?.price);
+            this.listBrandFilter = this.scheduleAvailables
           }
         }
       )

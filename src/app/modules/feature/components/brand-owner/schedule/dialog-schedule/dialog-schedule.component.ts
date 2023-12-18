@@ -132,7 +132,7 @@ export class DialogScheduleComponent implements OnInit, OnDestroy {
     let duration = selectedRouteName?.duration;
     this.dateSelected = moment(`${dateRangeStart.value} ${this.startTime.startTime}`, 'DD/MM/YYYY hh:mm:ss').toDate()
     let dateCondition = moment(`${dateRangeStart.value}`, 'DD/MM/YYYY').toDate()
-    if(!moment(dateCondition).isSameOrAfter(this.today)){
+    if(!moment(dateCondition).isAfter(this.today)){
       this.dateValid = false
       this.scheduleForm.get("dateStart")?.setErrors({dateValid:true})
     }
