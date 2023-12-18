@@ -18,10 +18,13 @@ export class DialogCreateUpdateRouteComponent implements OnInit {
   route!: Routes;
   startpoint: any;
   endpoint: any;
+  duration!:number;
   indexend: any;
+  defaultSelected :boolean = false
   indexStart: any;
   startPointSelected: any;
   endPointSelected: any;
+  durationTypeSelected:any;
 
   @Output() createOrUpdate = new EventEmitter<any>();
 
@@ -30,6 +33,8 @@ export class DialogCreateUpdateRouteComponent implements OnInit {
     this.routeForm = new FormGroup({
       startPoint: new FormControl(this.startpoint, [Validators.required]),
       endPoint: new FormControl(this.endpoint, [Validators.required]),
+      duration: new FormControl(this.duration, [Validators.required]),
+      durationType: new FormControl("", [Validators.required]),
     });
   }
 
@@ -41,6 +46,16 @@ export class DialogCreateUpdateRouteComponent implements OnInit {
     this.routeForm.get("endPoint")?.valueChanges.subscribe((data) => {
       this.endpoint = data.name;
     });
+    this.routeForm.get("durationType")?.valueChanges.subscribe((data)=>{
+      if(data){
+        this.durationTypeSelected = data
+      }
+    })
+    this.routeForm.get("duration")?.valueChanges.subscribe((data)=>{
+      if(data){
+        this.duration = data;
+      }
+    })
   }
   getProvices() {
     this.provinces = this.data.provinces;
@@ -55,16 +70,28 @@ export class DialogCreateUpdateRouteComponent implements OnInit {
       let selectedEndPoint = this.provincesCustoms.find((item: any) => item.name === this.data.route.endPoint);
       this.routeForm.get("startPoint")?.setValue(selectedStartPoint);
       this.routeForm.get("endPoint")?.setValue(selectedEndPoint);
+      this.routeForm.get("duration")?.setValue(this.data.route.duration);
+      this.duration =this.data.route.duration;
+      this.defaultSelected = true;
       this.startpoint = selectedStartPoint?.name;
       this.endpoint = selectedEndPoint?.name;
     }
   }
   onSubmit() {
+    let durationConverted : any;
+    
+    if(this.durationTypeSelected == 1){
+      durationConverted = this.duration*24
+    }
+    else{
+      durationConverted = this.duration*1;
+    }
     if (this.routeForm.valid) {
       this.createOrUpdate.emit({
         id: this.data.route?.id,
         startPoint: this.startpoint,
         endPoint: this.endpoint,
+        duration:durationConverted,
       });
     }
   }

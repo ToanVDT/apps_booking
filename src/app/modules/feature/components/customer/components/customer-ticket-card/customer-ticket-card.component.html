@@ -570,7 +570,10 @@
                                         <input matInput formControlName="giftCode" placeholder="Mã quà tặng" />
                                     </mat-form-field>
                                     <button *ngIf="!isLoading" matTooltip="Dùng mã" class=" ml-4 w-1/5 absolute  right-[105px] top-[17px]"
-                                        matTooltipPosition="right" (click)="checkGiftCodeValid()"><mat-icon>check</mat-icon></button>
+                                        matTooltipPosition="right" (click)="!disableFormGiftCode ? checkGiftCodeValid():cancelUseGift()">
+                                        <mat-icon *ngIf="!disableFormGiftCode"> check</mat-icon>
+                                        <mat-icon *ngIf="disableFormGiftCode"> close</mat-icon>
+                                    </button>
                                         <app-loading-item [isLoading]="isLoading" class="ml-4 w-1/5 absolute right-[105px] top-[6px]"></app-loading-item>
                                 </div>
                     

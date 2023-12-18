@@ -251,7 +251,6 @@ export class OrderComponent implements OnInit {
       data => {
         this.orders = data.data
         response = data.data
-        console.log("order", data.data)
         this.orders.map((item) => {
           if (item.orderStatus === "ORDERED") {
             item.orderStatus = this.status[0]

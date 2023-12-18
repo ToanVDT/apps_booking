@@ -208,7 +208,6 @@ export class ImageComponent implements OnInit {
     )
   }
   deleteImage(){
-    console.log("indexImage",this.images[this.selectedImageIndex])
     const dialogRef = this.dialog.open(DialogConfirmOrderComponent,{
       data:{name:"Bạn chắc chắn xóa ảnh"}
     })

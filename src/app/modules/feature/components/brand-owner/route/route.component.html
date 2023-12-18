@@ -62,19 +62,23 @@
         <!-- Position Column -->
   <ng-container matColumnDef="startPoint">
     <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Điểm xuất phát </th>
-    <td style="text-align: center;width: 30%;" mat-cell *matCellDef="let route"> {{route.startPoint}} </td>
+    <td style="text-align: center;width: 25%;" mat-cell *matCellDef="let route"> {{route.startPoint}} </td>
   </ng-container>
 
   <!-- Name Column -->
   <ng-container matColumnDef="endPoint">
     <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Điểm kết thúc </th>
-    <td style="text-align: center;width: 30%;" mat-cell *matCellDef="let route"> {{route.endPoint}} </td>
+    <td style="text-align: center;width: 25%;" mat-cell *matCellDef="let route"> {{route.endPoint}} </td>
+  </ng-container>
+  <ng-container matColumnDef="duration">
+    <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Thời gian giữa 2 chuyến </th>
+    <td style="text-align: center;width: 25%;" mat-cell *matCellDef="let route"> {{route.duration}} Giờ </td>
   </ng-container>
 
   
   <ng-container matColumnDef="action">
     <th style="text-align: center;" mat-header-cell *matHeaderCellDef> Hành động </th>
-    <td style="text-align: center;width: 30%;" mat-cell *matCellDef="let route"> <button
+    <td style="text-align: center;width: 25%;" mat-cell *matCellDef="let route"> <button
         mat-button
         color="primary"
         (click)="openFormAddRoute(route)" 

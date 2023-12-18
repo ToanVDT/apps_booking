@@ -173,7 +173,6 @@ export class BrandComponent implements OnInit {
     this.brandService.checkDuplicatePhoneBrand(phone, userId)
       .subscribe((data) => {
         this.phoneDuplicated = data;
-        console.log("phoneDuplicate", this.phoneDuplicated)
         if(data){
           this.brandForm.get('phone')?.setErrors({phoneDuplicated:true})
         }

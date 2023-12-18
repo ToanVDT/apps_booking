@@ -6,22 +6,15 @@
         <section>
             <div class="grid grid-cols-1 gap-6 gap-y-10 lg:grid-cols-4">
                 <div>
-                    <form class="hidden lg:block">
-                        <div *ngFor="let item of singleFilterData; let last = last">
-                            <div class="py-6 bg-white p-5 border rounded-md shadow-md">
-                                <span class="font-bold text-xl text-[#484848]">{{ item.name }}</span>
-                                <div class="pt-2" id="filter-section-0">
-                                    <div class="scroll-py-4">
-                                        <div *ngFor="let option of item.options">
-                                            <div class="flex items-center">
-                                                <mat-radio-button id="'filter - '+ option.value" [name]="item.id"
-                                                    [value]="option.value">
-                                                    <span class="text-sm text-[#141414]">{{ option.label }}</span>
-                                                </mat-radio-button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                    <form class="hidden lg:block" [formGroup]="filterForm">
+                        <div class="py-6 bg-white p-5 border rounded-md shadow-md">
+                            <div class="text-sm text-left font-semibold mb-4">Sắp xếp</div>
+                            <div *ngFor="let item of singleFilterData">
+                                <label for="enum_answer_{{item.label}}">
+                                    <input id="enum_answer_{{item.label}}" [value]='item.value' type="radio"
+                                        formControlName="filterMoney">
+                                    {{item.label}}
+                                </label>
                             </div>
                         </div>
 
@@ -32,22 +25,10 @@
                                     <button class="text-[#2474E5] font-bold">Xóa lọc</button>
                                 </div>
                             </div>
-
-                            <div *ngFor="let item of filterData; let last = last">
-                                <div class="pb-6">
-                                    <span class="font-medium">{{ item.name }}</span>
-                                    <div class="pt-2" id="filter-section-0">
-                                        <div class="scroll-py-4">
-                                            <div *ngFor="let option of item.options">
-                                                <div class="flex items-center">
-                                                    <mat-checkbox id="'filter - '+ option.value" [name]="item.id"
-                                                        [value]="option.value">
-                                                        <span class="text-sm text-[#141414]">{{ option.label }}</span>
-                                                    </mat-checkbox>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div *ngFor="let item of filterData">
+                                <div class="flex items-center">
+                                    <input type="checkbox" [value]="item.value" (change)="onCheckChange($event)"
+                                    formControlName="filterBrandName">{{item?.value}}
                                 </div>
                             </div>
                         </div>
@@ -55,11 +36,13 @@
                 </div>
 
                 <div *ngIf="!noData" class="lg:col-span-3 flex flex-col items-center">
-                    <div  *ngFor="let scheduleAvailable of scheduleAvailables" class="w-full">
-                        <app-customer-ticket-card [scheduleAvailable]="scheduleAvailable" class=" bg-white border rounded-md shadow-md mb-6 hover:shadow-2xl"></app-customer-ticket-card>
+                    <div *ngFor="let scheduleAvailable of listBrandFilter" class="w-full">
+                        <app-customer-ticket-card [scheduleAvailable]="scheduleAvailable"
+                            class=" bg-white border rounded-md shadow-md mb-6 hover:shadow-2xl"></app-customer-ticket-card>
                     </div>
                 </div>
-                <div *ngIf="noData" class="text-xl font-semibold text-center w-[700px]">Không tìm thấy chuyến xe phù hợp</div>
+                <div *ngIf="noData" class="text-xl font-semibold text-center w-[700px]">Không tìm thấy chuyến xe phù hợp
+                </div>
             </div>
         </section>
     </main>

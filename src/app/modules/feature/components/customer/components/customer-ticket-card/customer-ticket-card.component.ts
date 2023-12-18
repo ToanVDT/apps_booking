@@ -128,7 +128,7 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
     eatingFee: any;
     fullName: any;
     phone: any;
-    requireDeposit:boolean = false;
+    requireDeposit: boolean = false;
     email: any;
     scheduleId: any
     selectedPickup!: Location;
@@ -137,8 +137,9 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
     seatPairs: Seat[][] = [];
     selectedSeats: Seat[] = [];
     listSeats: any;
-    user:any;
-    isLogged:boolean = false;
+    disableFormGiftCode: boolean = false;
+    user: any;
+    isLogged: boolean = false;
     infoCustomerForm: FormGroup;
     giftMoney: number = 0;
     isLoading: boolean = false;
@@ -155,7 +156,7 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
 
     constructor(
         public dialog: MatDialog, private parkingService: ParkingService, private paymentService: VnpayService,
-        private customerService: CustomerService, private orderService: OrderService,private auth:AuthenticationService,
+        private customerService: CustomerService, private orderService: OrderService, private auth: AuthenticationService,
         private elementRef: ElementRef, private message: ToastrService, private router: Router,
     ) {
         this.infoCustomerForm = new FormGroup({
@@ -176,10 +177,10 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.user = this.auth.userValue;
-        if(this.user?.data?.id){
+        if (this.user?.data?.id) {
             this.isLogged = true;
             this.customerService.getProfile(this.user?.data?.id).pipe().subscribe(
-                data=>{
+                data => {
                     this.infoCustomerForm.get("email")?.setValue(data.data.email);
                     this.infoCustomerForm.get("fullName")?.setValue(data.data.fullName);
                     this.infoCustomerForm.get("phoneNumber")?.setValue(data.data.phone);
@@ -189,6 +190,7 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
                 }
             )
         }
+
         this.infoCustomerForm.get('check')?.valueChanges.subscribe((value) => {
             this.isChecked = value;
         });
@@ -206,6 +208,7 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
                 }
             }
         )
+
         this.infoCustomerForm.get('quantity')?.valueChanges.subscribe(
             value => {
                 this.quantityEating = value;
@@ -249,28 +252,44 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
                 if (data.success) {
                     this.message.success(data.message, "Thành công", { timeOut: 2000, progressBar: true })
                     this.giftMoney = data.data
+                    this.disableFormGiftCode = true;
+                    this.giftForm.get("giftCode")?.disable()
                 }
                 else {
                     this.message.error(data.message, "Thất bại", { timeOut: 2000, progressBar: true })
-                    this.giftForm.get("giftCode")?.setValue("")
+                    this.cancelUseGift()
                 }
             }
         )
+    }
+    cancelUseGift() {
+        this.giftMoney = 0;
+        this.giftForm.get("giftCode")?.setValue("")
+        this.giftForm.get("giftCode")?.enable()
+        this.disableFormGiftCode = false;
     }
     getValueDropOffAnfPickUp() {
         this.pickup = this.selectedPickup;
         this.dropOff = this.selectedDropOff;
     }
     getDataReview() {
+        let quantityEating = this.getQuantityEating(this.quantityEating)
         this.InfoReView.fullName = this.fullName;
         this.InfoReView.email = this.email;
         this.InfoReView.phone = this.phone;
-        this.InfoReView.quantityEating = this.quantityEating;
+        this.InfoReView.quantityEating = quantityEating;
         this.InfoReView.listSeatOrderd = this.listSeatName;
         this.InfoReView.dropOffPoint = this.dropOff?.dropOffPoint;
         this.InfoReView.pickUpPoint = this.pickup?.pickUpPoint
         this.InfoReView.brandName = this.brandName;
 
+    }
+    getQuantityEating(quantity: any): number {
+        let quantityEating = 0;
+        if (this.isChecked) {
+            quantityEating = quantity;
+        }
+        return quantityEating;
     }
     getDropOffPickUpAndSeat(shuttleId: any, scheduleId: any) {
         forkJoin({
@@ -285,7 +304,7 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
                 this.listSeats = data.seats.data,
                     this.pickupLocations = data.pickUps.data,
                     this.dropOffLocations = data.dropOffs.data
-                    this.listpickup = data.pickUps.data,
+                this.listpickup = data.pickUps.data,
                     this.listdropoff = data.dropOffs.data
                 for (const seatRow of this.listSeats) {
                     const row: Seat[] = seatRow.map((seat: any) => {
@@ -384,15 +403,15 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
             const seatIndex = this.selectedSeats.findIndex((selectedSeat) => selectedSeat.id === seat.id);
 
             if (seatIndex === -1) {
-                
+
                 if (this.selectedSeats.length < 5) {
                     this.selectedSeats.push(seat);
                     this.listSeatIDSelected.push(seat?.id)
                     this.listSeatName.push(seat?.name)
-                    if(this.selectedSeats.length >= 3){
+                    if (this.selectedSeats.length >= 3) {
                         this.requireDeposit = true;
                     }
-                    else{
+                    else {
                         this.requireDeposit = false;
                     }
                 } else {
@@ -404,10 +423,10 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
                     });
                 }
             } else {
-                if(this.selectedSeats.length >= 3){
+                if (this.selectedSeats.length >= 3) {
                     this.requireDeposit = true;
                 }
-                else{
+                else {
                     this.requireDeposit = false;
                 }
                 this.listSeatName.splice(seatIndex, 1)
@@ -423,10 +442,12 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
 
     getTotalPrice(): number {
         let promotion = 0;
+        let quantityEating = this.getQuantityEating(this.quantityEating)
         if (this.paymentId === 1) {
             promotion = this.giftMoney;
         }
-            this.totalPrice = this.selectedSeats.reduce((total, seat) => total + seat.price, 0) + this.quantityEating * this.eatingFee - promotion;
+
+        this.totalPrice = this.selectedSeats.reduce((total, seat) => total + seat.price, 0) + quantityEating * this.eatingFee - promotion;
         return this.totalPrice;
     }
     getPromotion() {
@@ -445,7 +466,7 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
         });
     }
     bookingTicket() {
-        this.isLoadingPage  = true;
+        this.isLoadingPage = true;
         let gift: any;
         let payAmount: any;
         if (this.paymentId === 2) {
@@ -454,18 +475,19 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
         }
         else {
             gift = this.giftCode;
-            if(this.requireDeposit){
-                payAmount = this.totalPrice*0.6;
+            if (this.requireDeposit) {
+                payAmount = this.totalPrice * 0.6;
             }
-            else{
+            else {
                 payAmount = this.totalPrice;
             }
         }
+        let quantityEating = this.getQuantityEating(this.quantityEating)
         let request = {
             seatId: this.listSeatIDSelected,
             pickUp: this.pickup?.pickUpPoint,
             dropOff: this.dropOff?.dropOffPoint,
-            quantityEating: this.quantityEating,
+            quantityEating: quantityEating,
             scheduleId: this.scheduleId,
             paymentId: this.paymentId,
             giftCode: gift,
@@ -478,7 +500,7 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
             }
         }
         this.orderService.orderTicket(request).pipe(
-            finalize(()=>{
+            finalize(() => {
                 this.isLoadingPage = false
             })
         ).subscribe(
@@ -499,18 +521,19 @@ export class CustomerTicketCardComponent implements OnInit, AfterViewInit {
         }
         else {
             gift = this.giftCode
-            if(this.requireDeposit){
-                payAmount = this.totalPrice*0.6;
+            if (this.requireDeposit) {
+                payAmount = this.totalPrice * 0.6;
             }
-            else{
+            else {
                 payAmount = this.totalPrice;
             }
         }
+        let quantityEating = this.getQuantityEating(this.quantityEating)
         let request = {
             seatId: this.listSeatIDSelected,
             pickUp: this.pickup?.pickUpPoint,
             dropOff: this.dropOff?.dropOffPoint,
-            quantityEating: this.quantityEating,
+            quantityEating: quantityEating,
             scheduleId: this.scheduleId,
             paymentId: this.paymentId,
             giftCode: gift,

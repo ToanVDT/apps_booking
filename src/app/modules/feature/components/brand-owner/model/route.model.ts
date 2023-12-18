@@ -3,6 +3,7 @@ export class Routes {
   userId?: number;
   startPoint?: string;
   endPoint?: string;
+  duration?:any;
 }
 export class ProvinesCustom {
   name?: string;

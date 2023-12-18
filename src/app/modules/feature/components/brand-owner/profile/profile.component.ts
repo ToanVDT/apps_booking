@@ -214,7 +214,6 @@ export class ProfileComponent implements OnInit {
     this.profileService.checkExistPhone(phone).pipe().subscribe(
       data=>{
        this.duplicatePhone = data;
-       
         if(data){
           this.profileForm.get('phone')?.setErrors({duplicatePhone:true})
         

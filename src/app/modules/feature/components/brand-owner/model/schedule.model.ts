@@ -6,6 +6,7 @@ export class Schedule{
     price?:number;
     seats?:number;
     eatingFee?:number;
+    emptySeats?:number;
     routeName?:string;
     busId?:number;
 }

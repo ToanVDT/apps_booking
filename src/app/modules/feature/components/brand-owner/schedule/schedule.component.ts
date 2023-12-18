@@ -13,6 +13,7 @@ import { Schedule } from '../model/schedule.model';
 import { ScheduleService } from '../service/schedule.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Routes } from '../model/route.model';
+import { DialogUpdateScheduleComponent } from './dialog-update-schedule/dialog-update-schedule.component';
 
 @Component({
   selector: 'app-schedule',
@@ -69,8 +70,24 @@ export class ScheduleComponent implements OnInit {
       }
     });
   }
+
   openFormSchedule(schedule:any){
     const dialogRef =this.dialog.open(DialogScheduleComponent,{
+      data:{
+        schedule:schedule,
+        routes:this.routes,
+        routeId:this.route?.id
+      }
+    })
+    dialogRef.componentInstance.createOrUpdate.subscribe(
+      data=>{
+        this.handleCreateOrUpdate(data)
+        // console.log("data",data)
+      }
+    )
+  }
+  openFormUpdateSchedule(schedule:any){
+    const dialogRef =this.dialog.open(DialogUpdateScheduleComponent,{
       data:{
         schedule:schedule,
         routes:this.routes,
@@ -90,7 +107,8 @@ export class ScheduleComponent implements OnInit {
       finalize(()=>{
         if(response[0]?.id){
           this.noData = false;
-          this.dataSource  =new MatTableDataSource(this.schedules)
+          this.dataSource = new MatTableDataSource(this.schedules)
+          this.dataSource.paginator = this.paginator;
         }
         else{
           this.noData = true;
@@ -108,9 +126,11 @@ export class ScheduleComponent implements OnInit {
   this.isLoading = true
    this.routeService.getAllRoutes(this.user.data.id).pipe(
     finalize(()=>{
+      this.getSchedule(this.routes[0]?.id);
     })
   ).subscribe(
     data=>{
+    
       this.routes = data.data;
       this.scheduleForm.get("route")?.setValue(this.routes[0])
     }

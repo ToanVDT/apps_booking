@@ -21,6 +21,7 @@ export class RouteComponent implements OnInit {
   displayedColumns: string[] = [
     'startPoint',
     'endPoint',
+    'duration',
     'action'
   ];
   noData:boolean = true;
@@ -29,7 +30,7 @@ export class RouteComponent implements OnInit {
   route : Routes = {}
   user:any;
   isLoading : boolean = false;
-
+  duration : any;
   dataSource = new MatTableDataSource(this.routes);
   dataSourceWithPageSize = new MatTableDataSource(this.routes);
 
@@ -60,6 +61,7 @@ export class RouteComponent implements OnInit {
     dialogRef.componentInstance.createOrUpdate.subscribe(
       data=>{
         this.handleCreateOrUpdate(data)
+        // console.log("data",data)
       }
     )
   }
@@ -99,25 +101,39 @@ export class RouteComponent implements OnInit {
     let value: any;
     const request = {...route, userId:this.user.data.id}
     this.isLoading = true;
-    this.routeService.createOrUpdate(request).pipe(
-      finalize(()=>{
-        this.isLoading = false;
-        this.getRouteAndProvinces()
-      })
-    ).subscribe(
-      data=>{
-        value = data.data;
-        if(data.success && data.message == "Thêm"){
-          this.message.success("Thêm tuyến xe","Thành công",{timeOut:2000,progressBar:true})
+    if(request?.id){
+      this.routeService.updateRoute(request).pipe(
+        finalize(()=>{
+          this.isLoading = false;
+          this.getRouteAndProvinces()
+        })
+      ).subscribe(
+        data=>{
+          value = data.data;
+          if(data.success){
+            this.message.success("Chỉnh sửa tuyến xe","Thành công",{timeOut:2000,progressBar:true})
+          }
+          else if(!data.success){
+            this.message.error("Dữ liệu trùng","Thất bại",{timeOut:2000,progressBar:true})
+          }
         }
-        if(data.success && data.message == "Chỉnh sửa"){
-          this.message.success("Chỉnh sửa tuyến xe","Thành công",{timeOut:2000,progressBar:true})
+      )
+    }
+    else{
+      this.routeService.createRoute(request).pipe(
+        finalize(()=>{
+          this.isLoading = false;
+          this.getRouteAndProvinces()
+        })
+      ).subscribe(
+        data=>{
+          value = data.data;
+          if(data.success){
+            this.message.success("Thêm sửa tuyến xe","Thành công",{timeOut:2000,progressBar:true})
+          }
         }
-        else if(!data.success){
-          this.message.error("Dữ liệu trùng","Thất bại",{timeOut:2000,progressBar:true})
-        }
-      }
-    )
+      )
+    }
   }
   deleteRoutegory(route: Routes) {
     this.route = { ...route };
